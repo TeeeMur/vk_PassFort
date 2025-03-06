@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "723278665929",
+    "project_id": "passfort-a3856",
+    "storage_bucket": "passfort-a3856.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:723278665929:android:0d1cbd2c25325507c69518",
+        "android_client_info": {
+          "package_name": "com.example.passfort"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC8s79dC6eP-Y9JRialjd8U7Uc6Vv8rnB4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
