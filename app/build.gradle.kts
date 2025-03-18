@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.gms)
+    id("kotlin-kapt")
 }
 
 android {
@@ -18,6 +19,9 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
+        }
+        kapt {
+            arguments {arg("room.schemaLocation", "$projectDir/schemas")}
         }
     }
 
@@ -86,4 +90,13 @@ dependencies {
 
     //Timber
     implementation(libs.timber)
+
+    // Room library
+    implementation(libs.androidx.room.runtime)
+    // Room extensions for Kotlin Coroutines, Kotlin Flows
+    implementation(libs.androidx.room.ktx)
+    // Room codegen
+    kapt(libs.androidx.room.compiler){
+        exclude(group = "com.intellij", module = "annotations")
+    }
 }
