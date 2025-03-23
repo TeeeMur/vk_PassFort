@@ -1,4 +1,4 @@
-package com.example.passfort.ui.theme
+package com.example.passfort.designSystem.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
