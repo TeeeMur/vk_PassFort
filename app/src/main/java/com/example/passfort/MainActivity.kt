@@ -11,20 +11,23 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.passfort.designSystem.NavigationBar
 import com.example.passfort.designSystem.theme.PassFortTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        /*fb.collection("users").document()
-            .set(mapOf("name" to "Konda","email" to "konda@gmail.com"))*/
-
-
         enableEdgeToEdge()
         setContent {
             PassFortTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                Scaffold(
+                    modifier = Modifier
+                        .fillMaxSize(),
+
+                    bottomBar = {
+                        NavigationBar()
+                    }
+                ) { innerPadding ->
                     Greeting(
                         name = "Android",
                         modifier = Modifier.padding(innerPadding)

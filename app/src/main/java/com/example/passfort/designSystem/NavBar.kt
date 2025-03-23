@@ -1,47 +1,138 @@
 package com.example.passfort.designSystem
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.passfort.designSystem.theme.PassFortTheme
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
+import com.example.passfort.R
 
-class NavBar : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            PassFortTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting2(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
+data class NavigationBarItem(
+    val nameOpenActivity: String,
+    val selectedIcon: ImageVector,
+    val unselectedIcon: ImageVector
+)
+
+
+@Preview
+@Composable
+fun NavigationBar() {
+    val navItems = listOf(
+        NavigationBarItem(
+            nameOpenActivity = "",
+            selectedIcon = ImageVector.vectorResource(R.drawable.navbar_home_selected),
+            unselectedIcon = ImageVector.vectorResource(R.drawable.navbar_home_unselected),
+        ),
+        NavigationBarItem(
+            nameOpenActivity = "",
+            selectedIcon = ImageVector.vectorResource(R.drawable.navbar_passwords_selected),
+            unselectedIcon = ImageVector.vectorResource(R.drawable.navbar_passwords_unselected)
+        ),
+        NavigationBarItem(
+            nameOpenActivity = "",
+            selectedIcon = ImageVector.vectorResource(R.drawable.navbar_key_selected),
+            unselectedIcon = ImageVector.vectorResource(R.drawable.navbar_key_unselected)
+        ),
+        NavigationBarItem(
+            nameOpenActivity = "",
+            selectedIcon = ImageVector.vectorResource(R.drawable.navbar_settings_selected),
+            unselectedIcon = ImageVector.vectorResource(R.drawable.navbar_settings_unselected)
+        )
+    )
+
+    val selectedItemByIndex by remember {
+        mutableStateOf(0)
+    }
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.White, RoundedCornerShape(40.dp))
+            .height(80.dp)
+            .padding(horizontal = 20.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        navItems.forEachIndexed { index, item ->
+            NavItem(item.selectedIcon, item.unselectedIcon, index == selectedItemByIndex, {})
+        if (index == 1){
+
+            Box(
+                modifier = Modifier
+                    .offset { IntOffset(x = 0, y = -60) }
+                    .clickable {  }
+                    .size(80.dp)
+                    .align(Alignment.Bottom)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.primary, RoundedCornerShape(35.dp))
+                ) {
+                    Icon(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        imageVector = ImageVector.vectorResource(R.drawable.icon_button_add),
+                        tint = MaterialTheme.colorScheme.surface,
+                        contentDescription = null,
                     )
                 }
             }
+        }
         }
     }
 }
 
 @Composable
-fun Greeting2(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+fun NavItem(iconSelected: ImageVector,
+            iconUnselected: ImageVector,
+            isSelected: Boolean,
+            onClick: () -> Unit) {
+    val iconImage = if (isSelected) iconSelected else iconUnselected
+    val iconColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview2() {
-    PassFortTheme {
-        Greeting2("Android")
+    Box(
+        modifier = Modifier
+            .size(50.dp)
+            .clickable { onClick() }
+            .padding(10.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            modifier = Modifier
+                .fillMaxSize(),
+            imageVector = iconImage,
+            tint = iconColor,
+            contentDescription = null,
+        )
     }
 }
