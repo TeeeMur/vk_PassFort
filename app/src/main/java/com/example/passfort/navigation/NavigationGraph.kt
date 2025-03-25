@@ -30,7 +30,9 @@ fun NavigationGraph(navController: NavHostController, UserLoggedIn: Boolean) {
         composable(Screen.HomeScreen.route) {
             //HomeScreen(navController)
         }
+        composable(Screen.PasswordList.route) {
 
+        }
         composable(Screen.PasswordGenerator.route) {
             PasswordGeneratorScreen()
         }

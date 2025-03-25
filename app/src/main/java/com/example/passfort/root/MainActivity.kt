@@ -1,18 +1,19 @@
 package com.example.passfort
 
+import NavigationGraph
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.passfort.ui.theme.PassFortTheme
+import androidx.navigation.compose.rememberNavController
+import com.example.passfort.designSystem.components.NavigationBar
+import com.example.passfort.designSystem.theme.PassFortTheme
 import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -28,17 +29,22 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
-            val navController = rememberNavController()
-            NavigationGraph(navController = navController)
+            PassFortTheme {
+                val navController = rememberNavController()
+                val UserLoggedIn = remember { mutableStateOf(false) }
 
-            /*PassFortTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-            }*/
+                NavigationGraph(navController = navController, UserLoggedIn = UserLoggedIn.value)
+
+
+                /*PassFortTheme {
+                    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                        Greeting(
+                            name = "Android",
+                            modifier = Modifier.padding(innerPadding)
+                        )
+                    }
+                }*/
+            }
         }
     }
 }
@@ -49,12 +55,4 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
         text = "Hello $name!",
         modifier = modifier
     )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    PassFortTheme {
-        Greeting("Android")
-    }
 }

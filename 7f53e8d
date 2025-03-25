@@ -1,0 +1,28 @@
+[33mc50d75f[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeature/PAS-60_ScreenHome[m[33m, [m[1;31morigin/feature/PAS-60_ScreenHome[m[33m, [m[1;32mNavigation[m[33m)[m HEAD@{0}: checkout: moving from develop to feature/PAS-60_ScreenHome
+[33m0646181[m[33m ([m[1;31morigin/develop[m[33m, [m[1;32mdevelop[m[33m)[m HEAD@{1}: checkout: moving from master to develop
+[33m07baa85[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m HEAD@{2}: checkout: moving from develop to master
+[33m0646181[m[33m ([m[1;31morigin/develop[m[33m, [m[1;32mdevelop[m[33m)[m HEAD@{3}: checkout: moving from feature/PAS-60_ScreenHome to develop
+[33mc50d75f[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeature/PAS-60_ScreenHome[m[33m, [m[1;31morigin/feature/PAS-60_ScreenHome[m[33m, [m[1;32mNavigation[m[33m)[m HEAD@{4}: checkout: moving from develop to feature/PAS-60_ScreenHome
+[33m0646181[m[33m ([m[1;31morigin/develop[m[33m, [m[1;32mdevelop[m[33m)[m HEAD@{5}: checkout: moving from Navigation to develop
+[33mc50d75f[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeature/PAS-60_ScreenHome[m[33m, [m[1;31morigin/feature/PAS-60_ScreenHome[m[33m, [m[1;32mNavigation[m[33m)[m HEAD@{6}: merge feature/PAS-60_ScreenHome: Fast-forward
+[33m0646181[m[33m ([m[1;31morigin/develop[m[33m, [m[1;32mdevelop[m[33m)[m HEAD@{7}: checkout: moving from develop to Navigation
+[33m0646181[m[33m ([m[1;31morigin/develop[m[33m, [m[1;32mdevelop[m[33m)[m HEAD@{8}: checkout: moving from feature/-60_creenome to develop
+[33m7f53e8d[m HEAD@{9}: checkout: moving from develop to feature/-60_creenome
+[33m0646181[m[33m ([m[1;31morigin/develop[m[33m, [m[1;32mdevelop[m[33m)[m HEAD@{10}: checkout: moving from feature/PAS-60_ScreenHome to develop
+[33mc50d75f[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeature/PAS-60_ScreenHome[m[33m, [m[1;31morigin/feature/PAS-60_ScreenHome[m[33m, [m[1;32mNavigation[m[33m)[m HEAD@{11}: checkout: moving from feature/-60_creenome to feature/PAS-60_ScreenHome
+[33m7f53e8d[m HEAD@{12}: checkout: moving from develop to feature/-60_creenome
+[33m0646181[m[33m ([m[1;31morigin/develop[m[33m, [m[1;32mdevelop[m[33m)[m HEAD@{13}: pull origin develop: Fast-forward
+[33m07baa85[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m HEAD@{14}: checkout: moving from feature/-60_creenome to develop
+[33m7f53e8d[m HEAD@{15}: checkout: moving from develop to feature/-60_creenome
+[33m07baa85[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m HEAD@{16}: checkout: moving from feature/-60_creenome to develop
+[33m7f53e8d[m HEAD@{17}: checkout: moving from develop to feature/-60_creenome
+[33m07baa85[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m HEAD@{18}: checkout: moving from feature/-60_creenome to develop
+[33m7f53e8d[m HEAD@{19}: checkout: moving from 7f53e8d55c3975e972c34c8e3f50365c36509bb4 to feature/-60_creenome
+[33m7f53e8d[m HEAD@{20}: commit: pull
+[33m6a74177[m[33m ([m[1;31morigin/feature/ConnectionFirebase[m[33m)[m HEAD@{21}: checkout: moving from develop to 6a74177276dde36bc026145e43a55b97bf578496
+[33m07baa85[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m HEAD@{22}: checkout: moving from 7703f7618a09949d8282298e91ac6c27a93895cc to develop
+[33m7703f76[m[33m ([m[1;31morigin/feature/PasswordCRUD[m[33m)[m HEAD@{23}: checkout: moving from develop to 7703f7618a09949d8282298e91ac6c27a93895cc
+[33m07baa85[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m HEAD@{24}: checkout: moving from 7703f7618a09949d8282298e91ac6c27a93895cc to develop
+[33m7703f76[m[33m ([m[1;31morigin/feature/PasswordCRUD[m[33m)[m HEAD@{25}: checkout: moving from develop to 7703f7618a09949d8282298e91ac6c27a93895cc
+[33m07baa85[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m HEAD@{26}: checkout: moving from master to develop
+[33m07baa85[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m HEAD@{27}: clone: from https://github.com/TeeeMur/vk_PassFort.git
