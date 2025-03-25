@@ -52,7 +52,7 @@ android {
 }
 
 dependencies {
-
+    implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -68,6 +68,8 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+
 
     // Retrofit
     implementation(libs.retrofit)
@@ -86,4 +88,8 @@ dependencies {
 
     //Timber
     implementation(libs.timber)
+
+    implementation(libs.material3)
+    implementation(libs.androidx.foundation)
+    implementation(libs.ui)
 }
