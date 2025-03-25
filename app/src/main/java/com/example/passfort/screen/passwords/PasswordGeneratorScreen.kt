@@ -24,71 +24,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-@Preview(showBackground = true)
+
 @Composable
 fun PasswordGeneratorScreen() {
-    var generatedPassword by remember { mutableStateOf("") }
-    var passwordLength by remember { mutableStateOf(12) }
-    var includeNumbers by remember { mutableStateOf(true) }
-    var includeSpecialChars by remember { mutableStateOf(true) }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text("Генератор паролей", fontSize = 20.sp, fontWeight = FontWeight.Bold)
-        Spacer(modifier = Modifier.height(16.dp))
-
-        TextField(
-            value = generatedPassword,
-            onValueChange = {},
-            readOnly = true,
-            label = { Text("Сгенерированный пароль") },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text("Длина пароля: $passwordLength")
-        Slider(
-            value = passwordLength.toFloat(),
-            onValueChange = { passwordLength = it.toInt() },
-            valueRange = 6f..32f,
-            steps = 26
-        )
-
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Checkbox(checked = includeNumbers, onCheckedChange = { includeNumbers = it })
-            Text("Включать цифры")
-        }
-
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Checkbox(checked = includeSpecialChars, onCheckedChange = { includeSpecialChars = it })
-            Text("Включать спецсимволы")
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(onClick = {
-            generatedPassword = generatePassword(passwordLength, includeNumbers, includeSpecialChars)
-        }) {
-            Text("Сгенерировать")
-        }
-    }
 }
 
-fun generatePassword(length: Int, useNumbers: Boolean, useSpecialChars: Boolean): String {
-    val letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    val numbers = "0123456789"
-    val specialChars = "!@#$%^&*()-_=+<>?/"
+fun generatePassword(length: Int, useNumbers: Boolean, useSpecialChars: Boolean) {
 
-    var charPool = letters
-    if (useNumbers) charPool += numbers
-    if (useSpecialChars) charPool += specialChars
-
-    return (1..length)
-        .map { charPool.random() }
-        .joinToString("")
 }
