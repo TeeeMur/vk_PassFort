@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+option java_package = "com.example.passfort";
+option java_multiple_files = true;
+
+message Records {
+  string name = 1;
+  string login = 2;
+  string password = 3;
+  int32 interval = 4;
+  int64 lastSync = 5;
+}

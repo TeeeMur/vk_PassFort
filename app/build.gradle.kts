@@ -1,8 +1,10 @@
+import com.google.protobuf.gradle.id
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.gms)
-    id("kotlin-kapt")
+    id("com.google.protobuf") version "0.9.4"
 }
 
 android {
@@ -19,9 +21,6 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
-        }
-        kapt {
-            arguments {arg("room.schemaLocation", "$projectDir/schemas")}
         }
     }
 
@@ -91,12 +90,24 @@ dependencies {
     //Timber
     implementation(libs.timber)
 
-    // Room library
-    implementation(libs.androidx.room.runtime)
-    // Room extensions for Kotlin Coroutines, Kotlin Flows
-    implementation(libs.androidx.room.ktx)
-    // Room codegen
-    kapt(libs.androidx.room.compiler){
-        exclude(group = "com.intellij", module = "annotations")
+    implementation(libs.androidx.datastore)
+    implementation(libs.protobuf.kotlin.lite)
+    implementation(libs.protobuf.javalite)
+}
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.24.3"
+    }
+    generateProtoTasks {
+        all().forEach {
+            it.builtins {
+                id("kotlin") {
+                    option("lite")
+                }
+                id("java") {
+                    option("lite")
+                }
+            }
+        }
     }
 }
