@@ -8,12 +8,16 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.passfort.designSystem.components.NavigationBar
 import com.example.passfort.designSystem.theme.PassFortTheme
+import com.example.passfort.root.MainViewModel
 import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -30,29 +34,13 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             PassFortTheme {
+                val mainViewModel: MainViewModel = viewModel()
                 val navController = rememberNavController()
-                val UserLoggedIn = remember { mutableStateOf(false) }
 
-                NavigationGraph(navController = navController, UserLoggedIn = UserLoggedIn.value)
+                val UserLoggedIn by mainViewModel.isUserLoggedIn.collectAsState()
 
-
-                /*PassFortTheme {
-                    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                        Greeting(
-                            name = "Android",
-                            modifier = Modifier.padding(innerPadding)
-                        )
-                    }
-                }*/
+                NavigationGraph(navController = navController, UserLoggedIn)
             }
         }
     }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
 }

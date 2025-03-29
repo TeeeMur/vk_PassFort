@@ -7,36 +7,45 @@ import com.example.passfort.navigation.PasswordGeneratorScreen
 import com.example.passfort.screen.auth.LoginScreen
 import com.example.passfort.screen.auth.RegisterScreen
 import com.example.passfort.screen.main.HomeScreen
+import com.example.passfort.screen.passwords.AddPasswordScreen
+import com.example.passfort.screen.passwords.PasswordListScreen
+import com.example.passfort.screen.passwords.SettingsScreen
 
 @Composable
 fun NavigationGraph(navController: NavHostController, UserLoggedIn: Boolean) {
-    // Если добавим Пинкод
-    //NavHost(navController = navController, startDestination = if (UserLoggedIn) Screen.PinCode.route else Screen.Login.route) {
-
-    NavHost(navController = navController, startDestination = if (UserLoggedIn) Screen.HomeScreen.route else Screen.Login.route) {
+    val startDestination = when {
+        !UserLoggedIn -> Screen.Login.route
+        //Pin -> Screen.PinCode.route     Если добавим Пинкод
+        else -> Screen.HomeScreen.route
+    }
+    NavHost(navController = navController, startDestination) {
 
         composable(Screen.Login.route) {
-            LoginScreen(
-                //lonLoginSuccess = { navController.navigate(Screen.HomeScreen.route) }
-            )
+            LoginScreen()
         }
 
         composable(Screen.Register.route) {
-            RegisterScreen(
-                //onRegisterSuccess = { navController.popBackStack() }
-            )
+            RegisterScreen()
         }
 
         composable(Screen.HomeScreen.route) {
-            //HomeScreen(navController)
-        }
-        composable(Screen.PasswordList.route) {
-
+            HomeScreen(navController)
         }
         composable(Screen.PasswordGenerator.route) {
-            PasswordGeneratorScreen()
+            PasswordGeneratorScreen(navController)
+        }
+        composable(Screen.AddPassword.route) {
+            AddPasswordScreen(navController)
+        }
+        composable(Screen.PasswordList.route) {
+            PasswordListScreen(navController)
+        }
+        composable(Screen.Settings.route) {
+            SettingsScreen()
         }
     }
 }
+
+
 
 

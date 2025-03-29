@@ -17,6 +17,7 @@ firebaseBomVersion = "33.1.2"
 timberVersion = "5.0.1"
 navigationCompose = "2.7.7"
 ui = "1.7.8"
+navigationRuntimeAndroid = "2.9.0-alpha09"
 
 [libraries]
 androidx-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "foundation" }
@@ -45,6 +46,7 @@ firebase-database = { group = "com.google.firebase", name = "firebase-database-k
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore-ktx"}
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timberVersion" }
 ui = { module = "androidx.compose.ui:ui", version.ref = "ui" }
+androidx-navigation-runtime-android = { group = "androidx.navigation", name = "navigation-runtime-android", version.ref = "navigationRuntimeAndroid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

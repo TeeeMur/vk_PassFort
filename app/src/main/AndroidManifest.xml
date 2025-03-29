@@ -13,11 +13,6 @@
         android:theme="@style/Theme.PassFort"
         tools:targetApi="31">
         <activity
-                android:name=".designSystem.NavBar"
-                android:exported="false"
-                android:label="@string/title_activity_nav_bar"
-                android:theme="@style/Theme.PassFort" />
-        <activity
                 android:name=".MainActivity"
                 android:exported="true"
                 android:label="@string/app_name"

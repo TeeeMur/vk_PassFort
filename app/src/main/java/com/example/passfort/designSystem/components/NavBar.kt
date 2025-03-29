@@ -38,8 +38,6 @@ data class NavigationBarItem(
     val unselectedIcon: ImageVector
 )
 
-
-@Preview
 @Composable
 fun NavigationBar(navController: NavHostController) {
     val navItems = listOf(
@@ -79,13 +77,15 @@ fun NavigationBar(navController: NavHostController) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         navItems.forEachIndexed { index, item ->
-            NavItem(item.selectedIcon, item.unselectedIcon, index == selectedItemByIndex, {})
+            NavItem(item.selectedIcon, item.unselectedIcon, index == selectedItemByIndex)
+                {navController.navigate(item.nameOpenActivity)
+            }
         if (index == 1){
 
             Box(
                 modifier = Modifier
                     .offset { IntOffset(x = 0, y = -60) }
-                    .clickable {  }
+                    .clickable { navController.navigate(Screen.AddPassword.route) }
                     .size(80.dp)
                     .align(Alignment.Bottom)
             ) {
