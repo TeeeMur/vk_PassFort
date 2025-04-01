@@ -24,13 +24,6 @@
             </intent-filter>
         </activity>
 
-        <!-- Вторая Activity -->
-        <activity
-                android:name=".designSystem.NavBar"
-                android:exported="false"
-                android:label="@string/title_activity_nav_bar"
-                android:theme="@style/Theme.PassFort"/>
-
     </application>
 
 
