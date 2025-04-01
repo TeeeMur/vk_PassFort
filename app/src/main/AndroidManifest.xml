@@ -17,6 +17,11 @@
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.Passfort">
+        <activity
+                android:name=".designSystem.NavBar"
+                android:exported="false"
+                android:label="@string/title_activity_nav_bar"
+                android:theme="@style/Theme.PassFort" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
