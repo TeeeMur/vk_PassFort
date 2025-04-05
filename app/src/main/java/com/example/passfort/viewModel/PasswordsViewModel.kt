@@ -36,14 +36,6 @@ class PasswordsViewModel @Inject constructor(private val repo: PasswordsRepo): V
         }
     }
 
-    fun changePinPassword(passwordRecordEntity: PasswordRecordEntity) {
-        viewModelScope.launch {
-            passwordRecordEntity.pinned = !passwordRecordEntity.pinned
-            repo.upsertPassword(passwordRecordEntity)
-            this@PasswordsViewModel.refreshPasswords()
-        }
-    }
-
     fun upsertPassword(passwordRecordEntity: PasswordRecordEntity) {
         viewModelScope.launch {
             repo.upsertPassword(passwordRecordEntity)
