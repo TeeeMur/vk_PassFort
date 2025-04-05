@@ -93,6 +93,8 @@ dependencies {
     ksp(libs.androidx.room.compiler)
     // Hilt dependency
     implementation(libs.hilt.android)
+    // Hilt navigation
+    implementation(libs.androidx.hilt.navigation.compose)
     // Hilt codegen
     ksp(libs.hilt.android.compiler)
     // AppCompatActivity
