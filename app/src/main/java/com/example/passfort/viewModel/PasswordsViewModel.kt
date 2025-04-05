@@ -3,9 +3,9 @@ package com.example.passfort.viewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.passfort.dbentity.PasswordRecordEntity
-import com.example.passfort.repository.PasswordsRepoImpl
-import com.example.passfort.repository.ScreenListState
-import com.example.passfort.repository.ScreenState
+import com.example.passfort.repository.PasswordsRepo
+import com.example.passfort.ui.PasswordsScreenListState
+import com.example.passfort.ui.ScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,21 +14,23 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class PasswordsViewModel @Inject constructor(private val repo: PasswordsRepoImpl): ViewModel() {
+class PasswordsViewModel @Inject constructor(private val repo: PasswordsRepo): ViewModel() {
 
-    private val _passwordsStateFlow: MutableStateFlow<ScreenListState> = MutableStateFlow(ScreenListState())
+    private val _passwordsStateFlow: MutableStateFlow<PasswordsScreenListState> = MutableStateFlow(PasswordsScreenListState())
     val passwords = _passwordsStateFlow.asStateFlow()
 
     fun refreshPasswords() {
         viewModelScope.launch {
-            _passwordsStateFlow.value.screenState = ScreenState.Loading
+            _passwordsStateFlow.update { value ->
+                value.copy(screenState = ScreenState.LOADING)
+            }
             _passwordsStateFlow.update { value ->
                 try {
                     val resPinnedList = repo.getPinnedPasswords()
                     val resNotPinnedList = repo.getNonPinnedPasswords()
-                    ScreenListState(resPinnedList, resNotPinnedList, ScreenState.Success)
+                    PasswordsScreenListState(resPinnedList, resNotPinnedList, ScreenState.SUCCESS)
                 } catch(_: Exception) {
-                    ScreenListState(value.passwordsNotPinnedList, value.passwordsPinnedList, ScreenState.Error)
+                    value.copy(screenState = ScreenState.ERROR)
                 }
             }
         }

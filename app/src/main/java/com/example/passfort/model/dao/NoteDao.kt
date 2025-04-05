@@ -5,7 +5,7 @@ import androidx.room.Query
 import com.example.passfort.dbentity.NoteRecordEntity
 
 @Dao
-abstract class NoteDao: BaseDao<NoteRecordEntity> {
+interface NoteDao: BaseDao<NoteRecordEntity> {
 
     @Query("SELECT * from note_record")
     abstract suspend fun getAll(): List<NoteRecordEntity>

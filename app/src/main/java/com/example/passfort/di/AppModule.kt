@@ -1,8 +1,9 @@
-package com.example.passfort.dbentity
+package com.example.passfort.di
 
 import android.content.Context
 import androidx.room.Room
 import com.example.passfort.model.PassFortDB
+import com.example.passfort.repository.PasswordsRepo
 import com.example.passfort.repository.PasswordsRepoImpl
 import dagger.Module
 import dagger.Provides
@@ -22,7 +23,7 @@ object AppModule {
     }
 
     @Provides
-    fun providePasswordsRepository(db: PassFortDB): PasswordsRepoImpl {
+    fun providePasswordsRepository(db: PassFortDB): PasswordsRepo {
         return PasswordsRepoImpl(db)
     }
 }

@@ -20,31 +20,26 @@ import com.example.passfort.viewModel.PasswordsViewModel
 import com.example.passfort.model.PassFortDB
 import com.example.passfort.repository.PasswordsRepo
 import com.example.passfort.repository.PasswordsRepoImpl
-import com.example.passfort.viewModel.PasswordsViewModelFactory
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    @Inject
-    lateinit var db: PassFortDB
-    @Inject
-    lateinit var repo: PasswordsRepoImpl
     private val passwordsViewModel: PasswordsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            mainScreen(passwordsViewModel)
+            MainScreen(passwordsViewModel)
         }
     }
 }
 
 @Composable
 @Preview
-fun mainScreen(viewModel: PasswordsViewModel) {
+fun MainScreen(viewModel: PasswordsViewModel = hiltViewModel()) {
     Column(
         modifier = Modifier.fillMaxHeight(0.5f)
             .fillMaxWidth()
