@@ -97,7 +97,7 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     // Hilt codegen
     ksp(libs.hilt.android.compiler)
-    // AppCompatActivity
-    implementation(libs.androidx.appcompat)
+    // Kotlin immutable collections
+    implementation(libs.kotlinx.collections.immutable)
 
 }

@@ -7,6 +7,7 @@ import com.example.passfort.repository.PasswordsRepo
 import com.example.passfort.ui.PasswordsScreenListState
 import com.example.passfort.ui.ScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -26,8 +27,8 @@ class PasswordsViewModel @Inject constructor(private val repo: PasswordsRepo): V
             }
             _passwordsStateFlow.update { value ->
                 try {
-                    val resPinnedList = repo.getPinnedPasswords()
-                    val resNotPinnedList = repo.getNonPinnedPasswords()
+                    val resPinnedList = repo.getPinnedPasswords().toImmutableList()
+                    val resNotPinnedList = repo.getNonPinnedPasswords().toImmutableList()
                     PasswordsScreenListState(resPinnedList, resNotPinnedList, ScreenState.SUCCESS)
                 } catch(_: Exception) {
                     value.copy(screenState = ScreenState.ERROR)
