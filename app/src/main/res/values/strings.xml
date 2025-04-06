@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">PassFort</string>
+    <string name="title_activity_nav_bar">NavBar</string>
 </resources>
