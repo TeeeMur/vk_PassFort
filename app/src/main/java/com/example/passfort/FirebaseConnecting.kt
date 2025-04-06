@@ -19,9 +19,7 @@ class FirebaseConnecting {
             .addOnSuccessListener { documentReference ->
                 Timber.d("DocumentSnapshot added with ID: " + documentReference.id)
             }
-            .addOnFailureListener { e ->
-                Timber.d("Error adding document", e)
-            }
+
 
         db.collection("users")
             .get()
