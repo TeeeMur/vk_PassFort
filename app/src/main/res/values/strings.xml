@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">PassFort</string>
     <string name="title_activity_nav_bar">NavBar</string>
+    <string name="passwordgen_screen_title">Генерация пароля</string>
 </resources>
