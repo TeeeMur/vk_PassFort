@@ -85,7 +85,7 @@ fun PasswordGenScreen(viewModel: PasswordGenViewModel = hiltViewModel()) {
                     Icon(
                         painter = painterResource(R.drawable.content_copy_24),
                         contentDescription = "copy",
-                        modifier = Modifier.size(22.dp)
+                        modifier = Modifier.size(24.dp)
                     )
                 }
             }
@@ -113,48 +113,49 @@ fun PasswordGenScreenParams(viewModel: PasswordGenViewModel) {
 fun GenPasswordLength(viewModel: PasswordGenViewModel) {
     var generatedPasswordLength by remember { mutableIntStateOf(64) }
     var textFieldValue by remember { mutableStateOf(generatedPasswordLength.toString()) }
-    Column(
-        modifier = Modifier.fillMaxWidth()
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        Text(
-            text = stringResource(R.string.passwordgen_slider_title),
-            modifier = Modifier.padding(start = 8.dp),
-            )
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+        Column(
+            modifier = Modifier,
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.Start,
         ) {
+            Text(
+                text = stringResource(R.string.passwordgen_slider_title),
+                fontSize = 16.sp,
+                modifier = Modifier.padding(start = 4.dp),
+            )
             Slider(
                 modifier = Modifier
-                    .fillMaxWidth(0.8f)
-                    .padding(horizontal = 4.dp),
+                    .fillMaxWidth(0.84f),
                 value = generatedPasswordLength.toFloat(),
                 onValueChange = { generatedPasswordLength = it.toInt() },
                 valueRange = 6f..128f,
             )
-            OutlinedTextField(
-                modifier = Modifier.background(
-                    color = colorResource(R.color.text_field_color),
-                    RoundedCornerShape(28.dp)
-                    ),
-                value = textFieldValue,
-                onValueChange = {
-                    if (it.isEmpty()) textFieldValue = it
-                    else if (it.isDigitsOnly()) {
-                        if (it.toInt() in 1..128) {
-                            textFieldValue = it
-                            generatedPasswordLength = it.toInt()
-                        }
-                    }},
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                colors = OutlinedTextFieldDefaults.colors(
-                    unfocusedBorderColor = Color.Transparent,
-                    focusedBorderColor = Color.Transparent,
-                ),
-                singleLine = true,
-            )
         }
+        OutlinedTextField(
+            modifier = Modifier.background(
+                color = colorResource(R.color.text_field_color),
+                RoundedCornerShape(28.dp)
+            ),
+            value = textFieldValue,
+            onValueChange = {
+                if (it.isEmpty()) textFieldValue = it
+                else if (it.isDigitsOnly()) {
+                    if (it.toInt() in 1..128) {
+                        textFieldValue = it
+                        generatedPasswordLength = it.toInt()
+                    }
+                }},
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            colors = OutlinedTextFieldDefaults.colors(
+                unfocusedBorderColor = Color.Transparent,
+                focusedBorderColor = Color.Transparent,
+            ),
+            singleLine = true,
+        )
     }
 }
 
