@@ -11,6 +11,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Refresh
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
@@ -44,73 +47,83 @@ import com.example.passfort.viewModel.PasswordGenViewModel
 @Composable
 @Preview
 fun PasswordGenScreen(viewModel: PasswordGenViewModel = hiltViewModel()) {
-    var generatedPassword by remember { mutableStateOf("") }
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(color = colorResource(R.color.white))
             .padding(top = 48.dp, start = 16.dp, end = 16.dp),
-        verticalArrangement = Arrangement.Top,
+        verticalArrangement = Arrangement.SpaceBetween,
     ) {
-        Text(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 4.dp),
-            text = stringResource(R.string.passwordgen_screen_title),
-            textAlign = TextAlign.Left,
-            fontSize = 28.sp,
-            fontWeight = FontWeight.Medium,
-        )
-        OutlinedTextField(
-            modifier = Modifier
-                .padding(vertical = 16.dp)
-                .fillMaxWidth()
-                .background(
-                    color = colorResource(R.color.text_field_color),
-                    RoundedCornerShape(20.dp)
-                ),
-            value = generatedPassword,
-            onValueChange = {generatedPassword = it},
-            singleLine = true,
-            readOnly = true,
-            colors = OutlinedTextFieldDefaults.colors(
-                unfocusedBorderColor = Color.Transparent,
-                focusedBorderColor = Color.Transparent,
-            ),
-            trailingIcon = {
-                IconButton(
-                    modifier = Modifier.padding(end = 4.dp),
-                    onClick = {  }
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.content_copy_24),
-                        contentDescription = "copy",
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
-            }
-        )
-        GenPasswordLength(viewModel)
-        PasswordGenScreenParams(viewModel)
+        Column {
+            TitleWithPasswordField(viewModel)
+            GenPasswordLengthSlider(viewModel)
+            PasswordGenScreenParams(viewModel)
+        }
+        Row(
+            modifier = Modifier.fillMaxWidth()
+        ){
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth(0.8f),
+                onClick = {}
+            ) { Text("Записать пароль")}
+            Button(onClick = {}) { Icon(Icons.Outlined.Refresh, contentDescription = "")}
+        }
     }
+}
+
+@Composable
+fun TitleWithPasswordField(viewModel: PasswordGenViewModel) {
+    var generatedPassword by remember { mutableStateOf("") }
+    Text(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 4.dp),
+        text = stringResource(R.string.passwordgen_screen_title),
+        textAlign = TextAlign.Left,
+        fontSize = 28.sp,
+        fontWeight = FontWeight.Medium,
+    )
+    OutlinedTextField(
+        modifier = Modifier
+            .padding(vertical = 16.dp)
+            .fillMaxWidth()
+            .background(
+                color = colorResource(R.color.text_field_color),
+                RoundedCornerShape(20.dp)
+            ),
+        value = generatedPassword,
+        onValueChange = {generatedPassword = it},
+        singleLine = true,
+        readOnly = true,
+        colors = OutlinedTextFieldDefaults.colors(
+            unfocusedBorderColor = Color.Transparent,
+            focusedBorderColor = Color.Transparent,
+        ),
+        trailingIcon = {
+            IconButton(
+                modifier = Modifier.padding(end = 4.dp),
+                onClick = {  }
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.content_copy_24),
+                    contentDescription = "copy",
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+        }
+    )
 }
 
 @Composable
 fun PasswordGenScreenParams(viewModel: PasswordGenViewModel) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 8.dp),
-        verticalArrangement = Arrangement.SpaceAround,
-    ) {
-        ToggleLine(stringResource(R.string.passwordgen_toggle_digits_name), viewModel)
-        ToggleLine(stringResource(R.string.passwordgen_toggle_chars_name), viewModel)
-        ToggleLine(stringResource(R.string.passwordgen_toggle_specChar_name), viewModel)
-    }
+    ToggleLine(stringResource(R.string.passwordgen_toggle_digits_name), viewModel)
+    ToggleLine(stringResource(R.string.passwordgen_toggle_chars_name), viewModel)
+    ToggleLine(stringResource(R.string.passwordgen_toggle_specChar_name), viewModel)
 }
 
 @Composable
-fun GenPasswordLength(viewModel: PasswordGenViewModel) {
+fun GenPasswordLengthSlider(viewModel: PasswordGenViewModel) {
     var generatedPasswordLength by remember { mutableIntStateOf(64) }
     var textFieldValue by remember { mutableStateOf(generatedPasswordLength.toString()) }
     Row(
