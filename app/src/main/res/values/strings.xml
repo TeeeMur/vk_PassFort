@@ -2,4 +2,8 @@
     <string name="app_name">PassFort</string>
     <string name="title_activity_nav_bar">NavBar</string>
     <string name="passwordgen_screen_title">Генерация пароля</string>
+    <string name="passwordgen_slider_title">Длина пароля</string>
+    <string name="passwordgen_toggle_digits_name">Цифры</string>
+    <string name="passwordgen_toggle_specChar_name">Специальные символы (#, @, _ и др.)</string>
+    <string name="passwordgen_toggle_chars_name">Буквы</string>
 </resources>

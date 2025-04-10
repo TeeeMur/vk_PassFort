@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.passfort.designSystem.passwordgen.PasswordGenScreen
 import com.example.passfort.viewModel.PasswordsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -23,18 +24,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            MainScreen()
+            PasswordGenScreen()
         }
-    }
-}
-
-@Composable
-@Preview
-fun MainScreen(viewModel: PasswordsViewModel = hiltViewModel()) {
-    Column(
-        modifier = Modifier.fillMaxHeight(0.5f)
-            .fillMaxWidth()
-    ) {
-        Text("Hello!")
     }
 }
