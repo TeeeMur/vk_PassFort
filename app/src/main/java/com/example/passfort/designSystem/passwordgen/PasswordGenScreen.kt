@@ -125,7 +125,7 @@ fun PasswordGenScreenParams(viewModel: PasswordGenViewModel) {
 @Composable
 fun GenPasswordLengthSlider(viewModel: PasswordGenViewModel) {
     var generatedPasswordLength by remember { mutableIntStateOf(64) }
-    var textFieldValue by remember { mutableStateOf(generatedPasswordLength.toString()) }
+    var lengthTextFieldValue by remember { mutableStateOf(generatedPasswordLength.toString()) }
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -144,7 +144,8 @@ fun GenPasswordLengthSlider(viewModel: PasswordGenViewModel) {
                 modifier = Modifier
                     .fillMaxWidth(0.84f),
                 value = generatedPasswordLength.toFloat(),
-                onValueChange = { generatedPasswordLength = it.toInt() },
+                onValueChange = { generatedPasswordLength = it.toInt()
+                                lengthTextFieldValue = generatedPasswordLength.toString()},
                 valueRange = 6f..128f,
             )
         }
@@ -153,12 +154,12 @@ fun GenPasswordLengthSlider(viewModel: PasswordGenViewModel) {
                 color = colorResource(R.color.text_field_color),
                 RoundedCornerShape(28.dp)
             ),
-            value = textFieldValue,
+            value = lengthTextFieldValue,
             onValueChange = {
-                if (it.isEmpty()) textFieldValue = it
+                if (it.isEmpty()) lengthTextFieldValue = it
                 else if (it.isDigitsOnly()) {
                     if (it.toInt() in 1..128) {
-                        textFieldValue = it
+                        lengthTextFieldValue = it
                         generatedPasswordLength = it.toInt()
                     }
                 }},
