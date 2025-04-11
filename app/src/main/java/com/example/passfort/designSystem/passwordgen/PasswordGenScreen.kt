@@ -1,5 +1,6 @@
 package com.example.passfort.designSystem.passwordgen
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,10 +17,10 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.Refresh
-import androidx.compose.material.icons.rounded.ContentCopy
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Slider
@@ -34,7 +36,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -48,7 +49,7 @@ import com.example.passfort.R
 import com.example.passfort.viewModel.PasswordGenViewModel
 
 val horizontalPaddingValues = PaddingValues(
-    horizontal = 16.dp
+    horizontal = 20.dp
 )
 
 @Composable
@@ -68,13 +69,35 @@ fun PasswordGenScreen(viewModel: PasswordGenViewModel = hiltViewModel()) {
         }
         Row(
             modifier = Modifier.fillMaxWidth()
+                .padding(horizontalPaddingValues)
+                .height(48.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
         ){
             Button(
                 modifier = Modifier
-                    .fillMaxWidth(0.8f),
+                    .fillMaxWidth(0.8f)
+                    .height(50.dp)
+                ,
+                shape = RoundedCornerShape(16.dp),
+                contentPadding = PaddingValues(0.dp),
                 onClick = {}
-            ) { Text("Записать пароль")}
-            Button(onClick = {}) { Icon(Icons.Outlined.Refresh, contentDescription = "")}
+            ) { Text(
+                text = "Записать пароль",
+                fontSize = 18.sp,
+                )}
+            OutlinedButton(
+                modifier = Modifier
+                    .size(50.dp),
+                border = BorderStroke(2.dp, Color.Blue),
+                shape = RoundedCornerShape(16.dp),
+                contentPadding = PaddingValues(0.dp),
+                onClick = {}
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Refresh,
+                    contentDescription = "",
+                    modifier = Modifier.size(24.dp))
+            }
         }
     }
 }
@@ -85,7 +108,7 @@ fun TitleAndPasswordField(viewModel: PasswordGenViewModel) {
     Text(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 4.dp)
+            .padding(start = 4.dp, bottom = 8.dp)
             .padding(horizontalPaddingValues),
         text = stringResource(R.string.passwordgen_screen_title),
         textAlign = TextAlign.Left,
