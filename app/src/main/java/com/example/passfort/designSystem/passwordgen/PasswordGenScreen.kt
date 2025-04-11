@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -44,6 +45,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.passfort.R
 import com.example.passfort.viewModel.PasswordGenViewModel
 
+val horizontalPaddingValues = PaddingValues(
+    horizontal = 16.dp
+)
+
 @Composable
 @Preview
 fun PasswordGenScreen(viewModel: PasswordGenViewModel = hiltViewModel()) {
@@ -51,13 +56,13 @@ fun PasswordGenScreen(viewModel: PasswordGenViewModel = hiltViewModel()) {
         modifier = Modifier
             .fillMaxSize()
             .background(color = colorResource(R.color.white))
-            .padding(top = 48.dp, start = 16.dp, end = 16.dp),
+            .padding(top = 60.dp),
         verticalArrangement = Arrangement.SpaceBetween,
     ) {
         Column {
-            TitleWithPasswordField(viewModel)
-            GenPasswordLengthSlider(viewModel)
-            PasswordGenScreenParams(viewModel)
+            TitleAndPasswordField(viewModel)
+            PasswordLengthSlider(viewModel)
+            PasswordGenOptions(viewModel)
         }
         Row(
             modifier = Modifier.fillMaxWidth()
@@ -73,12 +78,13 @@ fun PasswordGenScreen(viewModel: PasswordGenViewModel = hiltViewModel()) {
 }
 
 @Composable
-fun TitleWithPasswordField(viewModel: PasswordGenViewModel) {
+fun TitleAndPasswordField(viewModel: PasswordGenViewModel) {
     var generatedPassword by remember { mutableStateOf("") }
     Text(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 4.dp),
+            .padding(start = 4.dp)
+            .padding(horizontalPaddingValues),
         text = stringResource(R.string.passwordgen_screen_title),
         textAlign = TextAlign.Left,
         fontSize = 28.sp,
@@ -87,6 +93,7 @@ fun TitleWithPasswordField(viewModel: PasswordGenViewModel) {
     OutlinedTextField(
         modifier = Modifier
             .padding(vertical = 16.dp)
+            .padding(horizontalPaddingValues)
             .fillMaxWidth()
             .background(
                 color = colorResource(R.color.text_field_color),
@@ -116,22 +123,25 @@ fun TitleWithPasswordField(viewModel: PasswordGenViewModel) {
 }
 
 @Composable
-fun PasswordGenScreenParams(viewModel: PasswordGenViewModel) {
+fun PasswordGenOptions(viewModel: PasswordGenViewModel) {
     ToggleLine(stringResource(R.string.passwordgen_toggle_digits_name), viewModel)
     ToggleLine(stringResource(R.string.passwordgen_toggle_chars_name), viewModel)
     ToggleLine(stringResource(R.string.passwordgen_toggle_specChar_name), viewModel)
 }
 
 @Composable
-fun GenPasswordLengthSlider(viewModel: PasswordGenViewModel) {
+fun PasswordLengthSlider(viewModel: PasswordGenViewModel) {
     var generatedPasswordLength by remember { mutableIntStateOf(64) }
     var lengthTextFieldValue by remember { mutableStateOf(generatedPasswordLength.toString()) }
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth()
+            .padding(horizontalPaddingValues),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Column(
-            modifier = Modifier,
+            modifier = Modifier
+                .padding(end = 12.dp)
+                .fillMaxWidth(0.84f),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.Start,
         ) {
@@ -141,8 +151,6 @@ fun GenPasswordLengthSlider(viewModel: PasswordGenViewModel) {
                 modifier = Modifier.padding(start = 4.dp),
             )
             Slider(
-                modifier = Modifier
-                    .fillMaxWidth(0.84f),
                 value = generatedPasswordLength.toFloat(),
                 onValueChange = { generatedPasswordLength = it.toInt()
                                 lengthTextFieldValue = generatedPasswordLength.toString()},
@@ -179,13 +187,14 @@ fun ToggleLine(name: String, viewModel: PasswordGenViewModel) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 4.dp)
-            .clickable(onClick = { checked = !checked }),
+            .clickable(onClick = { checked = !checked })
+            .padding(horizontalPaddingValues),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = name,
+            modifier = Modifier.padding(start = 4.dp),
             fontSize = 16.sp
         )
         Switch(
