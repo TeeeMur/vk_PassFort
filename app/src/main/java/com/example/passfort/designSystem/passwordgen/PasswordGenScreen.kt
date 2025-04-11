@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -21,6 +22,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Slider
@@ -70,13 +72,14 @@ fun PasswordGenScreen(viewModel: PasswordGenViewModel = hiltViewModel()) {
         Row(
             modifier = Modifier.fillMaxWidth()
                 .padding(horizontalPaddingValues)
-                .height(48.dp),
+                .wrapContentHeight(),
             horizontalArrangement = Arrangement.SpaceBetween
         ){
             Button(
                 modifier = Modifier
-                    .fillMaxWidth(0.8f)
-                    .height(50.dp)
+                    .fillMaxWidth(0.82f)
+                    .padding(end = 8.dp)
+                    .height(64.dp)
                 ,
                 shape = RoundedCornerShape(16.dp),
                 contentPadding = PaddingValues(0.dp),
@@ -85,18 +88,17 @@ fun PasswordGenScreen(viewModel: PasswordGenViewModel = hiltViewModel()) {
                 text = "Записать пароль",
                 fontSize = 18.sp,
                 )}
-            OutlinedButton(
-                modifier = Modifier
-                    .size(50.dp),
-                border = BorderStroke(2.dp, Color.Blue),
+            OutlinedIconButton(
+                modifier = Modifier.size(64.dp),
+                border = BorderStroke(2.dp, Color.DarkGray),
                 shape = RoundedCornerShape(16.dp),
-                contentPadding = PaddingValues(0.dp),
                 onClick = {}
             ) {
                 Icon(
                     imageVector = Icons.Outlined.Refresh,
                     contentDescription = "",
-                    modifier = Modifier.size(24.dp))
+                    modifier = Modifier.size(32.dp)
+                )
             }
         }
     }
@@ -160,6 +162,7 @@ fun PasswordLengthSlider(viewModel: PasswordGenViewModel) {
         modifier = Modifier.fillMaxWidth()
             .padding(horizontalPaddingValues),
         horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(
             modifier = Modifier
@@ -181,10 +184,11 @@ fun PasswordLengthSlider(viewModel: PasswordGenViewModel) {
             )
         }
         OutlinedTextField(
-            modifier = Modifier.background(
-                color = colorResource(R.color.text_field_color),
-                RoundedCornerShape(28.dp)
-            ),
+            modifier = Modifier.height(48.dp)
+                .background(
+                    color = colorResource(R.color.text_field_color),
+                    RoundedCornerShape(28.dp)
+                ),
             value = lengthTextFieldValue,
             onValueChange = {
                 if (it.isEmpty()) lengthTextFieldValue = it
