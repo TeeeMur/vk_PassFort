@@ -1,4 +1,4 @@
-package com.example.passfort
+package com.example.passfort.data
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import timber.log.Timber
@@ -19,9 +19,7 @@ class FirebaseConnecting {
             .addOnSuccessListener { documentReference ->
                 Timber.d("DocumentSnapshot added with ID: " + documentReference.id)
             }
-            .addOnFailureListener { e ->
-                Timber.d("Error adding document", e)
-            }
+
 
         db.collection("users")
             .get()

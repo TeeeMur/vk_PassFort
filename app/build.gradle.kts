@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.gms)
+    id("com.google.devtools.ksp") version "1.9.0-1.0.13"
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -10,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.passfort"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -52,7 +54,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -61,6 +62,8 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    // ViewModel provider
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -69,21 +72,34 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+
+
     // Retrofit
     implementation(libs.retrofit)
     // Retrofit with Scalar Converter
     implementation(libs.converter.scalars)
-
     //Gson
     implementation(libs.gson)
-
     // Import the BoM for the Firebase platform
     implementation(platform(libs.firebase.bom))
-
     // Firebase Database
     implementation(libs.firebase.database)
     implementation(libs.firebase.firestore)
-
     //Timber
     implementation(libs.timber)
+    // Room library
+    implementation(libs.androidx.room.runtime)
+    // Room extensions for Kotlin Coroutines, Kotlin Flows
+    implementation(libs.androidx.room.ktx)
+    // Room codegen
+    ksp(libs.androidx.room.compiler)
+    // Hilt dependency
+    implementation(libs.hilt.android)
+    // Hilt navigation
+    implementation(libs.androidx.hilt.navigation.compose)
+    // Hilt codegen
+    ksp(libs.hilt.android.compiler)
+    // Kotlin immutable collections
+    implementation(libs.kotlinx.collections.immutable)
+
 }

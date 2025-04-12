@@ -1,9 +1,8 @@
-package com.example.passfort.designSystem
+package com.example.passfort.designSystem.components
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,14 +28,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.passfort.R
 import com.example.passfort.designSystem.theme.PassFortTheme
+import com.example.passfort.navigation.Screen
 
 @Immutable
 data class NavigationBarItem(
@@ -44,9 +43,9 @@ data class NavigationBarItem(
     @DrawableRes val Icon: Int,
 )
 
-@Preview
+
 @Composable
-fun NavigationBar() {
+fun NavigationBar(navController: NavHostController) {
     val navItems = listOf(
         NavigationBarItem(
             nameOpenActivity = 0,
@@ -67,13 +66,14 @@ fun NavigationBar() {
     )
 
     val selectedItemByIndex by remember {
-        mutableStateOf(1)
+        mutableStateOf(0)
     }
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 20.dp)
+            .padding(bottom = 20.dp)
             .shadow(5.dp, shape= CircleShape)
     ) {
         Row(
@@ -86,13 +86,20 @@ fun NavigationBar() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             navItems.forEachIndexed { index, item ->
-                NavItem(ImageVector.vectorResource(item.Icon), index == selectedItemByIndex, {})
+                NavItem(ImageVector.vectorResource(item.Icon), index == selectedItemByIndex)
+                {
+                    navController.navigate("") {
+                        popUpTo(Screen.PasswordList.route) { inclusive = false }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
 
                 if (index == 1) {
                     Box(
                         modifier = Modifier
                             .offset { IntOffset(x = 0, y = -60) }
-                            .clickable { }
+                            .clickable { navController.navigate(Screen.AddPassword.route)  }
                             .size(80.dp)
                             .align(Alignment.Bottom)
                             .padding(5.dp)
@@ -146,8 +153,8 @@ fun NavItem(iconImage: ImageVector,
     }
 }
 
-@PreviewLightDark
+/*@PreviewLightDark
 @Composable
 fun PrevieNavBar(){
     PassFortTheme { NavigationBar() }
-}
+}*/
