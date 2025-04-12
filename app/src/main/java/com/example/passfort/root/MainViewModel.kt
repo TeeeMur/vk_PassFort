@@ -22,6 +22,7 @@ class MainViewModel(
     }
 }
 
+@Suppress("UNCHECKED_CAST")
 class MainViewModelFactory(
     private val preferencesManager: PreferencesManager
 ) : ViewModelProvider.Factory {
