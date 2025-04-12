@@ -8,7 +8,9 @@ import androidx.compose.runtime.Composable
 @Composable
 fun LoginScreen(
     onLoginClick: () -> Unit,
-    onRegisterClick: () -> Unit
+    onRegisterClick: () -> Unit,
+    onForgotPasswordClick: () -> Unit,
+    onPrivacyPolicyClick: () -> Unit
 ) {
     Column {
         Button(onClick = onLoginClick) {

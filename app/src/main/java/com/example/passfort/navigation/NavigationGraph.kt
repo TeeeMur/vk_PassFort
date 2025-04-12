@@ -40,7 +40,9 @@ fun NavigationGraph(
                 },
                 onRegisterClick = {
                     navController.navigate(Screen.Register.route)
-                }
+                },
+                onForgotPasswordClick ={},
+                onPrivacyPolicyClick = {}
             )
         }
 
