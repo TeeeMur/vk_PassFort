@@ -25,7 +25,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -78,44 +77,56 @@ fun NavigationBar(navController: NavHostController) {
     ) {
         navItems.forEachIndexed { index, item ->
             NavItem(item.selectedIcon, item.unselectedIcon, index == selectedItemByIndex)
-                {navController.navigate(item.nameOpenActivity)
-            }
-        if (index == 1){
+            {
+                navController.navigate(item.nameOpenActivity) {
+                    popUpTo(Screen.PasswordList.route) { inclusive = false }
+                    launchSingleTop = true
+                    restoreState = true
+                }
 
-            Box(
-                modifier = Modifier
-                    .offset { IntOffset(x = 0, y = -60) }
-                    .clickable { navController.navigate(Screen.AddPassword.route) }
-                    .size(80.dp)
-                    .align(Alignment.Bottom)
-            ) {
+            }
+            if (index == 1) {
+
                 Box(
                     modifier = Modifier
-                        .clip(CircleShape)
-                        .fillMaxWidth()
-                        .background(MaterialTheme.colorScheme.primary, RoundedCornerShape(35.dp))
+                        .offset { IntOffset(x = 0, y = -60) }
+                        .clickable { navController.navigate(Screen.AddPassword.route) }
+                        .size(80.dp)
+                        .align(Alignment.Bottom)
                 ) {
-                    Icon(
+                    Box(
                         modifier = Modifier
-                            .fillMaxSize(),
-                        imageVector = ImageVector.vectorResource(R.drawable.icon_button_add),
-                        tint = MaterialTheme.colorScheme.surface,
-                        contentDescription = null,
-                    )
+                            .clip(CircleShape)
+                            .fillMaxWidth()
+                            .background(
+                                MaterialTheme.colorScheme.primary,
+                                RoundedCornerShape(35.dp)
+                            )
+                    ) {
+                        Icon(
+                            modifier = Modifier
+                                .fillMaxSize(),
+                            imageVector = ImageVector.vectorResource(R.drawable.icon_button_add),
+                            tint = MaterialTheme.colorScheme.surface,
+                            contentDescription = null,
+                        )
+                    }
                 }
             }
-        }
         }
     }
 }
 
 @Composable
-fun NavItem(iconSelected: ImageVector,
-            iconUnselected: ImageVector,
-            isSelected: Boolean,
-            onClick: () -> Unit) {
+fun NavItem(
+    iconSelected: ImageVector,
+    iconUnselected: ImageVector,
+    isSelected: Boolean,
+    onClick: () -> Unit
+) {
     val iconImage = if (isSelected) iconSelected else iconUnselected
-    val iconColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
+    val iconColor =
+        if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
 
     Box(
         modifier = Modifier

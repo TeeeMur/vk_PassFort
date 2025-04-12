@@ -1,9 +1,15 @@
+package com.example.passfort.navigation
+
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.passfort.navigation.Screen
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.passfort.navigation.PasswordGeneratorScreen
+import com.example.passfort.root.MainViewModel
 import com.example.passfort.screen.auth.LoginScreen
 import com.example.passfort.screen.auth.RegisterScreen
 import com.example.passfort.screen.main.HomeScreen
@@ -12,20 +18,42 @@ import com.example.passfort.screen.passwords.PasswordListScreen
 import com.example.passfort.screen.passwords.SettingsScreen
 
 @Composable
-fun NavigationGraph(navController: NavHostController, UserLoggedIn: Boolean) {
-    val startDestination = when {
-        !UserLoggedIn -> Screen.Login.route
-        //Pin -> Screen.PinCode.route     Если добавим Пинкод
-        else -> Screen.HomeScreen.route
-    }
-    NavHost(navController = navController, startDestination) {
 
+fun NavigationGraph(
+    navController: NavHostController,
+    isUserLoggedIn: Boolean,
+    onLoginSuccess: () -> Unit,
+    onLogout: () -> Unit
+) {
+    NavHost(
+        navController = navController,
+        startDestination = if (isUserLoggedIn) Screen.HomeScreen.route
+        else Screen.Login.route
+    ) {
         composable(Screen.Login.route) {
-            LoginScreen()
+            LoginScreen(
+                onLoginClick = {
+                    onLoginSuccess()
+                    navController.navigate(Screen.HomeScreen.route) {
+                        popUpTo(Screen.Login.route) { inclusive = true }
+                    }
+                },
+                onRegisterClick = {
+                    navController.navigate(Screen.Register.route)
+                }
+            )
         }
 
         composable(Screen.Register.route) {
-            RegisterScreen()
+            RegisterScreen(
+                onBack = { navController.popBackStack() },
+                onRegisterSuccess = {
+                    onLoginSuccess()
+                    navController.navigate(Screen.HomeScreen.route) {
+                        popUpTo(Screen.Login.route) { inclusive = true }
+                    }
+                }
+            )
         }
 
         composable(Screen.HomeScreen.route) {
@@ -41,7 +69,15 @@ fun NavigationGraph(navController: NavHostController, UserLoggedIn: Boolean) {
             PasswordListScreen(navController)
         }
         composable(Screen.Settings.route) {
-            SettingsScreen()
+            SettingsScreen(
+                navController,
+                onLogout = {
+                    onLogout()
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(0)
+                    }
+                }
+            )
         }
     }
 }

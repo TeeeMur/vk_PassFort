@@ -4,8 +4,19 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-class MainViewModel : ViewModel() {
-    private val _isUserLoggedIn = MutableStateFlow(true)
-    val isUserLoggedIn: StateFlow<Boolean> get() = _isUserLoggedIn // Проверить в Firebase
+class MainViewModel(
+    private val preferencesManager: PreferencesManager
+) : ViewModel() {
+    private val _isUserLoggedIn = MutableStateFlow(preferencesManager.isUserLoggedIn())
+    val isUserLoggedIn: StateFlow<Boolean> = _isUserLoggedIn
 
+    fun login() {
+        preferencesManager.saveAuthState(true)
+        _isUserLoggedIn.value = true
+    }
+
+    fun logout() {
+        preferencesManager.clearAuthState()
+        _isUserLoggedIn.value = false
+    }
 }
