@@ -1,4 +1,4 @@
-package com.example.passfort.designSystem.passwordgen
+package com.example.passfort.ui.screen.passwordgen
 
 import android.content.ClipData
 import androidx.compose.foundation.BorderStroke
@@ -52,6 +52,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.passfort.R
 import com.example.passfort.viewModel.GeneratorViewModel
 import kotlinx.coroutines.flow.StateFlow
+import kotlin.math.ceil
+
+private const val CHARACTERS_IN_LINE = 26f
 
 val horizontalPaddingValues = PaddingValues(
     horizontal = 20.dp
@@ -71,39 +74,7 @@ fun PasswordGenScreen(clipBoard: ClipboardManager, viewModel: GeneratorViewModel
             PasswordLengthSlider(viewModel)
             PasswordGenOptions(viewModel)
         }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontalPaddingValues)
-                .wrapContentHeight(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ){
-            Button(
-                modifier = Modifier
-                    .fillMaxWidth(0.82f)
-                    .padding(end = 8.dp)
-                    .height(64.dp)
-                ,
-                shape = RoundedCornerShape(16.dp),
-                contentPadding = PaddingValues(0.dp),
-                onClick = {}
-            ) { Text(
-                text = stringResource(R.string.passwordgen_bottombutton_text),
-                fontSize = 18.sp,
-                )}
-            OutlinedIconButton(
-                modifier = Modifier.size(64.dp),
-                border = BorderStroke(2.dp, Color.DarkGray),
-                shape = RoundedCornerShape(16.dp),
-                onClick = { viewModel.generatePassword() }
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Refresh,
-                    contentDescription = "",
-                    modifier = Modifier.size(32.dp)
-                )
-            }
-        }
+        BottomButtonLine(viewModel)
     }
 }
 
@@ -135,12 +106,12 @@ fun TitleAndPasswordField(clipBoard: ClipboardManager, viewModel: GeneratorViewM
             unfocusedBorderColor = Color.Transparent,
             focusedBorderColor = Color.Transparent,
         ),
+        minLines = ceil(viewModel.passwordLength.collectAsState().value / CHARACTERS_IN_LINE).toInt(),
         trailingIcon = {
             IconButton(
                 modifier = Modifier.padding(end = 4.dp),
                 onClick = {
-                    val clipData = ClipData.newPlainText("Copied:", viewModel.password.value)
-                    clipData.apply {
+                    val clipData = ClipData.newPlainText("Copied:", viewModel.password.value).apply {
                         description.extras = PersistableBundle().apply {
                             putBoolean("android.content.extra.IS_SENSITIVE", true)
                         }
@@ -251,6 +222,43 @@ fun ToggleLine(name: String, valueFlow: StateFlow<Boolean>, toggleAction: () -> 
             checked = valueFlow.collectAsState().value,
             onCheckedChange = { toggleAction() }
         )
+    }
+}
+
+@Composable
+fun BottomButtonLine(viewModel: GeneratorViewModel) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontalPaddingValues)
+            .wrapContentHeight(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ){
+        Button(
+            modifier = Modifier
+                .fillMaxWidth(0.82f)
+                .padding(end = 8.dp)
+                .height(64.dp)
+            ,
+            shape = RoundedCornerShape(16.dp),
+            contentPadding = PaddingValues(0.dp),
+            onClick = {}
+        ) { Text(
+            text = stringResource(R.string.passwordgen_bottombutton_text),
+            fontSize = 18.sp,
+        )}
+        OutlinedIconButton(
+            modifier = Modifier.size(64.dp),
+            border = BorderStroke(2.dp, Color.DarkGray),
+            shape = RoundedCornerShape(16.dp),
+            onClick = { viewModel.generatePassword() }
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.Refresh,
+                contentDescription = "",
+                modifier = Modifier.size(32.dp)
+            )
+        }
     }
 }
 

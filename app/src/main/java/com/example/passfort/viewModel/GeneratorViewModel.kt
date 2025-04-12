@@ -43,11 +43,12 @@ class GeneratorViewModel @Inject constructor() : ViewModel() {
     }
 
     fun setDigits() {
-        if (!_enableDigits.value or _enableLowercaseCharacters.value or _enableUppercaseCharacters.value or
-            _enableSpecSymbols.value) {
-            _enableDigits.update { !it }
-            generatePassword()
+        _enableDigits.update { !it }
+        if (!(_enableUppercaseCharacters.value or
+                    _enableLowercaseCharacters.value or _enableDigits.value or _enableSpecSymbols.value)) {
+            setLowercaseCharacters()
         }
+        else generatePassword()
     }
 
     fun setSpecSymbols() {
