@@ -33,6 +33,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.passfort.R
 import com.example.passfort.designSystem.theme.PassFortTheme
 import com.example.passfort.navigation.Screen
@@ -153,8 +154,9 @@ fun NavItem(iconImage: ImageVector,
     }
 }
 
-/*@PreviewLightDark
+@PreviewLightDark
 @Composable
 fun PrevieNavBar(){
-    PassFortTheme { NavigationBar() }
-}*/
+    var navController = rememberNavController()
+    PassFortTheme { NavigationBar(navController) }
+}
