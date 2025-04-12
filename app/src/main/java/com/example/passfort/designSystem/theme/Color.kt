@@ -6,5 +6,5 @@ val BackgroundLight = Color(0xFFFFFFFF)
 val BackgroundDark = Color(0xFF18191B)
 
 val ActiveState = Color(0xFF3D2CB7)
-val InactiveState = Color(0xFF777C87)
+val InactiveState = Color(0xFF6F85B7)
 val BorderStroke = Color(0xFFF2F1F3)

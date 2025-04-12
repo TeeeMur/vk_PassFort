@@ -9,22 +9,22 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 
 private val DarkColorScheme = darkColorScheme(
     primary = ActiveState,
     secondary = InactiveState,
-    tertiary = BorderStroke,
+    surface = BorderStroke,
     background = BackgroundDark
 )
 
 private val LightColorScheme = lightColorScheme(
     primary = ActiveState,
     secondary = InactiveState,
-    tertiary = BorderStroke,
+    surface = BorderStroke,
     background = BackgroundLight,
 
     /* Other default colors to override
-    surface = Color(0xFFFFFBFE),
     onPrimary = Color.White,
     onSecondary = Color.White,
     onTertiary = Color.White,
