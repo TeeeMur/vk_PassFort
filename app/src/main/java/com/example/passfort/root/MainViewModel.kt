@@ -1,6 +1,7 @@
 package com.example.passfort.root
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -18,5 +19,19 @@ class MainViewModel(
     fun logout() {
         preferencesManager.clearAuthState()
         _isUserLoggedIn.value = false
+    }
+}
+
+class MainViewModelFactory(
+    private val preferencesManager: PreferencesManager
+) : ViewModelProvider.Factory {
+
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return when {
+            modelClass.isAssignableFrom(MainViewModel::class.java) -> {
+                MainViewModel(preferencesManager) as T
+            }
+            else -> throw IllegalArgumentException("Unknown ViewModel class")
+        }
     }
 }
