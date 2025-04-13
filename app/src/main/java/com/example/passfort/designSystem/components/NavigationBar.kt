@@ -28,6 +28,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.IntOffset
@@ -41,7 +42,7 @@ import com.example.passfort.navigation.Screen
 @Immutable
 data class NavigationBarItem(
     @StringRes val nameOpenActivity: Int,
-    @DrawableRes val Icon: Int,
+    @DrawableRes val icon: Int,
 )
 
 
@@ -49,82 +50,111 @@ data class NavigationBarItem(
 fun NavigationBar(navController: NavHostController) {
     val navItems = listOf(
         NavigationBarItem(
-            nameOpenActivity = 0,
-            Icon = R.drawable.navbar_home,
+            nameOpenActivity = R.string.home_screen,
+            icon = R.drawable.navbar_home,
         ),
         NavigationBarItem(
-            nameOpenActivity = 0,
-            Icon = R.drawable.navbar_passwords,
+            nameOpenActivity = R.string.password_list,
+            icon = R.drawable.navbar_passwords,
         ),
         NavigationBarItem(
-            nameOpenActivity = 0,
-            Icon = R.drawable.navbar_key,
+            nameOpenActivity = R.string.password_generator,
+            icon = R.drawable.navbar_key,
         ),
         NavigationBarItem(
-            nameOpenActivity = 0,
-            Icon = R.drawable.navbar_settings,
+            nameOpenActivity = R.string.settings,
+            icon = R.drawable.navbar_settings,
         )
     )
 
-    val selectedItemByIndex by remember {
+    val selectedItemByIndex = remember {
         mutableStateOf(0)
     }
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp)
-            .padding(bottom = 20.dp)
-            .shadow(5.dp, shape= CircleShape)
+            .padding(horizontal = 15.dp)
+            .padding(top = 10.dp)
+            .height(100.dp)
     ) {
-        Row(
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color.White, RoundedCornerShape(40.dp))
-                .height(80.dp)
-                .padding(horizontal = 20.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            navItems.forEachIndexed { index, item ->
-                NavItem(ImageVector.vectorResource(item.Icon), index == selectedItemByIndex)
-                {
-                    navController.navigate("") {
-                        popUpTo(Screen.PasswordList.route) { inclusive = false }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                }
+                .height(70.dp)
 
-                if (index == 1) {
-                    Box(
-                        modifier = Modifier
-                            .offset { IntOffset(x = 0, y = -60) }
-                            .clickable { navController.navigate(Screen.AddPassword.route)  }
-                            .size(80.dp)
-                            .align(Alignment.Bottom)
-                            .padding(5.dp)
-                            .shadow(10.dp, shape= CircleShape)
-                    ) {
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .shadow(5.dp, shape = CircleShape)
+            ) {
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.White, RoundedCornerShape(40.dp))
+                    .height(70.dp)
+                    .padding(horizontal = 20.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                navItems.forEachIndexed { index, item ->
+                    NavItem(ImageVector.vectorResource(item.icon),
+                        stringResource(item.nameOpenActivity),
+                        index == selectedItemByIndex.value,
+                        navController
+                    ) { selectedItemByIndex.value = index }
+
+                    if (index == 1) {
                         Box(
                             modifier = Modifier
-                                .clip(CircleShape)
-                                .fillMaxWidth()
-                                .background(
-                                    MaterialTheme.colorScheme.primary,
-                                    RoundedCornerShape(35.dp)
-                                )
+                                .offset { IntOffset(x = 0, y = -50) }
+                                .size(100.dp)
+                                .padding(5.dp)
                         ) {
-                            Icon(
+                            Box(
                                 modifier = Modifier
-                                    .fillMaxSize(),
-                                imageVector = ImageVector.vectorResource(R.drawable.icon_button_add),
-                                tint = MaterialTheme.colorScheme.surface,
-                                contentDescription = null,
-                            )
+                                    .fillMaxSize()
+                                    .clip(CircleShape)
+                            ) {}
                         }
                     }
                 }
+            }
+        }
+
+        Box(
+            modifier = Modifier
+                .offset { IntOffset(x = 0, y = -100) }
+                .align(Alignment.TopCenter)
+                .clickable { navController.navigate(Screen.AddPassword.route){
+                    popUpTo(Screen.PasswordList.route) { inclusive = false }
+                    launchSingleTop = true
+                    restoreState = true
+                }
+                    selectedItemByIndex.value = 4}
+                .size(90.dp)
+                .padding(5.dp)
+                .shadow(10.dp, shape = CircleShape)
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clip(CircleShape)
+                    .background(
+                        MaterialTheme.colorScheme.primary,
+                        RoundedCornerShape(35.dp)
+                    )
+            ) {
+                Icon(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(CircleShape),
+                    imageVector = ImageVector.vectorResource(R.drawable.icon_button_add),
+                    tint = MaterialTheme.colorScheme.surface,
+                    contentDescription = null,
+                )
             }
         }
     }
@@ -132,7 +162,9 @@ fun NavigationBar(navController: NavHostController) {
 
 @Composable
 fun NavItem(iconImage: ImageVector,
+            navigateString: String,
             isSelected: Boolean,
+            navController: NavHostController,
             onClick: () -> Unit) {
 
     val iconColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
@@ -140,7 +172,14 @@ fun NavItem(iconImage: ImageVector,
     Box(
         modifier = Modifier
             .size(50.dp)
-            .clickable { onClick() }
+            .clickable {
+                navController.navigate(navigateString) {
+                popUpTo(Screen.PasswordList.route) { inclusive = false }
+                launchSingleTop = true
+                restoreState = true
+            };
+                onClick()
+            }
             .padding(10.dp),
         contentAlignment = Alignment.Center
     ) {

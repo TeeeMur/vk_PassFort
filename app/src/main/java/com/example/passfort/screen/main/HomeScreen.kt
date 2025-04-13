@@ -1,6 +1,9 @@
 package com.example.passfort.screen.main
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContentPadding
+import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.safeGesturesPadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -12,6 +15,7 @@ import com.example.passfort.designSystem.components.NavigationBar
 fun HomeScreen(navController: NavHostController) {
 
     Scaffold(
+        //modifier = Modifier.safeDrawingPadding(),
         bottomBar = { NavigationBar(navController) }
     ) { innerPadding ->
         Text(
