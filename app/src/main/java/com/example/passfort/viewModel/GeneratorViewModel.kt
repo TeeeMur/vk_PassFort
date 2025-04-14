@@ -11,12 +11,13 @@ import java.security.SecureRandom
 
 @HiltViewModel
 class GeneratorViewModel @Inject constructor() : ViewModel() {
-    private var _enableLowercaseCharacters: MutableStateFlow<Boolean> = MutableStateFlow(true)
-    private var _enableUppercaseCharacters: MutableStateFlow<Boolean> = MutableStateFlow(true)
-    private var _enableDigits: MutableStateFlow<Boolean> = MutableStateFlow(true)
-    private var _enableSpecSymbols: MutableStateFlow<Boolean> = MutableStateFlow(true)
-    private var _passwordLength: MutableStateFlow<Int> = MutableStateFlow(64)
-    private var _password: MutableStateFlow<String> = MutableStateFlow("")
+    private val randomGenerator = SecureRandom()
+    private val _enableLowercaseCharacters: MutableStateFlow<Boolean> = MutableStateFlow(true)
+    private val _enableUppercaseCharacters: MutableStateFlow<Boolean> = MutableStateFlow(true)
+    private val _enableDigits: MutableStateFlow<Boolean> = MutableStateFlow(true)
+    private val _enableSpecSymbols: MutableStateFlow<Boolean> = MutableStateFlow(true)
+    private val _passwordLength: MutableStateFlow<Int> = MutableStateFlow(64)
+    private val _password: MutableStateFlow<String> = MutableStateFlow("")
     val enableLowercaseCharacters: StateFlow<Boolean> = _enableLowercaseCharacters.asStateFlow()
     val enableUppercaseCharacters: StateFlow<Boolean> = _enableUppercaseCharacters.asStateFlow()
     val enableDigits: StateFlow<Boolean> = _enableDigits.asStateFlow()
@@ -24,39 +25,27 @@ class GeneratorViewModel @Inject constructor() : ViewModel() {
     val passwordLength: StateFlow<Int> = _passwordLength.asStateFlow()
     val password: StateFlow<String> = _password.asStateFlow()
 
+    fun setDigits() {
+        _enableDigits.update { !it }
+        if (checkSetImpossible()) setLowercaseCharacters()
+        else generatePassword()
+    }
+
     fun setLowercaseCharacters() {
         _enableLowercaseCharacters.update { !it }
-        if (!(_enableUppercaseCharacters.value or
-                    _enableLowercaseCharacters.value or _enableDigits.value or _enableSpecSymbols.value)) {
-            setDigits()
-        }
+        if (checkSetImpossible()) setDigits()
         else generatePassword()
     }
 
     fun setUppercaseCharacters() {
         _enableUppercaseCharacters.update { !it }
-        if (!(_enableUppercaseCharacters.value or
-            _enableLowercaseCharacters.value or _enableDigits.value or _enableSpecSymbols.value)) {
-            setDigits()
-        }
-        else generatePassword()
-    }
-
-    fun setDigits() {
-        _enableDigits.update { !it }
-        if (!(_enableUppercaseCharacters.value or
-                    _enableLowercaseCharacters.value or _enableDigits.value or _enableSpecSymbols.value)) {
-            setLowercaseCharacters()
-        }
+        if (checkSetImpossible()) setDigits()
         else generatePassword()
     }
 
     fun setSpecSymbols() {
         _enableSpecSymbols.update { !it }
-        if (!(_enableUppercaseCharacters.value or
-                    _enableLowercaseCharacters.value or _enableDigits.value or _enableSpecSymbols.value)) {
-            setDigits()
-        }
+        if (checkSetImpossible()) setDigits()
         else generatePassword()
     }
 
@@ -65,20 +54,26 @@ class GeneratorViewModel @Inject constructor() : ViewModel() {
         generatePassword()
     }
 
+    private fun checkSetImpossible(): Boolean {
+        return !(_enableUppercaseCharacters.value or
+                    _enableLowercaseCharacters.value or _enableDigits.value or _enableSpecSymbols.value)
+    }
+
     fun generatePassword() {
         var charsChooseSet = ""
         if (_enableDigits.value) charsChooseSet += DIGITS
         if (_enableSpecSymbols.value) charsChooseSet += SPEC_CHARS
         if (_enableLowercaseCharacters.value) charsChooseSet += LOWERCASE_CHARS
         if (_enableUppercaseCharacters.value) charsChooseSet += UPPERCASE_CHARS
-        _password.update { (1.._passwordLength.value).map{ charsChooseSet[randomGenerator.nextInt(charsChooseSet.length)] }.joinToString("") }
+        _password.update { (1.._passwordLength.value)
+            .map{ charsChooseSet[randomGenerator.nextInt(charsChooseSet.length)] }
+            .joinToString("") }
     }
 
     companion object {
         private const val LOWERCASE_CHARS = "abcdefghijklmnopqrstuvwxyz"
         private const val UPPERCASE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        private const val DIGITS = "01234567890"
-        private const val SPEC_CHARS = "!@#$%^&*()"
-        private val randomGenerator = SecureRandom()
+        private const val DIGITS = "0123456789"
+        private const val SPEC_CHARS = "!@#$%^&*()_+"
     }
 }

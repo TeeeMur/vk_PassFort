@@ -10,8 +10,3 @@ data class PasswordsScreenListState(
     val screenState: ScreenState = ScreenState.LOADING
 )
 
-enum class ScreenState {
-    SUCCESS,
-    LOADING,
-    ERROR
-}

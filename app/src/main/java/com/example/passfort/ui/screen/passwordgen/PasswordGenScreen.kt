@@ -38,8 +38,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import android.content.ClipboardManager
 import android.os.PersistableBundle
+import androidx.compose.ui.platform.ClipEntry
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -52,16 +53,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.passfort.R
 import com.example.passfort.viewModel.GeneratorViewModel
 import kotlinx.coroutines.flow.StateFlow
-import kotlin.math.ceil
-
-private const val CHARACTERS_IN_LINE = 26f
 
 val horizontalPaddingValues = PaddingValues(
     horizontal = 20.dp
 )
 
 @Composable
-fun PasswordGenScreen(clipBoard: ClipboardManager, viewModel: GeneratorViewModel = hiltViewModel()) {
+fun PasswordGenScreen(viewModel: GeneratorViewModel = hiltViewModel()) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -70,7 +68,7 @@ fun PasswordGenScreen(clipBoard: ClipboardManager, viewModel: GeneratorViewModel
         verticalArrangement = Arrangement.SpaceBetween,
     ) {
         Column {
-            TitleAndPasswordField(clipBoard, viewModel)
+            TitleAndPasswordField(viewModel)
             PasswordLengthSlider(viewModel)
             PasswordGenOptions(viewModel)
         }
@@ -79,7 +77,8 @@ fun PasswordGenScreen(clipBoard: ClipboardManager, viewModel: GeneratorViewModel
 }
 
 @Composable
-fun TitleAndPasswordField(clipBoard: ClipboardManager, viewModel: GeneratorViewModel) {
+fun TitleAndPasswordField(viewModel: GeneratorViewModel) {
+    val clipboardManager = LocalClipboardManager.current
     Text(
         modifier = Modifier
             .fillMaxWidth()
@@ -106,7 +105,6 @@ fun TitleAndPasswordField(clipBoard: ClipboardManager, viewModel: GeneratorViewM
             unfocusedBorderColor = Color.Transparent,
             focusedBorderColor = Color.Transparent,
         ),
-        minLines = ceil(viewModel.passwordLength.collectAsState().value / CHARACTERS_IN_LINE).toInt(),
         trailingIcon = {
             IconButton(
                 modifier = Modifier.padding(end = 4.dp),
@@ -116,12 +114,13 @@ fun TitleAndPasswordField(clipBoard: ClipboardManager, viewModel: GeneratorViewM
                             putBoolean("android.content.extra.IS_SENSITIVE", true)
                         }
                     }
-                    clipBoard.setPrimaryClip(clipData)
+                    clipboardManager.setClip(ClipEntry(clipData))
                 }
             ) {
                 Icon(
                     Icons.Outlined.ContentCopy,
-                    contentDescription = "copy")
+                    contentDescription = "copy"
+                )
             }
         }
     )
@@ -208,7 +207,7 @@ fun ToggleLine(name: String, valueFlow: StateFlow<Boolean>, toggleAction: () -> 
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = { toggleAction() })
+            .clickable(onClick = toggleAction)
             .padding(horizontalPaddingValues),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
