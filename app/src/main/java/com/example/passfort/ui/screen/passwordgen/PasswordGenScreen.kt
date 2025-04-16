@@ -31,7 +31,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -46,6 +45,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
@@ -59,6 +59,7 @@ val horizontalPaddingValues = PaddingValues(
 )
 
 @Composable
+@Preview
 fun PasswordGenScreen(viewModel: GeneratorViewModel = hiltViewModel()) {
     Column(
         modifier = Modifier
@@ -144,8 +145,7 @@ fun PasswordGenOptions(viewModel: GeneratorViewModel) {
 
 @Composable
 fun PasswordLengthSlider(viewModel: GeneratorViewModel) {
-    var generatedPasswordLength by remember { mutableIntStateOf(64) }
-    var lengthTextFieldValue by remember { mutableStateOf(generatedPasswordLength.toString()) }
+    var lengthTextFieldValue by remember { mutableStateOf(viewModel.passwordLength.value.toString()) }
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -166,11 +166,10 @@ fun PasswordLengthSlider(viewModel: GeneratorViewModel) {
                 modifier = Modifier.padding(start = 4.dp),
             )
             Slider(
-                value = generatedPasswordLength.toFloat(),
-                onValueChange = { generatedPasswordLength = it.toInt()
-                                lengthTextFieldValue = generatedPasswordLength.toString()},
+                value = lengthTextFieldValue.toFloat(),
+                onValueChange = { lengthTextFieldValue = it.toInt().toString() },
                 onValueChangeFinished = {
-                    viewModel.setPasswordLength(generatedPasswordLength)
+                    viewModel.setPasswordLength(lengthTextFieldValue.toInt())
                 },
                 valueRange = 6f..128f,
             )
@@ -188,8 +187,7 @@ fun PasswordLengthSlider(viewModel: GeneratorViewModel) {
                 else if (it.isDigitsOnly()) {
                     if (it.toInt() in 1..128) {
                         lengthTextFieldValue = it
-                        generatedPasswordLength = it.toInt()
-                        viewModel.setPasswordLength(generatedPasswordLength)
+                        viewModel.setPasswordLength(it.toInt())
                     }
                 }},
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
