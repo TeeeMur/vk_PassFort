@@ -8,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.passfort.designSystem.components.NavigationBar
 import com.example.passfort.ui.screen.passwordgen.PasswordGenScreen
@@ -21,14 +22,11 @@ fun PasswordGeneratorScreen(navController: NavHostController) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding),
+                .padding(innerPadding)
+                .padding(bottom = 30.dp),
             contentAlignment = Alignment.Center
         ) {
             PasswordGenScreen()
         }
     }
-}
-
-fun generatePassword(length: Int, useNumbers: Boolean, useSpecialChars: Boolean) {
-
 }

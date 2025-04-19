@@ -1,7 +1,5 @@
-package com.example.passfort.ui.screen.passwordgen
+package com.example.passfort.ui.screen.passwordcreate
 
-//import androidx.compose.material.icons.outlined.ContentCopy
-//import androidx.compose.ui.platform.ClipEntry
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -32,9 +30,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -57,6 +57,7 @@ fun PasswordGenScreen(viewModel: GeneratorViewModel = hiltViewModel()) {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(color = colorResource(R.color.white))
             .padding(top = 60.dp),
         verticalArrangement = Arrangement.SpaceBetween,
     ) {
@@ -71,7 +72,7 @@ fun PasswordGenScreen(viewModel: GeneratorViewModel = hiltViewModel()) {
 
 @Composable
 fun TitleAndPasswordField(viewModel: GeneratorViewModel) {
-    val clipboardManager = LocalClipboardManager.current
+
     Text(
         modifier = Modifier
             .fillMaxWidth()
@@ -102,18 +103,12 @@ fun TitleAndPasswordField(viewModel: GeneratorViewModel) {
             IconButton(
                 modifier = Modifier.padding(end = 4.dp),
                 onClick = {
-//                    val clipData = ClipData.newPlainText("Copied:", viewModel.password.value).apply {
-//                        description.extras = PersistableBundle().apply {
-//                            putBoolean("android.content.extra.IS_SENSITIVE", true)
-//                        }
-//                    }
-                    //clipboardManager.setClip(ClipEntry(clipData))
                 }
             ) {
-//                Icon(
-//                    Icons.Outlined.ContentCopy,
-//                    contentDescription = "copy"
-//                )
+                Icon(
+                    imageVector = ImageVector.vectorResource(R.drawable.navbar_key),
+                    contentDescription = "copy"
+                )
             }
         }
     )
