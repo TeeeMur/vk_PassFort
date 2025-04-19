@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import com.example.passfort.designSystem.components.NavigationBar
+import com.example.passfort.ui.screen.passwordgen.PasswordGenScreen
 
 
 @Composable
@@ -23,9 +24,7 @@ fun PasswordGeneratorScreen(navController: NavHostController) {
                 .padding(innerPadding),
             contentAlignment = Alignment.Center
         ) {
-            Text(
-                text = "PasswordGeneratorScreen",
-            )
+            PasswordGenScreen()
         }
     }
 }

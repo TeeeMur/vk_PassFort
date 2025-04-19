@@ -17,7 +17,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ContentCopy
+//import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -38,7 +38,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import android.os.PersistableBundle
-import androidx.compose.ui.platform.ClipEntry
+//import androidx.compose.ui.platform.ClipEntry
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -110,18 +110,18 @@ fun TitleAndPasswordField(viewModel: GeneratorViewModel) {
             IconButton(
                 modifier = Modifier.padding(end = 4.dp),
                 onClick = {
-                    val clipData = ClipData.newPlainText("Copied:", viewModel.password.value).apply {
-                        description.extras = PersistableBundle().apply {
-                            putBoolean("android.content.extra.IS_SENSITIVE", true)
-                        }
-                    }
-                    clipboardManager.setClip(ClipEntry(clipData))
+//                    val clipData = ClipData.newPlainText("Copied:", viewModel.password.value).apply {
+//                        description.extras = PersistableBundle().apply {
+//                            putBoolean("android.content.extra.IS_SENSITIVE", true)
+//                        }
+//                    }
+                    //clipboardManager.setClip(ClipEntry(clipData))
                 }
             ) {
-                Icon(
-                    Icons.Outlined.ContentCopy,
-                    contentDescription = "copy"
-                )
+//                Icon(
+//                    Icons.Outlined.ContentCopy,
+//                    contentDescription = "copy"
+//                )
             }
         }
     )
