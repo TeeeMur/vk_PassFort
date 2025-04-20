@@ -9,6 +9,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -25,10 +26,9 @@ class MainActivity : ComponentActivity() {
 
         /*fb.collection("users").document()
             .set(mapOf("name" to "Konda","email" to "konda@gmail.com"))*/
-
         enableEdgeToEdge()
         setContent {
-            PassFortTheme {
+            PassFortTheme(dynamicColor = false) {
                 val context = LocalContext.current
                 val preferencesManager = remember { PreferencesManager(context) }
                 val viewModel: MainViewModel = viewModel(

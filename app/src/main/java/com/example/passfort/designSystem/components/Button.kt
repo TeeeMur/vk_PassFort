@@ -1,22 +1,19 @@
 package com.yourpackage.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.R
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,14 +26,17 @@ fun SecondaryButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    height: Dp = 48.dp,
+    height: Dp = 56.dp,
+    width: Dp = 56.dp,
     contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
     textColor: Color = MaterialTheme.colorScheme.primary,
     containerColor: Color = Color.Transparent
 ) {
     OutlinedButton(
         onClick = onClick,
-        modifier = modifier.height(height),
+        modifier = modifier
+            .height(height)
+            .width(width),
         colors = ButtonDefaults.outlinedButtonColors(
             containerColor = containerColor,
             contentColor = textColor
@@ -55,38 +55,32 @@ fun SecondaryButton(
 fun AuthButton(
     text: String,
     onClick: () -> Unit,
-    isLoading: Boolean = false,
+    isLoading: Boolean,
+    enabled: Boolean = true,
     modifier: Modifier = Modifier,
+    height: Dp = 56.dp,
+    width: Dp = 56.dp,
     containerColor: Color = MaterialTheme.colorScheme.primary,
     contentColor: Color = MaterialTheme.colorScheme.onPrimary
 ) {
     Button(
         onClick = onClick,
-        modifier = modifier.height(48.dp),
-        enabled = !isLoading,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = containerColor,
-            contentColor = contentColor,
-            disabledContainerColor = containerColor.copy(alpha = 0.5f),
-            disabledContentColor = contentColor.copy(alpha = 0.5f)
-        )
+        enabled = enabled && !isLoading,
+        colors = ButtonDefaults.buttonColors(containerColor, contentColor),
+        modifier = modifier
+                .width(width)
+            .height(height),
     ) {
-        Box(
-            modifier = Modifier.fillMaxWidth(),
-            contentAlignment = Alignment.Center
-        ) {
-            if (isLoading) {
-                CircularProgressIndicator(
-                    color = contentColor,
-                    strokeWidth = 2.dp,
-                    modifier = Modifier.size(24.dp))
-            } else {
-                Text(
-                    text = text,
-                    style = MaterialTheme.typography.labelLarge,
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
-            }
+        if (isLoading) {
+            CircularProgressIndicator(
+                color = contentColor,
+                strokeWidth = 2.dp,
+                modifier = Modifier
+                    .width(width)
+                    .height(height),
+            )
+        } else {
+            Text(text = text)
         }
     }
 }
@@ -94,7 +88,7 @@ fun AuthButton(
 @Preview(showBackground = true)
 @Composable
 private fun SecondaryButtonPreview_Light() {
-    PassFortTheme {
+    PassFortTheme(dynamicColor = false) {
         Column(
             modifier = Modifier
                 .padding(16.dp)
@@ -114,20 +108,25 @@ private fun SecondaryButtonPreview_Light() {
             )
 
             AuthButton(
+                text = "войти",
+                onClick = {},
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary,
+                modifier = Modifier
+                    .fillMaxWidth(),
+                isLoading = false,
+                enabled = true
+            )
+
+            AuthButton(
                 text = "Зарегистрироваться",
-                onClick = { /* логика */ },
-                containerColor = R.color(0xFF3D2CB7),
+                onClick = {},
+                containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.surface,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                isLoading = false,
+                enabled = false
             )
         }
-    }
-}
-
-
-@Composable
-fun FilledButtonExample(onClick: () -> Unit) {
-    Button(onClick = { onClick() }) {
-        Text("Filled")
     }
 }

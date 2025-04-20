@@ -1,4 +1,15 @@
 <resources>
     <string name="app_name">PassFort</string>
     <string name="title_activity_nav_bar">NavBar</string>
+    <string name="login_screen_email_hint">Электронная почта</string>
+    <string name="login_screen_password_hint">Пароль</string>
+    <string name="login_login_button">Войти</string>
+    <string name="login_register_button">Создать аккаунт</string>
+    <string name="login_forgot_password_button">Забыли пароль?</string>
+    <string name="login_privacy_policy_button">Политика безопасности</string>
+    <string name="login_error_empty_fields">Введите логин и пароль</string>
+    <string name="content_description_app_logo">Логотип приложения</string>
+    <string name="login_password_label">Пароль</string>
+    <string name="login_username_label">Логин</string>
+    // Для contentDescription иконки
 </resources>

@@ -1,8 +1,11 @@
 package com.example.passfort.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.passfort.navigation.Screen
 import androidx.navigation.NavHostController
@@ -10,12 +13,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.passfort.navigation.PasswordGeneratorScreen
 import com.example.passfort.root.MainViewModel
+import com.example.passfort.root.PreferencesManager
 import com.example.passfort.screen.auth.LoginScreen
 import com.example.passfort.screen.auth.RegisterScreen
 import com.example.passfort.screen.main.HomeScreen
 import com.example.passfort.screen.passwords.AddPasswordScreen
 import com.example.passfort.screen.passwords.PasswordListScreen
 import com.example.passfort.screen.passwords.SettingsScreen
+import com.example.passfort.viewModel.LoginViewModel
 
 @Composable
 
@@ -31,29 +36,42 @@ fun NavigationGraph(
         else Screen.Login.route
     ) {
         composable(Screen.Login.route) {
-            LoginScreen(
-                onLoginClick = {
-                    onLoginSuccess()
+
+            val context = LocalContext.current
+            val preferencesManager = remember { PreferencesManager(context.applicationContext) }
+
+            val viewModel: LoginViewModel = viewModel(
+                factory = LoginViewModel.provideFactory(preferencesManager)
+            )
+
+            val uiState = viewModel.uiState
+
+            LaunchedEffect(uiState.loginSuccess) {
+                if (uiState.loginSuccess) {
+                    onLoginSuccess() // Твоя функция
                     navController.navigate(Screen.HomeScreen.route) {
                         popUpTo(Screen.Login.route) { inclusive = true }
                     }
-                },
-                onRegisterClick = {
+                    viewModel.consumeLoginSuccessEvent()
+                }
+            }
+
+            LoginScreen(
+                uiState = uiState,
+                onUsernameChange = viewModel::onUsernameChange,
+                onPasswordChange = viewModel::onPasswordChange,
+                onLoginAttempt = viewModel::onLoginAttempt,
+
+                onNavigateToRegister = {
                     navController.navigate(Screen.Register.route)
                 },
-                onForgotPasswordClick ={},
-                onPrivacyPolicyClick = {}
-            )
-        }
-
-        composable(Screen.Register.route) {
-            RegisterScreen(
-                onBack = { navController.popBackStack() },
-                onRegisterSuccess = {
-                    onLoginSuccess()
-                    navController.navigate(Screen.HomeScreen.route) {
-                        popUpTo(Screen.Login.route) { inclusive = true }
-                    }
+                onNavigateToForgotPassword = {
+                    // TODO: Добавить навигацию на экран восстановления пароля
+                    // navController.navigate(Screen.ForgotPassword.route)
+                },
+                onNavigateToPrivacyPolicy = {
+                    // TODO: Добавить навигацию на экран политики
+                    // navController.navigate(Screen.PrivacyPolicy.route)
                 }
             )
         }
@@ -64,11 +82,19 @@ fun NavigationGraph(
         composable(Screen.PasswordGenerator.route) {
             PasswordGeneratorScreen(navController)
         }
+
         composable(Screen.AddPassword.route) {
             AddPasswordScreen(navController)
         }
         composable(Screen.PasswordList.route) {
             PasswordListScreen(navController)
+        }
+        composable(Screen.Register.route) {
+            RegisterScreen(
+                navController,
+                onBack = {navController.navigate(Screen.Login.route)},
+                onRegisterSuccess = {navController.navigate(Screen.Login.route)}
+            )
         }
         composable(Screen.Settings.route) {
             SettingsScreen(
