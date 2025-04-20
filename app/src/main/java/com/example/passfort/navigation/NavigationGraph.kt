@@ -2,17 +2,12 @@ package com.example.passfort.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.passfort.navigation.Screen
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.passfort.navigation.PasswordGeneratorScreen
-import com.example.passfort.root.MainViewModel
 import com.example.passfort.root.PreferencesManager
 import com.example.passfort.screen.auth.LoginScreen
 import com.example.passfort.screen.auth.RegisterScreen
@@ -48,7 +43,7 @@ fun NavigationGraph(
 
             LaunchedEffect(uiState.loginSuccess) {
                 if (uiState.loginSuccess) {
-                    onLoginSuccess() // Твоя функция
+                    onLoginSuccess()
                     navController.navigate(Screen.HomeScreen.route) {
                         popUpTo(Screen.Login.route) { inclusive = true }
                     }
@@ -66,12 +61,8 @@ fun NavigationGraph(
                     navController.navigate(Screen.Register.route)
                 },
                 onNavigateToForgotPassword = {
-                    // TODO: Добавить навигацию на экран восстановления пароля
-                    // navController.navigate(Screen.ForgotPassword.route)
                 },
                 onNavigateToPrivacyPolicy = {
-                    // TODO: Добавить навигацию на экран политики
-                    // navController.navigate(Screen.PrivacyPolicy.route)
                 }
             )
         }
