@@ -1,7 +1,5 @@
 package com.example.passfort.designSystem.components
 
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -18,11 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,7 +34,6 @@ import androidx.navigation.compose.rememberNavController
 import com.example.passfort.R
 import com.example.passfort.designSystem.theme.PassFortTheme
 import com.example.passfort.navigation.Screen
-import kotlin.enums.EnumEntries
 
 enum class ENavigationItem(
     val nameResId: Int,
@@ -72,7 +65,7 @@ enum class ENavigationItem(
 }
 
 @Composable
-fun NavigationBar(navController: NavHostController) {
+fun NavigationBar(navController: NavHostController, onAddPassword: () -> Unit) {
     val navItems = ENavigationItem.entries.toList()
 
     Box(

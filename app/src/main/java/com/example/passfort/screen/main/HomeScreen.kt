@@ -14,7 +14,7 @@ import com.example.passfort.designSystem.components.NavigationBar
 @Composable
 fun HomeScreen(navController: NavHostController, onAddPassword: () -> Unit) {
     Scaffold(
-        bottomBar = { NavigationBar(navController) }
+        bottomBar = { NavigationBar(navController, onAddPassword) }
     ) { innerPadding ->
         Text(
             text = "Android",
