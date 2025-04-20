@@ -15,7 +15,6 @@ import com.example.passfort.designSystem.components.NavigationBar
 fun HomeScreen(navController: NavHostController) {
 
     Scaffold(
-        //modifier = Modifier.safeDrawingPadding(),
         bottomBar = { NavigationBar(navController) }
     ) { innerPadding ->
         Text(
