@@ -224,6 +224,8 @@ fun LoginScreenPreview() {
             username = "preview@user.com",
             password = "password",
             isLoading = false,
+            usernameError = "2323",
+
         )
         LoginScreen(
             uiState = previewState,

@@ -17,6 +17,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
@@ -34,7 +35,8 @@ fun AuthTextField(
     onValueChange: (String) -> Unit,
     isPassword: Boolean = false,
     enabled: Boolean = true,
-    modifier: Modifier
+    modifier: Modifier,
+    backgroundColor: Color
 ) {
     var passwordVisible by remember { mutableStateOf(false) }
 
@@ -93,7 +95,8 @@ fun AuthTextFieldPreview() {
             label = "Логин",
             value = "",
             onValueChange = {},
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            backgroundColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.05f)
         )
     }
 }
