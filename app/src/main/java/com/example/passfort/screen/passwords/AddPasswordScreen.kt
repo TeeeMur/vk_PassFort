@@ -10,11 +10,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import com.example.passfort.designSystem.components.NavigationBar
+import com.example.passfort.ui.screen.passwordcreate.PartialBottomSheet
 
 @Composable
-fun AddPasswordScreen(navController: NavHostController) {
+fun AddPasswordScreen(navController: NavHostController, onAddPassword: () -> Unit) {
     Scaffold(
-        bottomBar = { NavigationBar(navController) }
+//        bottomBar = { NavigationBar(navController) }
     ) { innerPadding ->
         Box(
             modifier = Modifier
@@ -22,9 +23,7 @@ fun AddPasswordScreen(navController: NavHostController) {
                 .padding(innerPadding),
             contentAlignment = Alignment.Center
         ) {
-            Text(
-                text = "AddPasswordScreen",
-            )
+            //PartialBottomSheet()
         }
     }
 }

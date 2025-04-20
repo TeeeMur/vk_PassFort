@@ -14,9 +14,9 @@ import androidx.navigation.NavHostController
 import com.example.passfort.designSystem.components.NavigationBar
 
 @Composable
-fun PasswordListScreen(navController: NavHostController) {
+fun PasswordListScreen(navController: NavHostController, onAddPassword: () -> Unit) {
     Scaffold(
-        bottomBar = { NavigationBar(navController) }
+        bottomBar = { NavigationBar(navController, onAddPassword)}
     ) { innerPadding ->
         Box(
             modifier = Modifier

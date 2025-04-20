@@ -2,6 +2,8 @@ package com.example.passfort.ui.screen.passwordgen
 
 //import androidx.compose.material.icons.outlined.ContentCopy
 //import androidx.compose.ui.platform.ClipEntry
+import android.content.ClipData
+import android.os.PersistableBundle
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -32,9 +34,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.ClipEntry
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.passfort.R
+import com.example.passfort.designSystem.components.InputFieldWithCopy
 import com.example.passfort.designSystem.components.PasswordLengthSlider
 import com.example.passfort.designSystem.components.ToggleLine
 import com.example.passfort.viewModel.GeneratorViewModel
@@ -61,7 +67,7 @@ fun PasswordGenScreen(viewModel: GeneratorViewModel = hiltViewModel()) {
         verticalArrangement = Arrangement.SpaceBetween,
     ) {
         Column {
-            TitleAndPasswordField(viewModel)
+            InputFieldWithCopy(viewModel.password.collectAsState().value)
             PasswordLengthSlider(viewModel)
             PasswordGenOptions(viewModel)
         }
@@ -102,18 +108,18 @@ fun TitleAndPasswordField(viewModel: GeneratorViewModel) {
             IconButton(
                 modifier = Modifier.padding(end = 4.dp),
                 onClick = {
-//                    val clipData = ClipData.newPlainText("Copied:", viewModel.password.value).apply {
-//                        description.extras = PersistableBundle().apply {
-//                            putBoolean("android.content.extra.IS_SENSITIVE", true)
-//                        }
-//                    }
-                    //clipboardManager.setClip(ClipEntry(clipData))
+                    val clipData = ClipData.newPlainText("Copied:", viewModel.password.value).apply {
+                        description.extras = PersistableBundle().apply {
+                            putBoolean("android.content.extra.IS_SENSITIVE", true)
+                        }
+                    }
+                    clipboardManager.setClip(ClipEntry(clipData))
                 }
             ) {
-//                Icon(
-//                    Icons.Outlined.ContentCopy,
-//                    contentDescription = "copy"
-//                )
+                Icon(
+                    imageVector = ImageVector.vectorResource(R.drawable.icon_button_copy),
+                    contentDescription = "copy"
+                )
             }
         }
     )

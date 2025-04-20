@@ -1,6 +1,10 @@
 package com.example.passfort.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -10,6 +14,7 @@ import com.example.passfort.screen.main.HomeScreen
 import com.example.passfort.screen.passwords.AddPasswordScreen
 import com.example.passfort.screen.passwords.PasswordListScreen
 import com.example.passfort.screen.passwords.SettingsScreen
+import com.example.passfort.ui.screen.passwordcreate.PartialBottomSheet
 
 @Composable
 
@@ -19,6 +24,8 @@ fun NavigationGraph(
     onLoginSuccess: () -> Unit,
     onLogout: () -> Unit
 ) {
+    var showBottomSheet by remember { mutableStateOf(false) }
+
     NavHost(
         navController = navController,
         startDestination = if (isUserLoggedIn) Screen.HomeScreen.route
@@ -51,16 +58,16 @@ fun NavigationGraph(
         }
 
         composable(Screen.HomeScreen.route) {
-            HomeScreen(navController)
+            HomeScreen(navController) { showBottomSheet = true }
         }
         composable(Screen.PasswordGenerator.route) {
-            PasswordGeneratorScreen(navController)
+            PasswordGeneratorScreen(navController) { showBottomSheet = true }
         }
         composable(Screen.AddPassword.route) {
-            AddPasswordScreen(navController)
+            AddPasswordScreen(navController) { showBottomSheet = true }
         }
         composable(Screen.PasswordList.route) {
-            PasswordListScreen(navController)
+            PasswordListScreen(navController) { showBottomSheet = true }
         }
         composable(Screen.Settings.route) {
             SettingsScreen(
@@ -72,8 +79,10 @@ fun NavigationGraph(
                     }
                 }
             )
+            { showBottomSheet = true }
         }
     }
+    PartialBottomSheet(showBottomSheet) { showBottomSheet = false }
 }
 
 

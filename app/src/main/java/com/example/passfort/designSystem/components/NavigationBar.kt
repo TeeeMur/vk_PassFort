@@ -19,7 +19,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -47,7 +46,7 @@ data class NavigationBarItem(
 
 
 @Composable
-fun NavigationBar(navController: NavHostController) {
+fun NavigationBar(navController: NavHostController, onAddPassword: () -> Unit) {
     val navItems = listOf(
         NavigationBarItem(
             nameOpenActivity = R.string.home_screen,
@@ -128,12 +127,7 @@ fun NavigationBar(navController: NavHostController) {
             modifier = Modifier
                 .offset { IntOffset(x = 0, y = -100) }
                 .align(Alignment.TopCenter)
-                .clickable { navController.navigate(Screen.AddPassword.route){
-                    popUpTo(Screen.PasswordList.route) { inclusive = false }
-                    launchSingleTop = true
-                    restoreState = true
-                }
-                    selectedItemByIndex.value = 4}
+                .clickable(onClick = onAddPassword)
                 .size(90.dp)
                 .padding(5.dp)
                 .shadow(10.dp, shape = CircleShape)
@@ -195,7 +189,7 @@ fun NavItem(iconImage: ImageVector,
 
 @PreviewLightDark
 @Composable
-fun PrevieNavBar(){
+fun PreviewNavBar(){
     var navController = rememberNavController()
-    PassFortTheme { NavigationBar(navController) }
+    PassFortTheme { NavigationBar(navController, {}) }
 }
