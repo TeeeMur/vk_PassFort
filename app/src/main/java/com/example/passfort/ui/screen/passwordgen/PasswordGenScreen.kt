@@ -32,6 +32,7 @@ import com.example.passfort.designSystem.components.InputFieldWithCopy
 import com.example.passfort.designSystem.components.PasswordLengthSlider
 import com.example.passfort.designSystem.components.ToggleLine
 import com.example.passfort.viewModel.GeneratorViewModel
+import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 @Preview
