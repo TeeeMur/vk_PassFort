@@ -58,7 +58,7 @@ fun LoginScreen(
         ) {
             Icon(
                 modifier = Modifier.fillMaxWidth(0.4f),
-                imageVector = ImageVector.vectorResource(R.drawable.navbar_key_selected),
+                imageVector = ImageVector.vectorResource(R.drawable.navbar_home),
                 tint = MaterialTheme.colorScheme.secondary,
                 contentDescription = null
             )
