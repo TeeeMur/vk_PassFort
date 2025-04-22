@@ -15,7 +15,9 @@ import com.example.passfort.navigation.NavigationGraph
 import com.example.passfort.root.MainViewModel
 import com.example.passfort.root.MainViewModelFactory
 import com.example.passfort.root.PreferencesManager
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 @Suppress("UNCHECKED_CAST")
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

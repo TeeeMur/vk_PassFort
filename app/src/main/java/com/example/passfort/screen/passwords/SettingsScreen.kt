@@ -21,10 +21,11 @@ import com.example.passfort.navigation.Screen
 @Composable
 fun SettingsScreen(
     navController: NavHostController,
-    onLogout: () -> Unit
+    onLogout: () -> Unit,
+    onAddPassword: () -> Unit
 ) {
     Scaffold(
-        bottomBar = { NavigationBar(navController) }
+        bottomBar = { NavigationBar(navController, onAddPassword) }
     ) { innerPadding ->
         Column(
             modifier = Modifier
