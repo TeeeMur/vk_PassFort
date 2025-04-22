@@ -8,4 +8,15 @@
     <string name="passwordgen_toggle_lowercase_chars_name">Строчные буквы</string>
     <string name="passwordgen_toggle_uppercase_chars_name">Прописные буквы</string>
     <string name="passwordgen_bottombutton_text">Записать пароль</string>
+
+    <string name="login">login</string>
+    <string name="register">register</string>
+    <string name="home_screen">home_screen</string>
+    <string name="password_list">password_list</string>
+    <!--<string name="password_detail/{passwordId}">PasswordDetail</string>
+    <string name="password_detail/$passwordId">createRoute</string>-->
+    <string name="password_add">password_add</string>
+    <string name="password_generator">password_generator</string>
+    <string name="settings">settings</string>
+    <string name="profile">profile</string>
 </resources>

@@ -11,20 +11,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = ActiveState,
-    secondary = InactiveState,
-    tertiary = BorderStroke,
-    background = BackgroundDark
+    primary = active_state,
+    secondary = inactive_state,
+    surface = border_stroke,
+    background = background_dark
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = ActiveState,
-    secondary = InactiveState,
-    tertiary = BorderStroke,
-    background = BackgroundLight,
+    primary = active_state,
+    secondary = inactive_state,
+    surface = border_stroke,
+    background = background_light,
 
     /* Other default colors to override
-    surface = Color(0xFFFFFBFE),
     onPrimary = Color.White,
     onSecondary = Color.White,
     onTertiary = Color.White,
@@ -40,18 +39,26 @@ fun PassFortTheme(
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
+    /*val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+            if (darkTheme)
+                dynamicDarkColorScheme(context)
+            else dynamicLightColorScheme(context)
         }
 
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
+    }*/
+
+    val colors = if (!darkTheme) {
+        LightColorScheme
+    } else {
+        DarkColorScheme
     }
 
     MaterialTheme(
-        colorScheme = colorScheme,
+        colorScheme = colors,
         typography = Typography,
         content = content
     )
