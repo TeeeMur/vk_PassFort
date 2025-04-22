@@ -54,10 +54,6 @@ import com.example.passfort.R
 import com.example.passfort.viewModel.GeneratorViewModel
 import kotlinx.coroutines.flow.StateFlow
 
-val horizontalPaddingValues = PaddingValues(
-    horizontal = 20.dp
-)
-
 @Composable
 @Preview
 fun PasswordGenScreen(viewModel: GeneratorViewModel = hiltViewModel()) {
@@ -84,7 +80,7 @@ fun TitleAndPasswordField(viewModel: GeneratorViewModel) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 4.dp, bottom = 8.dp)
-            .padding(horizontalPaddingValues),
+            .padding(horizontal = 20.dp),
         text = stringResource(R.string.passwordgen_screen_title),
         textAlign = TextAlign.Left,
         fontSize = 28.sp,
@@ -93,7 +89,7 @@ fun TitleAndPasswordField(viewModel: GeneratorViewModel) {
     OutlinedTextField(
         modifier = Modifier
             .padding(vertical = 16.dp)
-            .padding(horizontalPaddingValues)
+            .padding(horizontal = 20.dp)
             .fillMaxWidth()
             .background(
                 color = colorResource(R.color.text_field_color),
@@ -149,7 +145,7 @@ fun PasswordLengthSlider(viewModel: GeneratorViewModel) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontalPaddingValues),
+            .padding(horizontal = 20.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -206,7 +202,7 @@ fun ToggleLine(name: String, valueFlow: StateFlow<Boolean>, toggleAction: () -> 
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = toggleAction)
-            .padding(horizontalPaddingValues),
+            .padding(horizontal = 20.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -227,7 +223,7 @@ fun BottomButtonLine(viewModel: GeneratorViewModel) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontalPaddingValues)
+            .padding(horizontal = 20.dp)
             .wrapContentHeight(),
         horizontalArrangement = Arrangement.SpaceBetween
     ){
