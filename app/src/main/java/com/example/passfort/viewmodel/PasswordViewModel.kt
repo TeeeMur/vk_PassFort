@@ -1,4 +1,4 @@
-package com.example.passfort.viewmodel
+package com.example.passfort.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
