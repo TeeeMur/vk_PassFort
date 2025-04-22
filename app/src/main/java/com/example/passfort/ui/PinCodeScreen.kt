@@ -13,8 +13,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.passfort.viewmodel.PinCodeState
-import com.example.passfort.viewmodel.PinCodeViewModel
+import com.example.passfort.viewModel.PinCodeState
+import com.example.passfort.viewModel.PinCodeViewModel
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.text.style.TextAlign
 
