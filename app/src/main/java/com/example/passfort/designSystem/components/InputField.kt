@@ -3,16 +3,21 @@ package com.example.passfort.designSystem.components
 import android.content.ClipData
 import android.os.PersistableBundle
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -24,40 +29,65 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.compose.rememberNavController
 import com.example.passfort.R
-import com.example.passfort.designSystem.theme.PassFortTheme
-import com.example.passfort.ui.screen.passwordgen.horizontalPaddingValues
-import com.example.passfort.viewModel.GeneratorViewModel
+
+@Composable
+fun InputFieldTitle(onValueChange: (String) -> Unit, onClick: () -> Unit) {
+    TextField(
+        modifier = Modifier
+            .padding(horizontal = 10.dp)
+            .padding(bottom = 10.dp)
+            .fillMaxWidth(),
+        value = stringResource(R.string.passwordcreate_screen_title),
+        singleLine = true,
+        onValueChange = onValueChange,
+        textStyle = LocalTextStyle.current.copy(
+            fontSize = MaterialTheme.typography.headlineMedium.fontSize
+        ),
+        colors = OutlinedTextFieldDefaults.colors(
+            unfocusedBorderColor = Color.Transparent,
+            focusedBorderColor = Color.Transparent,
+        ),
+        trailingIcon = {
+            IconButton(
+                modifier = Modifier.padding(end = 4.dp),
+                onClick = onClick
+            ) {
+                Icon(
+                    imageVector = ImageVector.vectorResource(R.drawable.icon_button_edit),
+                    contentDescription = "copy"
+                )
+            }
+        }
+    )
+}
 
 @Preview
 @Composable
-fun InputField(onValueChange: (String) -> Unit) {
+fun InputFieldOutline(onValueChange: (String) -> Unit, resourceString: Int) {
     Text(
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 4.dp, bottom = 8.dp)
-            .padding(horizontalPaddingValues),
-        text = stringResource(R.string.passwordgen_screen_title),
+            .padding(horizontal = 25.dp),
+        text = stringResource(resourceString),
         textAlign = TextAlign.Left,
-        fontSize = 20.sp,
-        fontWeight = FontWeight.Medium,
+        fontSize = 18.sp,
     )
     OutlinedTextField(
         modifier = Modifier
-            .padding(vertical = 16.dp)
-            .padding(horizontalPaddingValues)
+            .padding(horizontal = 20.dp)
+            .padding(bottom = 20.dp)
             .fillMaxWidth()
             .background(
                 color = colorResource(R.color.text_field_color),
-                RoundedCornerShape(20.dp)
+                RoundedCornerShape(15.dp)
             ),
-        value = "viewModel.password.collectAsState().value",
+        value = "",
+        singleLine = true,
         onValueChange = onValueChange,
-        readOnly = true,
         colors = OutlinedTextFieldDefaults.colors(
             unfocusedBorderColor = Color.Transparent,
             focusedBorderColor = Color.Transparent,
@@ -67,56 +97,74 @@ fun InputField(onValueChange: (String) -> Unit) {
 
 @Preview
 @Composable
-fun InputFieldWithCopy(value: String) {
+fun InputFieldWithCopy(value: String,
+                       onValueChange: (String) -> Unit,
+                       resourceString: Int,
+                       isTitle: Boolean = false,
+                       isReadOnly : Boolean = false,
+                       isPassword : Boolean = false
+){
     val clipboardManager = LocalClipboardManager.current
+
     Text(
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 4.dp, bottom = 8.dp)
-            .padding(horizontalPaddingValues),
-        text = stringResource(R.string.passwordgen_screen_title),
+            .padding(horizontal = if (isTitle) 20.dp else 25.dp),
+        text = stringResource(resourceString),
         textAlign = TextAlign.Left,
-        fontSize = 28.sp,
-        fontWeight = FontWeight.Medium,
+        fontSize = if (isTitle) 29.sp else 18.sp ,
+        fontWeight = if (isTitle) FontWeight.Medium else FontWeight.Normal,
     )
     OutlinedTextField(
         modifier = Modifier
-            .padding(vertical = 16.dp)
-            .padding(horizontalPaddingValues)
+            .padding(vertical = if (isTitle) 16.dp else 0.dp)
+            .padding(horizontal = 20.dp)
+            .padding(bottom = 20.dp)
             .fillMaxWidth()
             .background(
                 color = colorResource(R.color.text_field_color),
-                RoundedCornerShape(20.dp)
+                RoundedCornerShape(15.dp)
             ),
         value = value,
-        onValueChange = {},
-        readOnly = true,
+        onValueChange = onValueChange,
+        readOnly = isReadOnly,
+        singleLine = !isTitle,
         colors = OutlinedTextFieldDefaults.colors(
             unfocusedBorderColor = Color.Transparent,
             focusedBorderColor = Color.Transparent,
         ),
         trailingIcon = {
-            IconButton(
-                modifier = Modifier.padding(end = 4.dp),
-                onClick = {
-                    val clipData = ClipData.newPlainText("Copied:", value).apply {
-                        description.extras = PersistableBundle().apply {
-                            putBoolean("android.content.extra.IS_SENSITIVE", true)
+            Row {
+                if (isPassword) {
+                    IconButton(
+                        onClick = {
+
                         }
+                    ) {
+                        Icon(
+                            imageVector = ImageVector.vectorResource(R.drawable.icon_button_password_show),
+                            contentDescription = "password show/hide"
+                        )
                     }
-                    clipboardManager.setClip(ClipEntry(clipData))
                 }
-            ) {
-                Icon(
-                    imageVector = ImageVector.vectorResource(R.drawable.icon_button_copy),
-                    contentDescription = "copy"
-                )
+                IconButton(
+                    modifier = Modifier.padding(end = 4.dp),
+                    onClick = {
+                        val clipData = ClipData.newPlainText("Copied:", value).apply {
+                            description.extras = PersistableBundle().apply {
+                                putBoolean("android.content.extra.IS_SENSITIVE", true)
+                            }
+                        }
+                        clipboardManager.setClip(ClipEntry(clipData))
+                    }
+                ) {
+                    Icon(
+                        imageVector = ImageVector.vectorResource(R.drawable.icon_button_copy),
+                        contentDescription = "copy"
+                    )
+                }
             }
         }
     )
-}
-
-@Composable
-fun InputFieldPassword(){
-
 }

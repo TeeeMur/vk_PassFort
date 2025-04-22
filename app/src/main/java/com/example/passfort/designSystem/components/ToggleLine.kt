@@ -13,7 +13,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.passfort.ui.screen.passwordgen.horizontalPaddingValues
 import kotlinx.coroutines.flow.StateFlow
 
 @Composable
@@ -22,7 +21,7 @@ fun ToggleLine(name: String, valueFlow: StateFlow<Boolean>, toggleAction: () -> 
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = toggleAction)
-            .padding(horizontalPaddingValues),
+            .padding(horizontal = 20.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {

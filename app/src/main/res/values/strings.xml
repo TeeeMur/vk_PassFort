@@ -10,6 +10,11 @@
     <string name="passwordgen_bottombutton_text">Записать пароль</string>
 
     <string name="passwordcreate_screen_title">Новый пароль</string>
+    <string name="passwordcreate_inputfield_login">Логин</string>
+    <string name="passwordcreate_inputfield_password">Пароль</string>
+    <string name="passwordcreate_inputfield_note">Заметка</string>
+    <string name="passwordcreate_toggle_remind_change_name">Напоминать о смене пароля</string>
+    <string name="passwordcreate_bottombutton_save">Сохранить</string>
 
     <string name="login">login</string>
     <string name="register">register</string>
