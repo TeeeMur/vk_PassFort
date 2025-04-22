@@ -1,0 +1,757 @@
+Index: app/src/main/res/drawable/navbar_key_selected.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/drawable/navbar_key_selected.xml b/app/src/main/res/drawable/navbar_key_selected.xml
+new file mode 100644
+--- /dev/null	(date 1745337385594)
++++ b/app/src/main/res/drawable/navbar_key_selected.xml	(date 1745337385594)
+@@ -0,0 +1,4 @@
++<?xml version="1.0" encoding="utf-8"?>
++<selector xmlns:android="http://schemas.android.com/apk/res/android">
++
++</selector>
+\ No newline at end of file
+Index: app/src/main/java/com/example/passfort/designSystem/components/AuthInputField.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/passfort/designSystem/components/AuthInputField.kt b/app/src/main/java/com/example/passfort/designSystem/components/AuthInputField.kt
+new file mode 100644
+--- /dev/null	(date 1745335329294)
++++ b/app/src/main/java/com/example/passfort/designSystem/components/AuthInputField.kt	(date 1745335329294)
+@@ -0,0 +1,102 @@
++package com.example.passfort.designSystem.components
++
++import androidx.compose.foundation.layout.Column
++import androidx.compose.foundation.layout.fillMaxWidth
++import androidx.compose.foundation.layout.padding
++import androidx.compose.foundation.shape.RoundedCornerShape
++import androidx.compose.material3.ExperimentalMaterial3Api
++import androidx.compose.material3.Icon
++import androidx.compose.material3.IconButton
++import androidx.compose.material3.MaterialTheme
++import androidx.compose.material3.OutlinedTextField
++import androidx.compose.material3.OutlinedTextFieldDefaults
++import androidx.compose.material3.Text
++import androidx.compose.runtime.Composable
++import androidx.compose.runtime.getValue
++import androidx.compose.runtime.mutableStateOf
++import androidx.compose.runtime.remember
++import androidx.compose.runtime.setValue
++import androidx.compose.ui.Modifier
++import androidx.compose.ui.graphics.Color
++import androidx.compose.ui.graphics.vector.ImageVector
++import androidx.compose.ui.res.vectorResource
++import androidx.compose.ui.text.font.FontWeight
++import androidx.compose.ui.text.input.PasswordVisualTransformation
++import androidx.compose.ui.text.input.VisualTransformation
++import androidx.compose.ui.tooling.preview.Preview
++import androidx.compose.ui.unit.dp
++import com.example.passfort.R
++
++@OptIn(ExperimentalMaterial3Api::class)
++@Composable
++fun AuthTextField(
++    label: String,
++    value: String,
++    onValueChange: (String) -> Unit,
++    isPassword: Boolean = false,
++    enabled: Boolean = true,
++    modifier: Modifier,
++    backgroundColor: Color
++) {
++    var passwordVisible by remember { mutableStateOf(false) }
++
++    val visualTransformation = if (isPassword && !passwordVisible)
++        PasswordVisualTransformation() else VisualTransformation.None
++
++    val icon = if (passwordVisible)
++        ImageVector.vectorResource(R.drawable.outline_visibility_24)
++    else
++        ImageVector.vectorResource(R.drawable.outline_visibility_off_24)
++
++    Column(modifier = modifier) {
++        Text(
++            text = label,
++            style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
++            color = MaterialTheme.colorScheme.onSurfaceVariant,
++            modifier = Modifier.padding(start = 8.dp)
++        )
++
++        OutlinedTextField(
++            value = value,
++            onValueChange = onValueChange,
++            singleLine = true,
++            enabled = enabled,
++            visualTransformation = visualTransformation,
++            trailingIcon = if (isPassword) {
++                {
++                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
++                        Icon(
++                            imageVector = icon,
++                            contentDescription = if (passwordVisible) "Скрыть пароль" else "Показать пароль"
++                        )
++                    }
++                }
++            } else null,
++            shape = RoundedCornerShape(20.dp),
++            colors = OutlinedTextFieldDefaults.colors(
++                focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
++                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
++                disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
++                focusedBorderColor = MaterialTheme.colorScheme.primary,
++                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
++                errorBorderColor = MaterialTheme.colorScheme.error
++            ),
++            modifier = modifier
++                .padding(4.dp)
++        )
++    }
++}
++
++@Preview(showBackground = true)
++@Composable
++fun AuthTextFieldPreview() {
++    MaterialTheme {
++        AuthTextField(
++            label = "Логин",
++            value = "",
++            onValueChange = {},
++            modifier = Modifier.fillMaxWidth(),
++            backgroundColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.05f)
++        )
++    }
++}
+\ No newline at end of file
+Index: app/src/main/java/com/example/passfort/designSystem/components/Button.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/passfort/designSystem/components/Button.kt b/app/src/main/java/com/example/passfort/designSystem/components/Button.kt
+new file mode 100644
+--- /dev/null	(date 1745335329294)
++++ b/app/src/main/java/com/example/passfort/designSystem/components/Button.kt	(date 1745335329294)
+@@ -0,0 +1,132 @@
++package com.yourpackage.ui.components
++
++import androidx.compose.foundation.layout.Arrangement
++import androidx.compose.foundation.layout.Column
++import androidx.compose.material3.MaterialTheme
++import androidx.compose.foundation.layout.PaddingValues
++import androidx.compose.foundation.layout.fillMaxWidth
++import androidx.compose.foundation.layout.height
++import androidx.compose.foundation.layout.padding
++import androidx.compose.foundation.layout.width
++import androidx.compose.material3.Button
++import androidx.compose.material3.ButtonDefaults
++import androidx.compose.material3.CircularProgressIndicator
++import androidx.compose.material3.OutlinedButton
++import androidx.compose.material3.Text
++import androidx.compose.runtime.Composable
++import androidx.compose.ui.Modifier
++import androidx.compose.ui.graphics.Color
++import androidx.compose.ui.tooling.preview.Preview
++import androidx.compose.ui.unit.Dp
++import androidx.compose.ui.unit.dp
++import com.example.passfort.designSystem.theme.PassFortTheme
++
++@Composable
++fun SecondaryButton(
++    text: String,
++    onClick: () -> Unit,
++    modifier: Modifier = Modifier,
++    height: Dp = 56.dp,
++    width: Dp = 56.dp,
++    contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
++    textColor: Color = MaterialTheme.colorScheme.primary,
++    containerColor: Color = Color.Transparent
++) {
++    OutlinedButton(
++        onClick = onClick,
++        modifier = modifier
++            .height(height)
++            .width(width),
++        colors = ButtonDefaults.outlinedButtonColors(
++            containerColor = containerColor,
++            contentColor = textColor
++        ),
++        contentPadding = contentPadding,
++        border = ButtonDefaults.outlinedButtonBorder
++    ) {
++        Text(
++            text = text,
++            style = MaterialTheme.typography.labelLarge
++        )
++    }
++}
++
++@Composable
++fun AuthButton(
++    text: String,
++    onClick: () -> Unit,
++    isLoading: Boolean,
++    enabled: Boolean = true,
++    modifier: Modifier = Modifier,
++    height: Dp = 56.dp,
++    width: Dp = 56.dp,
++    containerColor: Color = MaterialTheme.colorScheme.primary,
++    contentColor: Color = MaterialTheme.colorScheme.onPrimary
++) {
++    Button(
++        onClick = onClick,
++        enabled = enabled && !isLoading,
++        colors = ButtonDefaults.buttonColors(containerColor, contentColor),
++        modifier = modifier
++                .width(width)
++            .height(height),
++    ) {
++        if (isLoading) {
++            CircularProgressIndicator(
++                color = contentColor,
++                strokeWidth = 2.dp,
++                modifier = Modifier
++                    .width(width)
++                    .height(height),
++            )
++        } else {
++            Text(text = text)
++        }
++    }
++}
++
++@Preview(showBackground = true)
++@Composable
++private fun SecondaryButtonPreview_Light() {
++    PassFortTheme(dynamicColor = false) {
++        Column(
++            modifier = Modifier
++                .padding(16.dp)
++                .fillMaxWidth(),
++            verticalArrangement = Arrangement.spacedBy(16.dp)
++        ) {
++            SecondaryButton(
++                text = "Создать аккаунт",
++                onClick = {}
++            )
++
++            SecondaryButton(
++                text = "Другая кнопка",
++                onClick = {},
++                textColor = Color.Red,
++                containerColor = Color.LightGray
++            )
++
++            AuthButton(
++                text = "войти",
++                onClick = {},
++                containerColor = MaterialTheme.colorScheme.primary,
++                contentColor = MaterialTheme.colorScheme.onPrimary,
++                modifier = Modifier
++                    .fillMaxWidth(),
++                isLoading = false,
++                enabled = true
++            )
++
++            AuthButton(
++                text = "Зарегистрироваться",
++                onClick = {},
++                containerColor = MaterialTheme.colorScheme.primary,
++                contentColor = MaterialTheme.colorScheme.surface,
++                modifier = Modifier.fillMaxWidth(),
++                isLoading = false,
++                enabled = false
++            )
++        }
++    }
++}
+\ No newline at end of file
+Index: app/src/main/java/com/example/passfort/ui/screen/passwordgen/PasswordGenScreen.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/passfort/ui/screen/passwordgen/PasswordGenScreen.kt b/app/src/main/java/com/example/passfort/ui/screen/passwordgen/PasswordGenScreen.kt
+new file mode 100644
+--- /dev/null	(date 1745337385591)
++++ b/app/src/main/java/com/example/passfort/ui/screen/passwordgen/PasswordGenScreen.kt	(date 1745337385591)
+@@ -0,0 +1,257 @@
++package com.example.passfort.ui.screen.passwordgen
++
++import android.content.ClipData
++import androidx.compose.foundation.BorderStroke
++import androidx.compose.foundation.background
++import androidx.compose.foundation.clickable
++import androidx.compose.foundation.layout.Arrangement
++import androidx.compose.foundation.layout.Column
++import androidx.compose.foundation.layout.PaddingValues
++import androidx.compose.foundation.layout.Row
++import androidx.compose.foundation.layout.fillMaxSize
++import androidx.compose.foundation.layout.fillMaxWidth
++import androidx.compose.foundation.layout.height
++import androidx.compose.foundation.layout.padding
++import androidx.compose.foundation.layout.size
++import androidx.compose.foundation.layout.wrapContentHeight
++import androidx.compose.foundation.shape.RoundedCornerShape
++import androidx.compose.foundation.text.KeyboardOptions
++import androidx.compose.material.icons.Icons
++import androidx.compose.material.icons.outlined.ContentCopy
++import androidx.compose.material.icons.outlined.Refresh
++import androidx.compose.material3.Button
++import androidx.compose.material3.Icon
++import androidx.compose.material3.IconButton
++import androidx.compose.material3.OutlinedIconButton
++import androidx.compose.material3.OutlinedTextField
++import androidx.compose.material3.OutlinedTextFieldDefaults
++import androidx.compose.material3.Slider
++import androidx.compose.material3.Switch
++import androidx.compose.material3.Text
++import androidx.compose.runtime.Composable
++import androidx.compose.runtime.collectAsState
++import androidx.compose.runtime.getValue
++import androidx.compose.runtime.mutableStateOf
++import androidx.compose.runtime.remember
++import androidx.compose.runtime.setValue
++import androidx.compose.ui.Alignment
++import androidx.compose.ui.Modifier
++import androidx.compose.ui.graphics.Color
++import android.os.PersistableBundle
++import androidx.compose.ui.platform.ClipEntry
++import androidx.compose.ui.platform.LocalClipboardManager
++import androidx.compose.ui.res.colorResource
++import androidx.compose.ui.res.stringResource
++import androidx.compose.ui.text.font.FontWeight
++import androidx.compose.ui.text.input.KeyboardType
++import androidx.compose.ui.text.style.TextAlign
++import androidx.compose.ui.tooling.preview.Preview
++import androidx.compose.ui.unit.dp
++import androidx.compose.ui.unit.sp
++import androidx.core.text.isDigitsOnly
++import androidx.hilt.navigation.compose.hiltViewModel
++import com.example.passfort.R
++import com.example.passfort.viewModel.GeneratorViewModel
++import kotlinx.coroutines.flow.StateFlow
++
++@Composable
++@Preview
++fun PasswordGenScreen(viewModel: GeneratorViewModel = hiltViewModel()) {
++    Column(
++        modifier = Modifier
++            .fillMaxSize()
++            .background(color = colorResource(R.color.white))
++            .padding(top = 60.dp),
++        verticalArrangement = Arrangement.SpaceBetween,
++    ) {
++        Column {
++            TitleAndPasswordField(viewModel)
++            PasswordLengthSlider(viewModel)
++            PasswordGenOptions(viewModel)
++        }
++        BottomButtonLine(viewModel)
++    }
++}
++
++@Composable
++fun TitleAndPasswordField(viewModel: GeneratorViewModel) {
++    val clipboardManager = LocalClipboardManager.current
++    Text(
++        modifier = Modifier
++            .fillMaxWidth()
++            .padding(start = 4.dp, bottom = 8.dp)
++            .padding(horizontal = 20.dp),
++        text = stringResource(R.string.passwordgen_screen_title),
++        textAlign = TextAlign.Left,
++        fontSize = 28.sp,
++        fontWeight = FontWeight.Medium,
++    )
++    OutlinedTextField(
++        modifier = Modifier
++            .padding(vertical = 16.dp)
++            .padding(horizontal = 20.dp)
++            .fillMaxWidth()
++            .background(
++                color = colorResource(R.color.text_field_color),
++                RoundedCornerShape(20.dp)
++            ),
++        value = viewModel.password.collectAsState().value,
++        onValueChange = {},
++        readOnly = true,
++        colors = OutlinedTextFieldDefaults.colors(
++            unfocusedBorderColor = Color.Transparent,
++            focusedBorderColor = Color.Transparent,
++        ),
++        trailingIcon = {
++            IconButton(
++                modifier = Modifier.padding(end = 4.dp),
++                onClick = {
++                    val clipData = ClipData.newPlainText("Copied:", viewModel.password.value).apply {
++                        description.extras = PersistableBundle().apply {
++                            putBoolean("android.content.extra.IS_SENSITIVE", true)
++                        }
++                    }
++                    clipboardManager.setClip(ClipEntry(clipData))
++                }
++            ) {
++                Icon(
++                    Icons.Outlined.ContentCopy,
++                    contentDescription = "copy"
++                )
++            }
++        }
++    )
++}
++
++@Composable
++fun PasswordGenOptions(viewModel: GeneratorViewModel) {
++    ToggleLine(stringResource(R.string.passwordgen_toggle_digits_name), viewModel.enableDigits) {
++        viewModel.setDigits()
++    }
++    ToggleLine(stringResource(R.string.passwordgen_toggle_lowercase_chars_name), viewModel.enableLowercaseCharacters) {
++        viewModel.setLowercaseCharacters()
++    }
++    ToggleLine(stringResource(R.string.passwordgen_toggle_uppercase_chars_name), viewModel.enableUppercaseCharacters) {
++        viewModel.setUppercaseCharacters()
++    }
++    ToggleLine(stringResource(R.string.passwordgen_toggle_specChar_name), viewModel.enableSpecSymbols) {
++        viewModel.setSpecSymbols()
++    }
++}
++
++@Composable
++fun PasswordLengthSlider(viewModel: GeneratorViewModel) {
++    var lengthTextFieldValue by remember { mutableStateOf(viewModel.passwordLength.value.toString()) }
++    Row(
++        modifier = Modifier
++            .fillMaxWidth()
++            .padding(horizontal = 20.dp),
++        horizontalArrangement = Arrangement.SpaceBetween,
++        verticalAlignment = Alignment.CenterVertically,
++    ) {
++        Column(
++            modifier = Modifier
++                .padding(end = 12.dp)
++                .fillMaxWidth(0.84f),
++            verticalArrangement = Arrangement.Top,
++            horizontalAlignment = Alignment.Start,
++        ) {
++            Text(
++                text = stringResource(R.string.passwordgen_slider_title),
++                fontSize = 16.sp,
++                modifier = Modifier.padding(start = 4.dp),
++            )
++            Slider(
++                value = lengthTextFieldValue.toFloat(),
++                onValueChange = { lengthTextFieldValue = it.toInt().toString() },
++                onValueChangeFinished = {
++                    viewModel.setPasswordLength(lengthTextFieldValue.toInt())
++                },
++                valueRange = 6f..128f,
++            )
++        }
++        OutlinedTextField(
++            modifier = Modifier
++                .height(48.dp)
++                .background(
++                    color = colorResource(R.color.text_field_color),
++                    RoundedCornerShape(28.dp)
++                ),
++            value = lengthTextFieldValue,
++            onValueChange = {
++                if (it.isEmpty()) lengthTextFieldValue = it
++                else if (it.isDigitsOnly()) {
++                    if (it.toInt() in 1..128) {
++                        lengthTextFieldValue = it
++                        viewModel.setPasswordLength(it.toInt())
++                    }
++                }},
++            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
++            colors = OutlinedTextFieldDefaults.colors(
++                unfocusedBorderColor = Color.Transparent,
++                focusedBorderColor = Color.Transparent,
++            ),
++            singleLine = true,
++        )
++    }
++}
++
++@Composable
++fun ToggleLine(name: String, valueFlow: StateFlow<Boolean>, toggleAction: () -> Unit) {
++    Row(
++        modifier = Modifier
++            .fillMaxWidth()
++            .clickable(onClick = toggleAction)
++            .padding(horizontal = 20.dp),
++        horizontalArrangement = Arrangement.SpaceBetween,
++        verticalAlignment = Alignment.CenterVertically,
++    ) {
++        Text(
++            text = name,
++            modifier = Modifier.padding(start = 4.dp),
++            fontSize = 16.sp
++        )
++        Switch(
++            checked = valueFlow.collectAsState().value,
++            onCheckedChange = { toggleAction() }
++        )
++    }
++}
++
++@Composable
++fun BottomButtonLine(viewModel: GeneratorViewModel) {
++    Row(
++        modifier = Modifier
++            .fillMaxWidth()
++            .padding(horizontal = 20.dp)
++            .wrapContentHeight(),
++        horizontalArrangement = Arrangement.SpaceBetween
++    ){
++        Button(
++            modifier = Modifier
++                .fillMaxWidth(0.82f)
++                .padding(end = 8.dp)
++                .height(64.dp)
++            ,
++            shape = RoundedCornerShape(16.dp),
++            contentPadding = PaddingValues(0.dp),
++            onClick = {}
++        ) { Text(
++            text = stringResource(R.string.passwordgen_bottombutton_text),
++            fontSize = 18.sp,
++        )}
++        OutlinedIconButton(
++            modifier = Modifier.size(64.dp),
++            border = BorderStroke(2.dp, Color.DarkGray),
++            shape = RoundedCornerShape(16.dp),
++            onClick = { viewModel.generatePassword() }
++        ) {
++            Icon(
++                imageVector = Icons.Outlined.Refresh,
++                contentDescription = "",
++                modifier = Modifier.size(32.dp)
++            )
++        }
++    }
++}
++
+Index: app/src/main/java/com/example/passfort/viewModel/GeneratorViewModel.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/passfort/viewModel/GeneratorViewModel.kt b/app/src/main/java/com/example/passfort/viewModel/GeneratorViewModel.kt
+new file mode 100644
+--- /dev/null	(date 1745337385591)
++++ b/app/src/main/java/com/example/passfort/viewModel/GeneratorViewModel.kt	(date 1745337385591)
+@@ -0,0 +1,79 @@
++package com.example.passfort.viewModel
++
++import androidx.lifecycle.ViewModel
++import dagger.hilt.android.lifecycle.HiltViewModel
++import kotlinx.coroutines.flow.MutableStateFlow
++import kotlinx.coroutines.flow.StateFlow
++import kotlinx.coroutines.flow.asStateFlow
++import kotlinx.coroutines.flow.update
++import javax.inject.Inject
++import java.security.SecureRandom
++
++@HiltViewModel
++class GeneratorViewModel @Inject constructor() : ViewModel() {
++    private val randomGenerator = SecureRandom()
++    private val _enableLowercaseCharacters: MutableStateFlow<Boolean> = MutableStateFlow(true)
++    private val _enableUppercaseCharacters: MutableStateFlow<Boolean> = MutableStateFlow(true)
++    private val _enableDigits: MutableStateFlow<Boolean> = MutableStateFlow(true)
++    private val _enableSpecSymbols: MutableStateFlow<Boolean> = MutableStateFlow(true)
++    private val _passwordLength: MutableStateFlow<Int> = MutableStateFlow(64)
++    private val _password: MutableStateFlow<String> = MutableStateFlow("")
++    val enableLowercaseCharacters: StateFlow<Boolean> = _enableLowercaseCharacters.asStateFlow()
++    val enableUppercaseCharacters: StateFlow<Boolean> = _enableUppercaseCharacters.asStateFlow()
++    val enableDigits: StateFlow<Boolean> = _enableDigits.asStateFlow()
++    val enableSpecSymbols: StateFlow<Boolean> = _enableSpecSymbols.asStateFlow()
++    val passwordLength: StateFlow<Int> = _passwordLength.asStateFlow()
++    val password: StateFlow<String> = _password.asStateFlow()
++
++    fun setDigits() {
++        _enableDigits.update { !it }
++        if (checkSetImpossible()) setLowercaseCharacters()
++        else generatePassword()
++    }
++
++    fun setLowercaseCharacters() {
++        _enableLowercaseCharacters.update { !it }
++        if (checkSetImpossible()) setDigits()
++        else generatePassword()
++    }
++
++    fun setUppercaseCharacters() {
++        _enableUppercaseCharacters.update { !it }
++        if (checkSetImpossible()) setDigits()
++        else generatePassword()
++    }
++
++    fun setSpecSymbols() {
++        _enableSpecSymbols.update { !it }
++        if (checkSetImpossible()) setDigits()
++        else generatePassword()
++    }
++
++    fun setPasswordLength(length: Int) {
++        _passwordLength.update { length }
++        generatePassword()
++    }
++
++    private fun checkSetImpossible(): Boolean {
++        return !(_enableUppercaseCharacters.value or
++                    _enableLowercaseCharacters.value or _enableDigits.value or _enableSpecSymbols.value)
++    }
++
++    fun generatePassword() {
++        var charsChooseSet = ""
++        if (_enableDigits.value) charsChooseSet += DIGITS
++        if (_enableSpecSymbols.value) charsChooseSet += SPEC_CHARS
++        if (_enableLowercaseCharacters.value) charsChooseSet += LOWERCASE_CHARS
++        if (_enableUppercaseCharacters.value) charsChooseSet += UPPERCASE_CHARS
++        _password.update { (1.._passwordLength.value)
++            .map{ charsChooseSet[randomGenerator.nextInt(charsChooseSet.length)] }
++            .joinToString("") }
++    }
++
++    companion object {
++        private const val LOWERCASE_CHARS = "abcdefghijklmnopqrstuvwxyz"
++        private const val UPPERCASE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
++        private const val DIGITS = "0123456789"
++        private const val SPEC_CHARS = "!@#$%^&*()_+"
++    }
++}
+\ No newline at end of file
+Index: app/src/main/res/drawable/outline_visibility_off_24.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/drawable/outline_visibility_off_24.xml b/app/src/main/res/drawable/outline_visibility_off_24.xml
+new file mode 100644
+--- /dev/null	(date 1745335329300)
++++ b/app/src/main/res/drawable/outline_visibility_off_24.xml	(date 1745335329300)
+@@ -0,0 +1,9 @@
++<vector xmlns:android="http://schemas.android.com/apk/res/android"
++    android:width="24dp"
++    android:height="24dp"
++    android:viewportWidth="24"
++    android:viewportHeight="24">
++  <path
++      android:fillColor="@android:color/white"
++      android:pathData="M12,6c3.79,0 7.17,2.13 8.82,5.5 -0.59,1.22 -1.42,2.27 -2.41,3.12l1.41,1.41c1.39,-1.23 2.49,-2.77 3.18,-4.53C21.27,7.11 17,4 12,4c-1.27,0 -2.49,0.2 -3.64,0.57l1.65,1.65C10.66,6.09 11.32,6 12,6zM10.93,7.14L13,9.21c0.57,0.25 1.03,0.71 1.28,1.28l2.07,2.07c0.08,-0.34 0.14,-0.7 0.14,-1.07C16.5,9.01 14.48,7 12,7c-0.37,0 -0.72,0.05 -1.07,0.14zM2.01,3.87l2.68,2.68C3.06,7.83 1.77,9.53 1,11.5 2.73,15.89 7,19 12,19c1.52,0 2.98,-0.29 4.32,-0.82l3.42,3.42 1.41,-1.41L3.42,2.45 2.01,3.87zM9.51,11.37l2.61,2.61c-0.04,0.01 -0.08,0.02 -0.12,0.02 -1.38,0 -2.5,-1.12 -2.5,-2.5 0,-0.05 0.01,-0.08 0.01,-0.13zM6.11,7.97l1.75,1.75c-0.23,0.55 -0.36,1.15 -0.36,1.78 0,2.48 2.02,4.5 4.5,4.5 0.63,0 1.23,-0.13 1.77,-0.36l0.98,0.98c-0.88,0.24 -1.8,0.38 -2.75,0.38 -3.79,0 -7.17,-2.13 -8.82,-5.5 0.7,-1.43 1.72,-2.61 2.93,-3.53z"/>
++</vector>
+Index: app/src/main/java/com/example/passfort/viewModel/LoginViewModel.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/passfort/viewModel/LoginViewModel.kt b/app/src/main/java/com/example/passfort/viewModel/LoginViewModel.kt
+new file mode 100644
+--- /dev/null	(date 1745335329299)
++++ b/app/src/main/java/com/example/passfort/viewModel/LoginViewModel.kt	(date 1745335329299)
+@@ -0,0 +1,80 @@
++package com.example.passfort.viewModel
++
++import androidx.compose.runtime.getValue
++import androidx.compose.runtime.mutableStateOf
++import androidx.compose.runtime.setValue
++import androidx.lifecycle.ViewModel
++import androidx.lifecycle.ViewModelProvider
++import androidx.lifecycle.viewModelScope
++import com.example.passfort.root.PreferencesManager
++import kotlinx.coroutines.launch
++
++
++data class LoginUiState(
++    val username: String = "",
++    val password: String = "",
++    val isLoading: Boolean = false,
++    val usernameError: String? = null,
++    val passwordError: String? = null,
++    val loginSuccess: Boolean = false
++)
++
++class LoginViewModel (
++    private val preferencesManager: PreferencesManager
++) : ViewModel() {
++
++    var uiState by mutableStateOf(LoginUiState())
++        private set
++
++    fun onUsernameChange(newUsername: String) {
++        uiState = uiState.copy(username = newUsername, usernameError = null, loginSuccess = false)
++    }
++
++    fun onPasswordChange(newPassword: String) {
++        uiState = uiState.copy(password = newPassword, passwordError = null, loginSuccess = false)
++    }
++
++    fun onLoginAttempt() {
++        if (uiState.isLoading || uiState.loginSuccess) return
++
++        viewModelScope.launch {
++            uiState = uiState.copy(isLoading = true, usernameError = null,passwordError = null, loginSuccess = false)
++            kotlinx.coroutines.delay(1000)
++
++            if (uiState.username.isNotBlank() && uiState.password.isNotBlank()) {
++                preferencesManager.saveAuthState(true)
++                uiState = uiState.copy(isLoading = false, loginSuccess = true)
++            } else {
++                uiState = uiState.copy(
++                    isLoading = false,
++                    passwordError = "Введите пароль",
++                    usernameError = "Введите логин",
++                    loginSuccess = false
++                )
++            }
++        }
++    }
++
++    // Функция для сброса флага после того, как навигация была обработана
++    fun consumeLoginSuccessEvent() {
++        if (uiState.loginSuccess) { // Сбрасываем, только если он был true
++            uiState = uiState.copy(loginSuccess = false)
++        }
++    }
++
++    // --- Фабрика (ВРЕМЕННО, пока Hilt не работает) ---
++    companion object {
++        fun provideFactory(
++            preferencesManager: PreferencesManager
++        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
++            @Suppress("UNCHECKED_CAST")
++            override fun <T : ViewModel> create(modelClass: Class<T>): T {
++                if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
++                    return LoginViewModel(preferencesManager) as T
++                }
++                throw IllegalArgumentException("Unknown ViewModel class")
++            }
++        }
++    }
++    // --- Конец Фабрики ---
++}
+\ No newline at end of file
+Index: app/src/main/res/drawable/outline_visibility_24.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/drawable/outline_visibility_24.xml b/app/src/main/res/drawable/outline_visibility_24.xml
+new file mode 100644
+--- /dev/null	(date 1745335329300)
++++ b/app/src/main/res/drawable/outline_visibility_24.xml	(date 1745335329300)
+@@ -0,0 +1,9 @@
++<vector xmlns:android="http://schemas.android.com/apk/res/android"
++    android:width="24dp"
++    android:height="24dp"
++    android:viewportWidth="24"
++    android:viewportHeight="24">
++  <path
++      android:fillColor="@android:color/white"
++      android:pathData="M12,6c3.79,0 7.17,2.13 8.82,5.5C19.17,14.87 15.79,17 12,17s-7.17,-2.13 -8.82,-5.5C4.83,8.13 8.21,6 12,6m0,-2C7,4 2.73,7.11 1,11.5 2.73,15.89 7,19 12,19s9.27,-3.11 11,-7.5C21.27,7.11 17,4 12,4zM12,9c1.38,0 2.5,1.12 2.5,2.5S13.38,14 12,14s-2.5,-1.12 -2.5,-2.5S10.62,9 12,9m0,-2c-2.48,0 -4.5,2.02 -4.5,4.5S9.52,16 12,16s4.5,-2.02 4.5,-4.5S14.48,7 12,7z"/>
++</vector>
