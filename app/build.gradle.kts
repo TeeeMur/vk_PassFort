@@ -102,5 +102,7 @@ dependencies {
     ksp(libs.hilt.android.compiler)
     // Kotlin immutable collections
     implementation(libs.kotlinx.collections.immutable)
+    // Add extended material icons
+    implementation(libs.androidx.material.icons.extended)
 
 }

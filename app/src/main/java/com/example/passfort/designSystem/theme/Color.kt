@@ -2,9 +2,9 @@ package com.example.passfort.designSystem.theme
 
 import androidx.compose.ui.graphics.Color
 
-val BackgroundLight = Color(0xFFFFFFFF)
-val BackgroundDark = Color(0xFF18191B)
+val background_light = Color(0xFFFFFFFF)
+val background_dark = Color(0xFF18191B)
 
-val ActiveState = Color(0xFF3D2CB7)
-val InactiveState = Color(0xFF6F85B7)
-val BorderStroke = Color(0xFFF2F1F3)
+val active_state = Color(0xFF3D2CB7)
+val inactive_state = Color(0xFF767B86)
+val border_stroke = Color(0xFFF0EFF1)

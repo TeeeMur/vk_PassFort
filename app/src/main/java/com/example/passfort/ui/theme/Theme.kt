@@ -1,4 +1,4 @@
-package com.example.passfort.designSystem.theme
+package com.example.passfort.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -11,19 +11,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = active_state,
-    secondary = inactive_state,
-    surface = border_stroke,
-    background = background_dark
+    primary = Purple80,
+    secondary = PurpleGrey80,
+    tertiary = Pink80
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = active_state,
-    secondary = inactive_state,
-    surface = border_stroke,
-    background = background_light,
+    primary = Purple40,
+    secondary = PurpleGrey40,
+    tertiary = Pink40
 
     /* Other default colors to override
+    background = Color(0xFFFFFBFE),
+    surface = Color(0xFFFFFBFE),
     onPrimary = Color.White,
     onSecondary = Color.White,
     onTertiary = Color.White,
@@ -33,32 +33,24 @@ private val LightColorScheme = lightColorScheme(
 )
 
 @Composable
-fun PassFortTheme(
+fun PassfortTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    /*val colorScheme = when {
+    val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
-            if (darkTheme)
-                dynamicDarkColorScheme(context)
-            else dynamicLightColorScheme(context)
+            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
 
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
-    }*/
-
-    val colors = if (!darkTheme) {
-        LightColorScheme
-    } else {
-        DarkColorScheme
     }
 
     MaterialTheme(
-        colorScheme = colors,
+        colorScheme = colorScheme,
         typography = Typography,
         content = content
     )
