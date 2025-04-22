@@ -3,18 +3,28 @@ package com.example.passfort.designSystem.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContentPadding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,7 +47,6 @@ import com.example.passfort.viewModel.GeneratorViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-@Preview
 fun PasswordLengthSlider(viewModel: GeneratorViewModel) {
     var lengthTextFieldValue by remember { mutableStateOf(viewModel.passwordLength.value.toString()) }
 
@@ -81,12 +90,13 @@ fun PasswordLengthSlider(viewModel: GeneratorViewModel) {
 
                 OutlinedTextField(
                     modifier = Modifier
-                        .height(50.dp)
+                        .heightIn(50.dp)
+                        .height(40.dp)
                         .padding(start = 30.dp)
                         .align(Alignment.CenterVertically)
                         .background(
                             color = colorResource(R.color.text_field_color),
-                            RoundedCornerShape(8.dp)
+                            RoundedCornerShape(20.dp)
                         ),
                     value = lengthTextFieldValue,
                     onValueChange = {
@@ -101,9 +111,12 @@ fun PasswordLengthSlider(viewModel: GeneratorViewModel) {
                     colors = OutlinedTextFieldDefaults.colors(
                         unfocusedBorderColor = Color.Transparent,
                         focusedBorderColor = Color.Transparent,
+                        unfocusedContainerColor = MaterialTheme.colorScheme.outline,
+                        focusedContainerColor = MaterialTheme.colorScheme.outline,
                     ),
                     singleLine = true,
                 )
+
             }
         }
     }

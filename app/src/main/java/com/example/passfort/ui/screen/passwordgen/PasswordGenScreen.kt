@@ -19,14 +19,18 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonColors
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -91,12 +95,15 @@ fun TitleAndPasswordField(viewModel: GeneratorViewModel) {
                 color = colorResource(R.color.text_field_color),
                 RoundedCornerShape(20.dp)
             ),
+
         value = viewModel.password.collectAsState().value,
         onValueChange = {},
         readOnly = true,
         colors = OutlinedTextFieldDefaults.colors(
             unfocusedBorderColor = Color.Transparent,
             focusedBorderColor = Color.Transparent,
+            unfocusedContainerColor = MaterialTheme.colorScheme.outline,
+            focusedContainerColor = MaterialTheme.colorScheme.outline,
         ),
         trailingIcon = {
             IconButton(
@@ -148,19 +155,22 @@ fun BottomButtonLine(viewModel: GeneratorViewModel) {
             modifier = Modifier
                 .fillMaxWidth(0.82f)
                 .padding(end = 8.dp)
-                .height(64.dp)
+                .height(56.dp)
             ,
             shape = RoundedCornerShape(16.dp),
             contentPadding = PaddingValues(0.dp),
             onClick = {}
         ) { Text(
             text = stringResource(R.string.passwordgen_bottombutton_text),
+            color = MaterialTheme.colorScheme.inversePrimary,
             fontSize = 18.sp,
         )}
         OutlinedIconButton(
-            modifier = Modifier.size(64.dp),
-            border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary),
+            modifier = Modifier.size(56.dp),
             shape = RoundedCornerShape(16.dp),
+            colors = IconButtonDefaults.outlinedIconButtonColors(
+                containerColor = MaterialTheme.colorScheme.inversePrimary),
+            border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary),
             onClick = { viewModel.generatePassword() }
         ) {
             Icon(
