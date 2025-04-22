@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "PassFort"
+rootProject.name = "passfort"
 include(":app")
  
