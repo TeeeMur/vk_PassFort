@@ -82,7 +82,7 @@ fun InputFieldOutline(onValueChange: (String) -> Unit, resourceString: Int) {
             .padding(bottom = 20.dp)
             .fillMaxWidth()
             .background(
-                color = colorResource(R.color.text_field_color),
+                color = MaterialTheme.colorScheme.background,
                 RoundedCornerShape(15.dp)
             ),
         value = "",
@@ -91,6 +91,8 @@ fun InputFieldOutline(onValueChange: (String) -> Unit, resourceString: Int) {
         colors = OutlinedTextFieldDefaults.colors(
             unfocusedBorderColor = Color.Transparent,
             focusedBorderColor = Color.Transparent,
+            unfocusedContainerColor = MaterialTheme.colorScheme.outline,
+            focusedContainerColor = MaterialTheme.colorScheme.outline,
         )
     )
 }
@@ -123,7 +125,7 @@ fun InputFieldWithCopy(value: String,
             .padding(bottom = 20.dp)
             .fillMaxWidth()
             .background(
-                color = colorResource(R.color.text_field_color),
+                color = MaterialTheme.colorScheme.background,
                 RoundedCornerShape(15.dp)
             ),
         value = value,
@@ -133,6 +135,8 @@ fun InputFieldWithCopy(value: String,
         colors = OutlinedTextFieldDefaults.colors(
             unfocusedBorderColor = Color.Transparent,
             focusedBorderColor = Color.Transparent,
+            unfocusedContainerColor = MaterialTheme.colorScheme.outline,
+            focusedContainerColor = MaterialTheme.colorScheme.outline,
         ),
         trailingIcon = {
             Row {

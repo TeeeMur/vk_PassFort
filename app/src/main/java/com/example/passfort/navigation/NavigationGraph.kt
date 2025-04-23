@@ -84,7 +84,7 @@ fun NavigationGraph(
             AddPasswordScreen(navController) { showBottomSheet = true }
         }
         composable(Screen.PasswordList.route) {
-            PasswordListScreen(navController) { showBottomSheet = true }
+            PasswordListScreen(navController = navController) { showBottomSheet = true }
         }
         composable(Screen.Register.route) {
             RegisterScreen(

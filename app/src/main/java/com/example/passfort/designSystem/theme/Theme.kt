@@ -1,27 +1,27 @@
 package com.example.passfort.designSystem.theme
 
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = active_state,
-    secondary = inactive_state,
-    surface = border_stroke,
-    background = background_dark
+    primary = active_state_dark,
+    secondary = inactive_state_dark,
+    surface = border_stroke_dark,
+    background = background_dark,
+    outline = outline_dark,
+    inversePrimary = inverse,
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = active_state,
-    secondary = inactive_state,
-    surface = border_stroke,
+    primary = active_state_light,
+    secondary = inactive_state_light,
+    surface = border_stroke_light,
     background = background_light,
+    outline = outline_light,
+    inversePrimary = inverse,
 
     /* Other default colors to override
     onPrimary = Color.White,
