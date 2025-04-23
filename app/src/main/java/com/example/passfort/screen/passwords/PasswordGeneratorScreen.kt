@@ -15,9 +15,9 @@ import com.example.passfort.ui.screen.passwordgen.PasswordGenScreen
 
 
 @Composable
-fun PasswordGeneratorScreen(navController: NavHostController) {
+fun PasswordGeneratorScreen(navController: NavHostController, onAddPassword: () -> Unit) {
     Scaffold(
-        bottomBar = { NavigationBar(navController) }
+        bottomBar = { NavigationBar(navController, onAddPassword) }
     ) { innerPadding ->
         Box(
             modifier = Modifier

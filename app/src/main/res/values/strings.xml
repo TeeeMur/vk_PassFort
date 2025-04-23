@@ -1,6 +1,16 @@
 <resources>
-    <string name="app_name">PassFort</string>
     <string name="title_activity_nav_bar">NavBar</string>
+    <string name="login_screen_email_hint">Электронная почта</string>
+    <string name="login_screen_password_hint">Пароль</string>
+    <string name="login_login_button">Войти</string>
+    <string name="login_register_button">Создать аккаунт</string>
+    <string name="login_forgot_password_button">Забыли пароль?</string>
+    <string name="login_privacy_policy_button">Политика безопасности</string>
+    <string name="login_error_empty_fields">Введите логин и пароль</string>
+    <string name="content_description_app_logo">Логотип приложения</string>
+    <string name="login_password_label">Пароль</string>
+    <string name="login_username_label">Логин</string>
+    // Для contentDescription иконки
     <string name="passwordgen_screen_title">Генерация пароля</string>
     <string name="passwordgen_slider_title">Длина пароля</string>
     <string name="passwordgen_toggle_digits_name">Цифры</string>
@@ -8,6 +18,13 @@
     <string name="passwordgen_toggle_lowercase_chars_name">Строчные буквы</string>
     <string name="passwordgen_toggle_uppercase_chars_name">Прописные буквы</string>
     <string name="passwordgen_bottombutton_text">Записать пароль</string>
+
+    <string name="passwordcreate_screen_title">Новый пароль</string>
+    <string name="passwordcreate_inputfield_login">Логин</string>
+    <string name="passwordcreate_inputfield_password">Пароль</string>
+    <string name="passwordcreate_inputfield_note">Заметка</string>
+    <string name="passwordcreate_toggle_remind_change_name">Напоминать о смене пароля</string>
+    <string name="passwordcreate_bottombutton_save">Сохранить</string>
 
     <string name="login">login</string>
     <string name="register">register</string>
@@ -19,4 +36,5 @@
     <string name="password_generator">password_generator</string>
     <string name="settings">settings</string>
     <string name="profile">profile</string>
+    <string name="app_name">passfort</string>
 </resources>

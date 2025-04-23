@@ -42,7 +42,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
 import com.example.passfort.R
-import com.example.passfort.ui.screen.passwordgen.horizontalPaddingValues
 import com.example.passfort.viewModel.GeneratorViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -53,7 +52,7 @@ fun PasswordLengthSlider(viewModel: GeneratorViewModel) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontalPaddingValues),
+            .padding(horizontal = 20.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
