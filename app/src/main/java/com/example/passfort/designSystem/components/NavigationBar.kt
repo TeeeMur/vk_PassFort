@@ -2,6 +2,7 @@ package com.example.passfort.designSystem.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -17,6 +18,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -126,7 +128,6 @@ fun NavigationBar(navController: NavHostController, onAddPassword: () -> Unit) {
             modifier = Modifier
                 .offset { IntOffset(x = 0, y = -100) }
                 .align(Alignment.TopCenter)
-                .clickable(onClick = onAddPassword)
                 .size(90.dp)
                 .padding(5.dp)
                 .shadow(10.dp, shape = CircleShape)
@@ -143,6 +144,7 @@ fun NavigationBar(navController: NavHostController, onAddPassword: () -> Unit) {
                 Icon(
                     modifier = Modifier
                         .fillMaxSize()
+                        .clickable(onClick = onAddPassword)
                         .clip(CircleShape),
                     imageVector = ImageVector.vectorResource(R.drawable.icon_button_add),
                     tint = MaterialTheme.colorScheme.surface,
@@ -168,7 +170,10 @@ fun NavItem(iconImage: ImageVector,
     Box(
         modifier = Modifier
             .size(50.dp)
-            .clickable {
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            ) {
                 navController.navigate(navigateString) {
                     popUpTo(Screen.PasswordList.route) { inclusive = false }
                     launchSingleTop = true
