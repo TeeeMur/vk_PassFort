@@ -18,6 +18,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -92,7 +94,7 @@ fun NavigationBar(navController: NavHostController, onAddPassword: () -> Unit) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color.White, RoundedCornerShape(40.dp))
+                    .background(MaterialTheme.colorScheme.outline, RoundedCornerShape(40.dp))
                     .height(70.dp)
                     .padding(horizontal = 20.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -147,7 +149,7 @@ fun NavigationBar(navController: NavHostController, onAddPassword: () -> Unit) {
                         .clickable(onClick = onAddPassword)
                         .clip(CircleShape),
                     imageVector = ImageVector.vectorResource(R.drawable.icon_button_add),
-                    tint = MaterialTheme.colorScheme.surface,
+                    tint = MaterialTheme.colorScheme.inversePrimary,
                     contentDescription = null,
                 )
             }

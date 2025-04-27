@@ -15,10 +15,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonColors
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
@@ -86,24 +91,27 @@ fun BottomButtonLine(viewModel: GeneratorViewModel) {
             modifier = Modifier
                 .fillMaxWidth(0.82f)
                 .padding(end = 8.dp)
-                .height(64.dp)
+                .height(56.dp)
             ,
             shape = RoundedCornerShape(16.dp),
             contentPadding = PaddingValues(0.dp),
             onClick = {}
         ) { Text(
             text = stringResource(R.string.passwordgen_bottombutton_text),
+            color = MaterialTheme.colorScheme.inversePrimary,
             fontSize = 18.sp,
         )}
         OutlinedIconButton(
-            modifier = Modifier.size(64.dp),
-            border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary),
+            modifier = Modifier.size(56.dp),
             shape = RoundedCornerShape(16.dp),
+            colors = IconButtonDefaults.outlinedIconButtonColors(
+                containerColor = MaterialTheme.colorScheme.primary),
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.inversePrimary),
             onClick = { viewModel.generatePassword() }
         ) {
             Icon(
                 imageVector = Icons.Outlined.Refresh,
-                tint = MaterialTheme.colorScheme.primary,
+                tint = MaterialTheme.colorScheme.inversePrimary,
                 contentDescription = "",
                 modifier = Modifier.size(32.dp)
             )
