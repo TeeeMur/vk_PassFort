@@ -26,6 +26,9 @@
     <string name="passwordcreate_toggle_remind_change_name">Напоминать о смене пароля</string>
     <string name="passwordcreate_bottombutton_save">Сохранить</string>
 
+    <string name="input_field_show_password">Показать пароль</string>
+    <string name="input_field_hide_password">Скрыть пароль</string>
+
     <string name="login">login</string>
     <string name="register">register</string>
     <string name="home_screen">home_screen</string>
