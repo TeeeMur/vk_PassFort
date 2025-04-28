@@ -31,17 +31,18 @@ fun PasswordCard(item: PasswordItem) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp),
-        colors = MaterialTheme.colorScheme.outline,
+        //colors = MaterialTheme.colorScheme.outline,
         shape = MaterialTheme.shapes.medium,
     ) {
         Row(
             modifier = Modifier
-                .padding(start=18.dp, bottom=18.dp, top=16.dp)
-
-        ) {
+                .padding(18.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ){
             Column(
                 modifier = Modifier
-                    .width(300.dp)
+                    .weight(1f)
             ) {
                 Text(
                     text = item.name,
