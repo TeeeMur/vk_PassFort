@@ -25,6 +25,10 @@ class GeneratorViewModel @Inject constructor() : ViewModel() {
     val passwordLength: StateFlow<Int> = _passwordLength.asStateFlow()
     val password: StateFlow<String> = _password.asStateFlow()
 
+    init {
+        generatePassword()
+    }
+
     fun setDigits() {
         _enableDigits.update { !it }
         if (checkSetImpossible()) setLowercaseCharacters()

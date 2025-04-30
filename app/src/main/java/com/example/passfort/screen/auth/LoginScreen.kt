@@ -118,7 +118,6 @@ fun LoginForm(
                 onValueChange = onUsernameChange,
                 isPassword = false,
                 enabled = !isLoading,
-                backgroundColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.05f),
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -142,7 +141,6 @@ fun LoginForm(
                 onValueChange = onPasswordChange,
                 isPassword = true,
                 enabled = !isLoading,
-                backgroundColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.05f),
                 modifier = Modifier.fillMaxWidth()
             )
 
