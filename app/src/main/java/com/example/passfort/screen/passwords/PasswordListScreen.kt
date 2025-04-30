@@ -24,8 +24,13 @@ import com.valentinilk.shimmer.shimmer
 import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Warning
+import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.unit.TextUnit
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.example.passfort.designSystem.components.PasswordCard
+import com.example.passfort.designSystem.theme.PassFortTheme
 
 
 @Composable
@@ -44,8 +49,9 @@ fun PasswordListScreen(viewModel: PasswordViewModel = hiltViewModel(), navContro
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
-                .padding(16.dp)
+                .padding(top = padding.calculateTopPadding(),
+                    bottom = 40.dp)
+                .padding(20.dp)
         ) {
             SearchBar(
                 query = searchQuery,
@@ -86,7 +92,7 @@ fun SearchBar(query: String, onQueryChange: (String) -> Unit) {
                 Text(
                     text = "Search password",
                     color = Color.Gray,
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyMedium,
                 )
             }
             BasicTextField(
@@ -120,7 +126,8 @@ fun PasswordSections(
                 ) {
                     Text(
                         text = "Закрепленные",
-                        style = MaterialTheme.typography.titleMedium
+                        color = MaterialTheme.colorScheme.inverseSurface,
+                        fontSize = 22.sp,
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Icon(
@@ -141,7 +148,8 @@ fun PasswordSections(
         item {
             Text(
                 text = "Все пароли",
-                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.inverseSurface,
+                fontSize = 22.sp,
                 modifier = Modifier.padding(vertical = 8.dp)
             )
         }
@@ -150,94 +158,6 @@ fun PasswordSections(
         }
     }
 }
-
-
-
-@Composable
-fun PasswordCard(item: PasswordItem) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFF7F7F7)),  // Светло-серый цвет
-        shape = MaterialTheme.shapes.medium,
-        elevation = CardDefaults.cardElevation(1.dp)  // Легкая тень
-    ) {
-        Row(
-            modifier = Modifier
-                .padding(12.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = item.name,
-                    fontFamily = FontFamily.Default,  // Используем Roboto по умолчанию
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 18.sp,
-                    color = Color.Black
-                )
-                Text(
-                    text = item.username,
-                    fontFamily = FontFamily.Default,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 16.sp,
-                    color = Color(0xFF757575)  // DarkGrey_100
-                )
-                // Индикатор срока действия
-                when {
-                    item.daysToExpire <= 0 -> {
-                        Text(
-                            text = "Истёк",
-                            fontSize = 14.sp,
-                            color = Color.Red,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                    item.daysToExpire in 1..7 -> {
-                        Text(
-                            text = "Скоро истекает",
-                            fontSize = 14.sp,
-                            color = Color(0xFFFFA000), // оранжево-желтый оттенок
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                }
-            }
-            // Если пароль скомпрометирован, показываем иконку и текст "скомпрометирован"
-            if (item.isCompromised) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(end = 8.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Warning,
-                        contentDescription = "Пароль скомпрометирован",
-                        tint = Color.Red,
-                        modifier = Modifier.size(24.dp)
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        text = "СКОМПРОМЕТИРОВАН",
-                        fontSize = 14.sp,
-                        color = Color.Red,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-            }
-            IconButton(onClick = { /* Логика копирования */ }) {
-                Icon(
-                    imageVector = Icons.Filled.ContentCopy,
-                    contentDescription = "Копировать",
-                    tint = Color.Gray
-                )
-            }
-        }
-    }
-}
-
-
-
 
 @Composable
 fun LoadingScreen() {
@@ -303,4 +223,12 @@ fun EmptyScreen() {
             color = MaterialTheme.colorScheme.onSurface
         )
     }
+}
+
+@PreviewLightDark
+@Composable
+fun PreviewListScreen(){
+    var viewModel = hiltViewModel<PasswordViewModel>()
+    var navController = rememberNavController()
+    PassFortTheme { PasswordListScreen(viewModel,navController, {}) }
 }
