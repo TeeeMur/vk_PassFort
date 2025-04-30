@@ -1,16 +1,11 @@
 package com.example.passfort.designSystem.components
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeContentPadding
-import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -19,11 +14,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.passfort.R
 import com.example.passfort.designSystem.theme.PassFortTheme
 import com.example.passfort.model.PasswordItem
 
@@ -33,7 +31,12 @@ fun PasswordCard(item: PasswordItem) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp),
-        //colors = MaterialTheme.colorScheme.outline,
+        colors = CardColors(
+            containerColor = MaterialTheme.colorScheme.outline,
+            contentColor = MaterialTheme.colorScheme.outline,
+            disabledContentColor = Color.Transparent,
+            disabledContainerColor = Color.Transparent
+        ),
         shape = MaterialTheme.shapes.medium,
     ) {
         Row(
@@ -48,25 +51,25 @@ fun PasswordCard(item: PasswordItem) {
             ) {
                 Text(
                     text = item.name,
-                    fontFamily = FontFamily.Default,  // Используем Roboto по умолчанию
+                    fontFamily = FontFamily.Default,
                     fontWeight = FontWeight.Medium,
                     fontSize = 18.sp,
-                    color = Color.Black
+                    color = MaterialTheme.colorScheme.inverseSurface
                 )
                 Text(
                     text = item.username,
                     fontFamily = FontFamily.Default,
                     fontWeight = FontWeight.Normal,
                     fontSize = 16.sp,
-                    color = Color(0xFF757575)  // DarkGrey_100
+                    color = MaterialTheme.colorScheme.secondary
                 )
             }
             Column(){
                 IconButton(onClick = { /* Логика копирования */ }) {
                     Icon(
-                        imageVector = Icons.Filled.ContentCopy,
+                        imageVector = ImageVector.vectorResource(R.drawable.icon_button_copy),
                         contentDescription = "Копировать",
-                        tint = Color.Gray
+                        tint = MaterialTheme.colorScheme.secondary
                     )
                 }
             }
@@ -79,8 +82,8 @@ fun PasswordCard(item: PasswordItem) {
 fun PreviewPasCard(){
     var pasData = PasswordItem(
         0,
-        "",
-        "",
+        "Figma",
+        "asdf@gmail.com",
         1,
         false)
     PassFortTheme { PasswordCard(pasData) }

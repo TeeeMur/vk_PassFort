@@ -32,6 +32,10 @@ class PasswordViewModel : ViewModel() {
         PasswordItem(5, "Новая заметка 1", "mail123@mail.com", daysToExpire = -1, isCompromised = false),
         PasswordItem(6, "Аэрофлот бонус", "aeroflot@mail.ru", daysToExpire = -1, isCompromised = false),
         PasswordItem(5, "Новая заметка 2", "arina@mail.ru", daysToExpire = -1, isCompromised = false),
+        PasswordItem(5, "Новая заметка 2", "arina@mail.ru", daysToExpire = -1, isCompromised = false),
+        PasswordItem(5, "Новая заметка 2", "arina@mail.ru", daysToExpire = -1, isCompromised = false),
+        PasswordItem(5, "Новая заметка 3", "arina@mail.ru", daysToExpire = -1, isCompromised = false),
+        PasswordItem(5, "Новая заметка 5", "arina@mail.ru", daysToExpire = -1, isCompromised = false),
     )
 
     init {

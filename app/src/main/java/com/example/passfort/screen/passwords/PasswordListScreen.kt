@@ -24,10 +24,13 @@ import com.valentinilk.shimmer.shimmer
 import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Warning
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.TextUnit
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.passfort.designSystem.components.PasswordCard
+import com.example.passfort.designSystem.theme.PassFortTheme
 
 
 @Composable
@@ -46,8 +49,9 @@ fun PasswordListScreen(viewModel: PasswordViewModel = hiltViewModel(), navContro
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
-                .padding(16.dp)
+                .padding(top = padding.calculateTopPadding(),
+                    bottom = 40.dp)
+                .padding(20.dp)
         ) {
             SearchBar(
                 query = searchQuery,
@@ -122,7 +126,7 @@ fun PasswordSections(
                 ) {
                     Text(
                         text = "Закрепленные",
-                        color = MaterialTheme.colorScheme.inversePrimary,
+                        color = MaterialTheme.colorScheme.inverseSurface,
                         fontSize = 22.sp,
                     )
                     Spacer(modifier = Modifier.width(4.dp))
@@ -144,7 +148,7 @@ fun PasswordSections(
         item {
             Text(
                 text = "Все пароли",
-                color = MaterialTheme.colorScheme.inversePrimary,
+                color = MaterialTheme.colorScheme.inverseSurface,
                 fontSize = 22.sp,
                 modifier = Modifier.padding(vertical = 8.dp)
             )
@@ -219,4 +223,12 @@ fun EmptyScreen() {
             color = MaterialTheme.colorScheme.onSurface
         )
     }
+}
+
+@PreviewLightDark
+@Composable
+fun PreviewListScreen(){
+    var viewModel = hiltViewModel<PasswordViewModel>()
+    var navController = rememberNavController()
+    PassFortTheme { PasswordListScreen(viewModel,navController, {}) }
 }
