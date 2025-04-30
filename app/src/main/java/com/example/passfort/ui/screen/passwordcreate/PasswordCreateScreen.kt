@@ -1,5 +1,6 @@
 package com.example.passfort.ui.screen.passwordcreate
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,6 +23,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -103,6 +105,7 @@ fun BottomButtonLine(viewModel: GeneratorViewModel) {
         ) {
             Text(
                 text = stringResource(R.string.passwordcreate_bottombutton_save),
+                color = MaterialTheme.colorScheme.inversePrimary,
                 fontSize = 18.sp,
             )
         }
