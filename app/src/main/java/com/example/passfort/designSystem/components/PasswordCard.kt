@@ -21,8 +21,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.passfort.designSystem.theme.PassFortTheme
 import com.example.passfort.model.PasswordItem
 
 @Composable
@@ -70,4 +72,16 @@ fun PasswordCard(item: PasswordItem) {
             }
         }
     }
+}
+
+@PreviewLightDark
+@Composable
+fun PreviewPasCard(){
+    var pasData = PasswordItem(
+        0,
+        "",
+        "",
+        1,
+        false)
+    PassFortTheme { PasswordCard(pasData) }
 }
