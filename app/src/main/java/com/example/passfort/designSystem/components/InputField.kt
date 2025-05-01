@@ -228,7 +228,8 @@ fun InputFieldBase(
     isReadOnly : Boolean = false,
     enabled: Boolean = true,
     errorString: String = "",
-    trailingIcon: @Composable (() -> Unit),
+    trailingIcon: @Composable (() -> Unit) = {},
+    leadingIcon: @Composable (() -> Unit) = {},
 ) {
     Column{
         Text(
@@ -260,6 +261,7 @@ fun InputFieldBase(
             singleLine = !isTitle,
             visualTransformation = visualTransformation,
             shape = RoundedCornerShape(15.dp),
+            leadingIcon = leadingIcon,
             trailingIcon = trailingIcon,
             colors = OutlinedTextFieldDefaults.colors(
                 focusedContainerColor = MaterialTheme.colorScheme.outline,
