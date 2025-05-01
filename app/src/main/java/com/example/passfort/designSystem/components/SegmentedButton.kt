@@ -62,7 +62,7 @@ fun SingleChoiceSegmentedButton() {
                         label,
                         fontSize = 18.sp,
                         color =
-                            if (index == selectedIndex) MaterialTheme.colorScheme.background
+                            if (index == selectedIndex) MaterialTheme.colorScheme.inversePrimary
                             else MaterialTheme.colorScheme.secondary
                     )
                 },
