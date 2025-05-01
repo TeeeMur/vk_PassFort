@@ -36,12 +36,19 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.BaselineShift
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextGeometricTransform
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.passfort.R
+import com.example.passfort.designSystem.theme.PassFortTheme
 import com.example.passfort.viewModel.GeneratorViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -86,17 +93,21 @@ fun PasswordLengthSlider(viewModel: GeneratorViewModel) {
                     },
                     valueRange = 6f..128f
                 )
-
-                OutlinedTextField(
+                BasicTextField(
                     modifier = Modifier
-                        .heightIn(50.dp)
-                        .height(40.dp)
-                        .padding(start = 30.dp)
+                        .height(35.dp)
+                        .padding(start = 35.dp)
                         .align(Alignment.CenterVertically)
                         .background(
-                            color = colorResource(R.color.text_field_color),
-                            RoundedCornerShape(20.dp)
+                            color = MaterialTheme.colorScheme.outline,
+                            RoundedCornerShape(10.dp)
                         ),
+                    textStyle = TextStyle(
+                        color = MaterialTheme.colorScheme.inverseSurface,
+                        fontSize = 16.sp,
+                        textAlign = TextAlign.Center,
+                        baselineShift = BaselineShift.Subscript
+                    ),
                     value = lengthTextFieldValue,
                     onValueChange = {
                         if (it.isEmpty()) lengthTextFieldValue = it
@@ -107,16 +118,25 @@ fun PasswordLengthSlider(viewModel: GeneratorViewModel) {
                             }
                         }},
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    colors = OutlinedTextFieldDefaults.colors(
+                    /*colors = OutlinedTextFieldDefaults.colors(
                         unfocusedBorderColor = Color.Transparent,
                         focusedBorderColor = Color.Transparent,
                         unfocusedContainerColor = MaterialTheme.colorScheme.outline,
                         focusedContainerColor = MaterialTheme.colorScheme.outline,
-                    ),
+                    ),*/
                     singleLine = true,
+
                 )
 
             }
         }
+    }
+}
+
+@PreviewLightDark()
+@Composable
+fun LengthSliderPreview(viewModel: GeneratorViewModel = hiltViewModel()) {
+    PassFortTheme{
+        PasswordLengthSlider(viewModel)
     }
 }
