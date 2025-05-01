@@ -26,10 +26,13 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.rememberNavController
 import com.example.passfort.R
 import com.example.passfort.designSystem.components.InputFieldPassword
 import com.example.passfort.designSystem.components.InputFieldWithCopy
+import com.example.passfort.designSystem.theme.PassFortTheme
 import com.example.passfort.viewModel.LoginUiState
 import com.yourpackage.ui.components.AuthButton
 
@@ -189,4 +192,30 @@ fun ErrorText(error: String) {
             .padding(start = 25.dp, top = 4.dp, bottom = 8.dp),
         textAlign = TextAlign.Start
     )
+}
+
+
+@PreviewLightDark()
+@Composable
+fun LoginScreenPreview() {
+    PassFortTheme {
+        Surface {
+            val previewState = LoginUiState(
+                username = "preview@user.com",
+                password = "password",
+                isLoading = false,
+                usernameError = "2323",
+
+                )
+            LoginScreen(
+                uiState = previewState,
+                onUsernameChange = {},
+                onPasswordChange = {},
+                onLoginAttempt = {},
+                onNavigateToRegister = {},
+                onNavigateToForgotPassword = {},
+                onNavigateToPrivacyPolicy = {}
+            )
+        }
+    }
 }
