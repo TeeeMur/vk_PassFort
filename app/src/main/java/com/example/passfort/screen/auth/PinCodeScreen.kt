@@ -1,4 +1,4 @@
-package com.example.passfort.ui
+package com.example.passfort.screen.auth
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.background

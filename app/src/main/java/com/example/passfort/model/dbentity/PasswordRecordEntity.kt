@@ -1,11 +1,11 @@
-package com.example.passfort.dbentity
+package com.example.passfort.model.dbentity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
-import com.example.passfort.dbutils.DBDateConverters
-import com.example.passfort.dbutils.DBDateTimeConverters
+import com.example.passfort.model.dbutils.DBDateConverters
+import com.example.passfort.model.dbutils.DBDateTimeConverters
 import java.time.LocalDate
 import java.time.LocalDateTime
 
