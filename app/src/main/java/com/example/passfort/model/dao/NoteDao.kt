@@ -2,7 +2,7 @@ package com.example.passfort.model.dao
 
 import androidx.room.Dao
 import androidx.room.Query
-import com.example.passfort.dbentity.NoteRecordEntity
+import com.example.passfort.model.dbentity.NoteRecordEntity
 
 @Dao
 interface NoteDao: BaseDao<NoteRecordEntity> {

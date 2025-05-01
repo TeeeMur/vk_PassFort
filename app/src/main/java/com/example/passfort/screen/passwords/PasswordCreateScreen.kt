@@ -1,4 +1,4 @@
-package com.example.passfort.ui.screen.passwordcreate
+package com.example.passfort.screen.passwords
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
