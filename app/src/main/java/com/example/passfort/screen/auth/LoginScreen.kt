@@ -112,7 +112,7 @@ fun LoginForm(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 160.dp)
+                .padding(top = 20.dp, bottom = 160.dp)
         ) {
             InputFieldBase(
                 labelResourceString = stringResource(R.string.login_username_label),

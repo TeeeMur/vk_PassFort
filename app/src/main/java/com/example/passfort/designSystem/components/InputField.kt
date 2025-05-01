@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -22,6 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -40,7 +42,7 @@ import com.example.passfort.R
 import com.example.passfort.designSystem.theme.PassFortTheme
 
 @Composable
-fun InputFieldTitle(value: String, onValueChange: (String) -> Unit, onClick: () -> Unit) {
+fun InputFieldTitle(value: String, onValueChange: (String) -> Unit = {}, onClick: () -> Unit = {}) {
     TextField(
         modifier = Modifier
             .padding(horizontal = 10.dp)
@@ -73,7 +75,7 @@ fun InputFieldTitle(value: String, onValueChange: (String) -> Unit, onClick: () 
 @Composable
 fun InputFieldWithCopy(labelResourceString: String,
                        value: String,
-                       onValueChange: (String) -> Unit,
+                       onValueChange: (String) -> Unit = {},
                        visualTransformation: VisualTransformation = VisualTransformation.None,
                        isTitle: Boolean = false,
                        isReadOnly : Boolean = false,
@@ -117,7 +119,7 @@ fun InputFieldWithCopy(labelResourceString: String,
 @Composable
 fun InputFieldPasswordWithCopy(labelResourceString: String,
                        value: String,
-                       onValueChange: (String) -> Unit,
+                       onValueChange: (String) -> Unit = {},
                        isTitle: Boolean = false,
                        isReadOnly : Boolean = false,
 ){
@@ -180,7 +182,7 @@ fun InputFieldPasswordWithCopy(labelResourceString: String,
 @Composable
 fun InputFieldPassword(labelResourceString: String,
                        value: String,
-                       onValueChange: (String) -> Unit,
+                       onValueChange: (String) -> Unit = {},
 ){
     var passwordVisible by remember { mutableStateOf(false) }
 
@@ -225,6 +227,7 @@ fun InputFieldBase(
     isTitle: Boolean = false,
     isReadOnly : Boolean = false,
     enabled: Boolean = true,
+    errorString: String = "",
     trailingIcon: @Composable (() -> Unit)
 ) {
     Column{
@@ -244,7 +247,7 @@ fun InputFieldBase(
         OutlinedTextField(
             modifier = Modifier
                 .padding(vertical = if (isTitle) 16.dp else 0.dp)
-                .padding(bottom = 20.dp)
+                .padding(bottom = 5.dp)
                 .fillMaxWidth()
                 .background(
                     color = MaterialTheme.colorScheme.outline,
@@ -259,14 +262,27 @@ fun InputFieldBase(
             shape = RoundedCornerShape(15.dp),
             trailingIcon = trailingIcon,
             colors = OutlinedTextFieldDefaults.colors(
-                focusedContainerColor = MaterialTheme.colorScheme.surface,
-                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                focusedContainerColor = MaterialTheme.colorScheme.outline,
+                unfocusedContainerColor = MaterialTheme.colorScheme.outline,
                 disabledContainerColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f),
-                focusedBorderColor = MaterialTheme.colorScheme.outline,
+                focusedBorderColor = MaterialTheme.colorScheme.surface,
                 unfocusedBorderColor = Color.Transparent,
                 errorBorderColor = MaterialTheme.colorScheme.error
             ),
         )
+
+        if (errorString.isNotEmpty()) {
+            Text(
+                text = errorString,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier
+                    .align(Alignment.Start)
+                    .padding(start = 8.dp)
+                    .padding(bottom = 10.dp)
+                    .heightIn(max = 20.dp)
+            )
+        }
     }
 }
 
