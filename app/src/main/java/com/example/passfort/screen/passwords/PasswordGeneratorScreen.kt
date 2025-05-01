@@ -1,4 +1,4 @@
-package com.example.passfort.navigation
+package com.example.passfort.screen.passwords
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
