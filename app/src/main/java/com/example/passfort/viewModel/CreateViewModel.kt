@@ -1,19 +1,21 @@
 package com.example.passfort.viewModel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.passfort.model.dbentity.PasswordRecordEntity
-import com.example.passfort.repository.PasswordsListRepoImpl
+import com.example.passfort.repository.PasswordsListRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
 class CreateViewModel @Inject constructor(
-    private val repository: PasswordsListRepoImpl
+    private val repository: PasswordsListRepo
 ) : ViewModel() {
 
     private val _namePassword: MutableStateFlow<String> = MutableStateFlow("")
@@ -31,6 +33,7 @@ class CreateViewModel @Inject constructor(
 
     init {
         _namePassword.update { "Новый пароль" }
+        viewModelScope.launch { createPassword() }
     }
 
     fun onNamePasswordChange(newNamePassword: String) {
@@ -59,10 +62,10 @@ class CreateViewModel @Inject constructor(
     
     suspend fun createPassword() {
         repository.upsertPassword(
-            passwordEntity = PasswordRecordEntity(
-                passwordRecordName = "",
-                passwordRecordLogin = "",
-                passwordRecordPassword = "",
+            password = PasswordRecordEntity(
+                passwordRecordName = "123",
+                passwordRecordLogin = "LOgin",
+                passwordRecordPassword = "345432",
                 passwordLastChangeDate = LocalDateTime.now(),
                 passwordChangeIntervalDays = 0,
                 iconIndex = 0,

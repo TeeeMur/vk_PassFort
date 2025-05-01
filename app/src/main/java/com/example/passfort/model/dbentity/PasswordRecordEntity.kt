@@ -16,7 +16,7 @@ data class PasswordRecordEntity(
     @ColumnInfo(name = "password_name", index = true) val passwordRecordName: String,
     @ColumnInfo(name = "password_login", index = true) val passwordRecordLogin: String,
     @ColumnInfo(name = "password_password") var passwordRecordPassword: String,
-    @field:TypeConverters(DBDateConverters::class)
+    @field:TypeConverters(DBDateTimeConverters::class)
     @ColumnInfo(name = "last_change_at", index = true) val passwordLastChangeDate: LocalDateTime,
     @ColumnInfo(name = "change_interval") val passwordChangeIntervalDays: Int,
     @ColumnInfo(name = "icon_enum") val iconIndex: Int,
