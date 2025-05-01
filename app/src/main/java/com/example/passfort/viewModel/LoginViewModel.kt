@@ -55,11 +55,14 @@ class LoginViewModel (
         }
     }
 
-    // Функция для сброса флага после того, как навигация была обработана
     fun consumeLoginSuccessEvent() {
-        if (uiState.loginSuccess) { // Сбрасываем, только если он был true
+        if (uiState.loginSuccess) {
             uiState = uiState.copy(loginSuccess = false)
         }
+    }
+
+    fun resetState() {
+        uiState = LoginUiState()
     }
 
     // --- Фабрика (ВРЕМЕННО, пока Hilt не работает) ---
@@ -76,5 +79,4 @@ class LoginViewModel (
             }
         }
     }
-    // --- Конец Фабрики ---
 }

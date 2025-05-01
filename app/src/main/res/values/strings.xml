@@ -37,4 +37,11 @@
     <string name="settings">settings</string>
     <string name="profile">profile</string>
     <string name="app_name">passfort</string>
+    <string name="register_name_label">Имя</string>
+    <string name="register_email_label">email</string>
+    <string name="register_password_label">пароль</string>
+    <string name="register_confirm_password_label">Повтроите пароль</string>
+    <string name="register_button">Регистрация</string>
+    <string name="register_back_to_login">назад</string>
+    <string name="register_privacy_policy">политика безопасности</string>
 </resources>

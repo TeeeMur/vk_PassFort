@@ -61,14 +61,15 @@ fun AuthButton(
     height: Dp = 56.dp,
     width: Dp = 56.dp,
     containerColor: Color = MaterialTheme.colorScheme.primary,
-    contentColor: Color = MaterialTheme.colorScheme.onPrimary
+    contentColor: Color = MaterialTheme.colorScheme.onPrimary,
+    fillMaxWidth: Boolean
 ) {
     Button(
         onClick = onClick,
         enabled = enabled && !isLoading,
         colors = ButtonDefaults.buttonColors(containerColor, contentColor),
         modifier = modifier
-                .width(width)
+            .width(width)
             .height(height),
     ) {
         if (isLoading) {
@@ -91,7 +92,7 @@ private fun SecondaryButtonPreview_Light() {
     PassFortTheme(dynamicColor = false) {
         Column(
             modifier = Modifier
-                .padding(16.dp)
+                .padding(bottom = 20.dp)
                 .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
@@ -110,22 +111,20 @@ private fun SecondaryButtonPreview_Light() {
             AuthButton(
                 text = "войти",
                 onClick = {},
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary,
+                isLoading = false,
                 modifier = Modifier
                     .fillMaxWidth(),
-                isLoading = false,
-                enabled = true
+                fillMaxWidth = true
             )
 
             AuthButton(
                 text = "Зарегистрироваться",
                 onClick = {},
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.surface,
-                modifier = Modifier.fillMaxWidth(),
                 isLoading = false,
-                enabled = false
+                enabled = false,
+                modifier = Modifier.fillMaxWidth(),
+                contentColor = MaterialTheme.colorScheme.surface,
+                fillMaxWidth = true
             )
         }
     }

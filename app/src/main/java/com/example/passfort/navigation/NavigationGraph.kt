@@ -1,5 +1,6 @@
 package com.example.passfort.navigation
 
+import RegisterViewModel
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -20,6 +21,7 @@ import com.example.passfort.screen.passwords.PasswordListScreen
 import com.example.passfort.screen.passwords.SettingsScreen
 import com.example.passfort.ui.screen.passwordcreate.PartialBottomSheet
 import com.example.passfort.viewModel.LoginViewModel
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 
@@ -33,19 +35,17 @@ fun NavigationGraph(
 
     NavHost(
         navController = navController,
-        startDestination = if (isUserLoggedIn) Screen.HomeScreen.route
-        else Screen.Login.route
+        startDestination = if (isUserLoggedIn) Screen.HomeScreen.route else Screen.Login.route
     ) {
         composable(Screen.Login.route) {
-
             val context = LocalContext.current
             val preferencesManager = remember { PreferencesManager(context.applicationContext) }
-
-            val viewModel: LoginViewModel = viewModel(
-                factory = LoginViewModel.provideFactory(preferencesManager)
-            )
-
+            val viewModel: LoginViewModel = viewModel(factory = LoginViewModel.provideFactory(preferencesManager))
             val uiState = viewModel.uiState
+
+            LaunchedEffect(Unit) {
+                viewModel.resetState()
+            }
 
             LaunchedEffect(uiState.loginSuccess) {
                 if (uiState.loginSuccess) {
@@ -62,14 +62,9 @@ fun NavigationGraph(
                 onUsernameChange = viewModel::onUsernameChange,
                 onPasswordChange = viewModel::onPasswordChange,
                 onLoginAttempt = viewModel::onLoginAttempt,
-
-                onNavigateToRegister = {
-                    navController.navigate(Screen.Register.route)
-                },
-                onNavigateToForgotPassword = {
-                },
-                onNavigateToPrivacyPolicy = {
-                }
+                onNavigateToRegister = { navController.navigate(Screen.Register.route) },
+                onNavigateToForgotPassword = {},
+                onNavigateToPrivacyPolicy = {}
             )
         }
 
@@ -87,10 +82,33 @@ fun NavigationGraph(
             PasswordListScreen(navController = navController) { showBottomSheet = true }
         }
         composable(Screen.Register.route) {
+            val registerViewModel: RegisterViewModel = viewModel()
+
+            LaunchedEffect(Unit) {
+                registerViewModel.resetState()
+            }
+
+            LaunchedEffect(Unit) {
+                registerViewModel.eventFlow.collectLatest { event ->
+                    when (event) {
+                        is RegisterEvent.Success -> {
+                            navController.navigate(Screen.Login.route) {
+                                popUpTo(Screen.Login.route) { inclusive = true }
+                            }
+                        }
+                    }
+                }
+            }
+
             RegisterScreen(
-                navController,
-                onBack = {navController.navigate(Screen.Login.route)},
-                onRegisterSuccess = {navController.navigate(Screen.Login.route)}
+                uiState = registerViewModel.uiState,
+                onNameChange = registerViewModel::onNameChange,
+                onEmailChange = registerViewModel::onEmailChange,
+                onPasswordChange = registerViewModel::onPasswordChange,
+                onConfirmPasswordChange = registerViewModel::onConfirmPasswordChange,
+                onRegisterAttempt = registerViewModel::onRegisterAttempt,
+                onBack = { navController.popBackStack() },
+                onPrivacyPolicy = {}
             )
         }
         composable(Screen.Settings.route) {
@@ -108,6 +126,8 @@ fun NavigationGraph(
     }
     PartialBottomSheet(showBottomSheet) { showBottomSheet = false }
 }
+
+
 
 
 

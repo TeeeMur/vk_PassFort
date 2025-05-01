@@ -36,7 +36,7 @@ import com.example.passfort.designSystem.components.ToggleLine
 import com.example.passfort.viewModel.GeneratorViewModel
 
 @Composable
-@Preview
+@Preview (showBackground = true)
 fun PasswordCreateScreen(viewModel: GeneratorViewModel = hiltViewModel()) {
     Column(
         modifier = Modifier

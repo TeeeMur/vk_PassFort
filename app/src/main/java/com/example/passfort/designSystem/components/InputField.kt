@@ -64,7 +64,6 @@ fun InputFieldTitle(onValueChange: (String) -> Unit, onClick: () -> Unit) {
     )
 }
 
-@Preview
 @Composable
 fun InputFieldOutline(onValueChange: (String) -> Unit, resourceString: Int) {
     Text(
@@ -95,14 +94,15 @@ fun InputFieldOutline(onValueChange: (String) -> Unit, resourceString: Int) {
     )
 }
 
-@Preview
 @Composable
 fun InputFieldWithCopy(value: String,
                        onValueChange: (String) -> Unit,
                        resourceString: Int,
                        isTitle: Boolean = false,
+                       isLoginScreen: Boolean = false,
                        isReadOnly : Boolean = false,
-                       isPassword : Boolean = false
+                       isPassword : Boolean = false,
+                       isCopy: Boolean = true
 ){
     val clipboardManager = LocalClipboardManager.current
 
@@ -120,7 +120,7 @@ fun InputFieldWithCopy(value: String,
         modifier = Modifier
             .padding(vertical = if (isTitle) 16.dp else 0.dp)
             .padding(horizontal = 20.dp)
-            .padding(bottom = 20.dp)
+            .padding(bottom = if (isLoginScreen) 0.dp else 20.dp)
             .fillMaxWidth()
             .background(
                 color = colorResource(R.color.text_field_color),
@@ -148,6 +148,7 @@ fun InputFieldWithCopy(value: String,
                         )
                     }
                 }
+                if (isCopy)
                 IconButton(
                     modifier = Modifier.padding(end = 4.dp),
                     onClick = {
@@ -168,3 +169,4 @@ fun InputFieldWithCopy(value: String,
         }
     )
 }
+
