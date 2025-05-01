@@ -228,7 +228,7 @@ fun InputFieldBase(
     isReadOnly : Boolean = false,
     enabled: Boolean = true,
     errorString: String = "",
-    trailingIcon: @Composable (() -> Unit)
+    trailingIcon: @Composable (() -> Unit),
 ) {
     Column{
         Text(
