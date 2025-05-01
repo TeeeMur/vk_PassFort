@@ -1,8 +1,8 @@
 package com.example.passfort.repository
 
-import com.example.passfort.dbentity.PasswordRecordEntity
+import com.example.passfort.model.dbentity.PasswordRecordEntity
 
-interface PasswordsRepo {
+interface PasswordsListRepo {
     suspend fun getAllPasswords(): List<PasswordRecordEntity>
     suspend fun getPinnedPasswords(): List<PasswordRecordEntity>
     suspend fun getNonPinnedPasswords(): List<PasswordRecordEntity>

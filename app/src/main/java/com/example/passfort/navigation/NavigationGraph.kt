@@ -12,14 +12,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.passfort.root.PreferencesManager
+import com.example.passfort.model.PreferencesManager
 import com.example.passfort.screen.auth.LoginScreen
 import com.example.passfort.screen.auth.RegisterScreen
 import com.example.passfort.screen.main.HomeScreen
-import com.example.passfort.screen.passwords.AddPasswordScreen
 import com.example.passfort.screen.passwords.PasswordListScreen
 import com.example.passfort.screen.passwords.SettingsScreen
-import com.example.passfort.ui.screen.passwordcreate.PartialBottomSheet
+import com.example.passfort.screen.passwords.PartialBottomSheet
 import com.example.passfort.viewModel.LoginViewModel
 import kotlinx.coroutines.flow.collectLatest
 
@@ -75,9 +74,6 @@ fun NavigationGraph(
             PasswordGeneratorScreen(navController) { showBottomSheet = true }
         }
 
-        composable(Screen.AddPassword.route) {
-            AddPasswordScreen(navController) { showBottomSheet = true }
-        }
         composable(Screen.PasswordList.route) {
             PasswordListScreen(navController = navController) { showBottomSheet = true }
         }

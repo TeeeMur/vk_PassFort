@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.passfort.root.PreferencesManager
+import com.example.passfort.model.PreferencesManager
 import kotlinx.coroutines.launch
 
 
