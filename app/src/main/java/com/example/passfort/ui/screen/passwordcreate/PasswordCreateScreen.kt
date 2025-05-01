@@ -1,6 +1,5 @@
 package com.example.passfort.ui.screen.passwordcreate
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,50 +18,49 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.passfort.R
-import com.example.passfort.designSystem.components.InputFieldOutline
+import com.example.passfort.designSystem.components.InputFieldPassword
 import com.example.passfort.designSystem.components.InputFieldTitle
 import com.example.passfort.designSystem.components.InputFieldWithCopy
 import com.example.passfort.designSystem.components.SingleChoiceSegmentedButton
 import com.example.passfort.designSystem.components.ToggleLine
-import com.example.passfort.viewModel.GeneratorViewModel
+import com.example.passfort.designSystem.theme.PassFortTheme
+import com.example.passfort.viewModel.CreateViewModel
 
 @Composable
-@Preview (showBackground = true)
-fun PasswordCreateScreen(viewModel: GeneratorViewModel = hiltViewModel()) {
+fun PasswordCreateScreen(viewModel: CreateViewModel = hiltViewModel()) {
     Column(
         modifier = Modifier
             .fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween,
     ) {
-        val message = remember { mutableStateOf("") }
-
         Column {
-            InputFieldTitle({}, {})
-            InputFieldWithCopy(
-                viewModel.password.collectAsState().value,
-                onValueChange = {},
-                R.string.passwordcreate_inputfield_login
+            InputFieldTitle(
+                value = viewModel.namePassword.collectAsState().value,
+                onValueChange = {viewModel.onNamePasswordChange(it)},
+                onClick = {}
             )
             InputFieldWithCopy(
-                viewModel.password.collectAsState().value,
-                onValueChange = {},
-                R.string.passwordcreate_inputfield_password,
-                isPassword = true
+                labelResourceString = stringResource(R.string.passwordcreate_inputfield_login),
+                value = viewModel.login.collectAsState().value,
+                onValueChange = {viewModel.onLoginChange(it)}
             )
-            InputFieldOutline(
-                { newText -> message.value = newText },
-                R.string.passwordcreate_inputfield_note
+            InputFieldPassword(
+                labelResourceString = stringResource(R.string.passwordcreate_inputfield_password),
+                value = viewModel.password.collectAsState().value,
+                onValueChange = {viewModel.onPasswordChange(it)},
+            )
+            InputFieldWithCopy(
+                labelResourceString = stringResource(R.string.passwordcreate_inputfield_note),
+                value = viewModel.note.collectAsState().value,
+                onValueChange = {viewModel.onNoteChange(it)},
             )
             PasswordRemindOptions(viewModel)
         }
@@ -71,23 +69,29 @@ fun PasswordCreateScreen(viewModel: GeneratorViewModel = hiltViewModel()) {
 }
 
 @Composable
-fun PasswordRemindOptions(viewModel: GeneratorViewModel) {
+fun PasswordRemindOptions(viewModel: CreateViewModel) {
+
     Column(
         modifier = Modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         ToggleLine(
-            stringResource(R.string.passwordcreate_toggle_remind_change_name),
-            viewModel.enableDigits
+            name = stringResource(R.string.passwordcreate_toggle_remind_change_name),
+            valueFlow = viewModel.enablePasswordChange
         ) {
-            viewModel.setDigits()
+            viewModel.setPasswordChange()
         }
-        SingleChoiceSegmentedButton()
+        
+        if (viewModel.enablePasswordChange.collectAsState().value) {
+            SingleChoiceSegmentedButton() {
+                viewModel.setPasswordDaysCount(it)
+            }
+        }
     }
 }
 
 @Composable
-fun BottomButtonLine(viewModel: GeneratorViewModel) {
+fun BottomButtonLine(viewModel: CreateViewModel) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -130,6 +134,14 @@ fun PartialBottomSheet(showBottomSheet: Boolean, onDismiss: () -> Unit) {
         ) {
             PasswordCreateScreen()
         }
+    }
+}
+
+@PreviewLightDark()
+@Composable
+fun CreatePasswordPreview() {
+    PassFortTheme {
+        PasswordCreateScreen()
     }
 }
 

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -22,13 +23,13 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.passfort.R
+import com.example.passfort.designSystem.components.InputFieldPassword
 import com.example.passfort.designSystem.components.InputFieldWithCopy
-import com.example.passfort.designSystem.theme.PassFortTheme
-import com.example.passfort.designSystem.components.PasswordField
 import com.example.passfort.viewModel.LoginUiState
 import com.yourpackage.ui.components.AuthButton
 
@@ -53,7 +54,7 @@ fun LoginScreen(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f)
+                .weight(0.8f)
                 .background(MaterialTheme.colorScheme.primary),
             contentAlignment = Alignment.Center
         ) {
@@ -69,7 +70,7 @@ fun LoginScreen(
                 .fillMaxWidth()
                 .weight(1f)
                 .clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
-                .background(MaterialTheme.colorScheme.surface)
+                .background(MaterialTheme.colorScheme.background)
                 .padding(horizontal = 24.dp, vertical = 16.dp)
         ) {
             LoginForm(
@@ -103,185 +104,89 @@ fun LoginForm(
     onForgotPassword: () -> Unit,
     onPrivacyPolicy: () -> Unit,
 ) {
-    Box(
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        InputFieldWithCopy(
+            labelResourceString = stringResource(R.string.login_username_label),
+            value = username,
+            onValueChange = onUsernameChange,
+            isReadOnly = isLoading
+        )
+        usernameError?.let {
+            ErrorText(it)
+        }
+
+        InputFieldPassword(
+            labelResourceString = stringResource(R.string.login_password_label),
+            value = password,
+            onValueChange = onPasswordChange
+        )
+        passwordError?.let {
+            ErrorText(it)
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Text(
+            text = stringResource(R.string.login_forgot_password_button),
+            modifier = Modifier
+                .align(Alignment.Start)
+                .clickable(enabled = !isLoading, onClick = onForgotPassword)
+                .padding(start = 8.dp)
+                .padding(horizontal = 25.dp),
+            color = MaterialTheme.colorScheme.primary
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        AuthButton(
+            text = stringResource(R.string.login_login_button),
+            onClick = onLogin,
+            isLoading = isLoading,
+            modifier = Modifier
+                .padding(horizontal = 20.dp)
+                .fillMaxWidth(),
+            fillMaxWidth = true
+        )
+
+        Spacer(modifier = Modifier.height(4.dp))
+
+        AuthButton(
+            text = stringResource(R.string.login_register_button),
+            onClick = onRegister,
+            isLoading = false,
+            enabled = !isLoading,
+            modifier = Modifier
+                .padding(horizontal = 20.dp)
+                .fillMaxWidth(),
+            containerColor = MaterialTheme.colorScheme.secondary,
+            contentColor = MaterialTheme.colorScheme.onSecondary,
+            fillMaxWidth = true
+        )
+
+        Spacer(modifier = Modifier.height(4.dp))
+
+        Text(
+            text = stringResource(R.string.login_privacy_policy_button),
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .clickable(enabled = !isLoading, onClick = onPrivacyPolicy),
+            color = MaterialTheme.colorScheme.secondary
+        )
+    }
+}
+
+@Composable
+fun ErrorText(error: String) {
+    Text(
+        text = error,
+        color = MaterialTheme.colorScheme.error,
+        style = MaterialTheme.typography.bodySmall,
         modifier = Modifier
             .fillMaxWidth()
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 160.dp)
-        ) {
-            InputFieldWithCopy(
-                value = username,
-                onValueChange = onUsernameChange,
-                resourceString = R.string.login_username_label,
-                isReadOnly = isLoading,
-                isPassword = false,
-                isCopy = false,
-                isLoginScreen = true
-            )
-
-            if (usernameError != null) {
-                Text(
-                    text = usernameError,
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier
-                        .align(Alignment.Start)
-                        .padding(start = 8.dp)
-                        .padding(horizontal = 25.dp),
-                )
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            PasswordField(
-                value = password,
-                onValueChange = onPasswordChange,
-                labelResId = R.string.login_password_label,
-                isEnabled = !isLoading,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
-
-            if (passwordError != null) {
-                Text(
-                    text = passwordError,
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier
-                        .align(Alignment.Start)
-                        .padding(start = 8.dp)
-                        .padding(horizontal = 25.dp),
-                )
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = stringResource(R.string.login_forgot_password_button),
-                style = MaterialTheme.typography.bodySmall.copy(
-                    textDecoration = TextDecoration.Underline
-                ),
-                modifier = Modifier
-                    .align(Alignment.Start)
-                    .clickable(enabled = !isLoading, onClick = onForgotPassword)
-                    .padding(start = 8.dp)
-                    .padding(horizontal = 25.dp),
-                color = MaterialTheme.colorScheme.primary
-            )
-        }
-
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 8.dp)
-                .align(Alignment.BottomCenter)
-        ) {
-            Spacer(modifier = Modifier.weight(1f))
-
-            AuthButton(
-                text = stringResource(R.string.login_login_button),
-                onClick = onLogin,
-                isLoading = isLoading,
-                modifier = Modifier
-                    .padding(horizontal = 20.dp)
-                    .fillMaxWidth(),
-                fillMaxWidth = true,
-            )
-
-            Spacer(modifier = Modifier.height(4.dp))
-
-            AuthButton(
-                text = stringResource(R.string.login_register_button),
-                onClick = onRegister,
-                isLoading = false,
-                enabled = !isLoading,
-                modifier = Modifier
-                    .padding(horizontal = 20.dp)
-                    .fillMaxWidth(),
-                containerColor = MaterialTheme.colorScheme.secondary,
-                contentColor = MaterialTheme.colorScheme.onSecondary,
-                fillMaxWidth = true
-            )
-
-            Spacer(modifier = Modifier.height(4.dp))
-
-            Text(
-                text = stringResource(R.string.login_privacy_policy_button),
-                style = MaterialTheme.typography.labelSmall.copy(
-                    textDecoration = TextDecoration.Underline
-                ),
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .clickable(enabled = !isLoading, onClick = onPrivacyPolicy),
-                color = MaterialTheme.colorScheme.secondary
-            )
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun LoginScreenPreview() {
-    Surface {
-        val previewState = LoginUiState(
-            username = "preview@user.com",
-            password = "password",
-            isLoading = false,
-            usernameError = "2323",
-            passwordError = "2ewq"
-        )
-        LoginScreen(
-            uiState = previewState,
-            onUsernameChange = {},
-            onPasswordChange = {},
-            onLoginAttempt = {},
-            onNavigateToRegister = {},
-            onNavigateToForgotPassword = {},
-            onNavigateToPrivacyPolicy = {}
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun InputFieldWithCopyPreview() {
-    // Задаем тестовую тему, если у вас есть кастомная тема
-    PassFortTheme {
-        Column(modifier = Modifier.padding(16.dp)) {
-            // Пример с обычным текстовым полем
-            InputFieldWithCopy(
-                value = "Пример текста",
-                onValueChange = {},
-                resourceString = R.string.passwordcreate_inputfield_login, // Замените на реальный ID ресурса
-                isTitle = false
-            )
-
-            // Пример с заголовком
-            InputFieldWithCopy(
-                value = "Заголовок",
-                onValueChange = {},
-                resourceString = R.string.passwordcreate_inputfield_login, // Замените на реальный ID ресурса
-                isTitle = true
-            )
-
-            // Пример с паролем
-            InputFieldWithCopy(
-                value = "secret123",
-                onValueChange = {},
-                resourceString = R.string.passwordcreate_inputfield_login, // Замените на реальный ID ресурса
-                isPassword = true
-            )
-
-            // Пример только для чтения
-            InputFieldWithCopy(
-                value = "Только чтение",
-                onValueChange = {},
-                resourceString = R.string.passwordcreate_inputfield_login, // Замените на реальный ID ресурса
-                isReadOnly = true
-            )
-        }
-    }
+            .padding(start = 25.dp, top = 4.dp, bottom = 8.dp),
+        textAlign = TextAlign.Start
+    )
 }

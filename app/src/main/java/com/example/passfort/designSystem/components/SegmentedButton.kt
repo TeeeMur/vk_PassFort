@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -24,14 +25,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.passfort.R
+import com.example.passfort.designSystem.theme.PassFortTheme
+import com.example.passfort.viewModel.GeneratorViewModel
+import kotlinx.coroutines.flow.StateFlow
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
 @Composable
-fun SingleChoiceSegmentedButton() {
+fun SingleChoiceSegmentedButton(switchAction: (Int) -> Unit) {
     var selectedIndex by remember { mutableIntStateOf(0) }
     val options = listOf("60", "120", "180")
 
@@ -52,10 +57,11 @@ fun SingleChoiceSegmentedButton() {
                 shape = SegmentedButtonDefaults.itemShape(
                     index = index,
                     count = options.size,
-
                 ),
                 icon = {},
-                onClick = { selectedIndex = index },
+                onClick = {
+                    selectedIndex = index
+                    switchAction(options[index].toInt()) },
                 selected = index == selectedIndex,
                 label = {
                     Text(
@@ -73,5 +79,13 @@ fun SingleChoiceSegmentedButton() {
                 ),
             )
         }
+    }
+}
+
+@PreviewLightDark()
+@Composable
+fun SegmentsButtonPreview() {
+    PassFortTheme{
+        SingleChoiceSegmentedButton({})
     }
 }
