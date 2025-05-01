@@ -56,6 +56,7 @@ fun PasswordCreateScreen(viewModel: CreateViewModel = hiltViewModel()) {
                 labelResourceString = stringResource(R.string.passwordcreate_inputfield_password),
                 value = viewModel.password.collectAsState().value,
                 onValueChange = {viewModel.onPasswordChange(it)},
+                isCopy = false,
             )
             InputFieldWithCopy(
                 labelResourceString = stringResource(R.string.passwordcreate_inputfield_note),

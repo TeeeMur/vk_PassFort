@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -23,12 +22,8 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.rememberNavController
 import com.example.passfort.R
 import com.example.passfort.designSystem.components.InputFieldPassword
 import com.example.passfort.designSystem.components.InputFieldWithCopy
@@ -115,20 +110,18 @@ fun LoginForm(
             labelResourceString = stringResource(R.string.login_username_label),
             value = username,
             onValueChange = onUsernameChange,
-            isReadOnly = isLoading
+            isReadOnly = isLoading,
+            errorString = usernameError ?: "",
+            isCopy = false
         )
-        usernameError?.let {
-            ErrorText(it)
-        }
 
         InputFieldPassword(
             labelResourceString = stringResource(R.string.login_password_label),
             value = password,
-            onValueChange = onPasswordChange
+            onValueChange = onPasswordChange,
+            errorString = passwordError ?: "",
+            isCopy = false
         )
-        passwordError?.let {
-            ErrorText(it)
-        }
 
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -137,8 +130,7 @@ fun LoginForm(
             modifier = Modifier
                 .align(Alignment.Start)
                 .clickable(enabled = !isLoading, onClick = onForgotPassword)
-                .padding(start = 8.dp)
-                .padding(horizontal = 25.dp),
+                .padding(start = 25.dp, top = 4.dp, bottom = 8.dp),
             color = MaterialTheme.colorScheme.primary
         )
 
@@ -151,10 +143,10 @@ fun LoginForm(
             modifier = Modifier
                 .padding(horizontal = 20.dp)
                 .fillMaxWidth(),
-            fillMaxWidth = true
+            fillMaxWidth = true,
         )
 
-        Spacer(modifier = Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
         AuthButton(
             text = stringResource(R.string.login_register_button),
@@ -169,7 +161,7 @@ fun LoginForm(
             fillMaxWidth = true
         )
 
-        Spacer(modifier = Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
         Text(
             text = stringResource(R.string.login_privacy_policy_button),
@@ -179,19 +171,6 @@ fun LoginForm(
             color = MaterialTheme.colorScheme.secondary
         )
     }
-}
-
-@Composable
-fun ErrorText(error: String) {
-    Text(
-        text = error,
-        color = MaterialTheme.colorScheme.error,
-        style = MaterialTheme.typography.bodySmall,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 25.dp, top = 4.dp, bottom = 8.dp),
-        textAlign = TextAlign.Start
-    )
 }
 
 

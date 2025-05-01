@@ -25,7 +25,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.example.passfort.designSystem.components.InputFieldPassword
 import com.example.passfort.designSystem.components.InputFieldWithCopy
@@ -69,8 +68,8 @@ fun RegisterScreen(
                 .fillMaxWidth()
                 .weight(3f)
                 .clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
-                .background(MaterialTheme.colorScheme.surface)
-                .padding(horizontal = 24.dp, vertical = 16.dp)
+                .background(MaterialTheme.colorScheme.background)
+                .padding( vertical = 16.dp)
         ) {
             RegisterForm(
                 uiState = uiState,
@@ -107,31 +106,35 @@ fun RegisterForm(
             labelResourceString = stringResource(R.string.register_name_label),
             value = uiState.name,
             onValueChange = onNameChange,
-            isReadOnly = uiState.isLoading
+            isReadOnly = uiState.isLoading,
+            errorString = uiState.nameError ?: "",
+            isCopy = false
         )
-        uiState.nameError?.let { ErrorText(it) }
 
         InputFieldWithCopy(
             labelResourceString = stringResource(R.string.register_email_label),
             value = uiState.email,
             onValueChange = onEmailChange,
-            isReadOnly = uiState.isLoading
+            isReadOnly = uiState.isLoading,
+            errorString = uiState.emailError ?: "",
+            isCopy = false
         )
-        uiState.emailError?.let { ErrorText(it) }
 
         InputFieldPassword(
             labelResourceString = stringResource(R.string.register_password_label),
             value = uiState.password,
-            onValueChange = onPasswordChange
+            onValueChange = onPasswordChange,
+            errorString = uiState.passwordError ?: "",
+            isCopy = false
         )
-        uiState.passwordError?.let { ErrorText(it) }
 
         InputFieldPassword(
             labelResourceString = stringResource(R.string.register_confirm_password_label),
             value = uiState.confirmPassword,
-            onValueChange = onConfirmPasswordChange
+            onValueChange = onConfirmPasswordChange,
+            errorString = uiState.confirmPasswordError ?: "",
+            isCopy = false
         )
-        uiState.confirmPasswordError?.let { ErrorText(it) }
 
         if (uiState.confirmPassword.isNotEmpty()) {
             val isMatch = uiState.password == uiState.confirmPassword
@@ -140,9 +143,8 @@ fun RegisterForm(
                 color = if (isMatch) Color(0xFF4CAF50) else MaterialTheme.colorScheme.error,
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier
-                    .align(Alignment.Start)
-                    .padding(start = 8.dp)
-                    .padding(bottom = 10.dp)
+                    .fillMaxWidth()
+                    .padding(start = 25.dp, top = 4.dp, bottom = 8.dp)
             )
         }
 
@@ -157,6 +159,8 @@ fun RegisterForm(
                 .fillMaxWidth(),
             fillMaxWidth = true
         )
+
+        Spacer(modifier = Modifier.height(8.dp))
 
         Text(
             text = stringResource(R.string.register_privacy_policy),

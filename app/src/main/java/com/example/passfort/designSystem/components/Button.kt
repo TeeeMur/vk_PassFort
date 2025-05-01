@@ -61,35 +61,43 @@ fun AuthButton(
     height: Dp = 56.dp,
     width: Dp = 56.dp,
     containerColor: Color = MaterialTheme.colorScheme.primary,
-    contentColor: Color = MaterialTheme.colorScheme.onPrimary,
+    contentColor: Color = Color.White,
     fillMaxWidth: Boolean
 ) {
     Button(
         onClick = onClick,
         enabled = enabled && !isLoading,
-        colors = ButtonDefaults.buttonColors(containerColor, contentColor),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = containerColor,
+            contentColor = contentColor
+        ),
         modifier = modifier
-            .width(width)
-            .height(height),
+            .then(
+                if (fillMaxWidth) Modifier.fillMaxWidth() else Modifier.width(width)
+            )
+            .height(height)
     ) {
         if (isLoading) {
             CircularProgressIndicator(
                 color = contentColor,
                 strokeWidth = 2.dp,
                 modifier = Modifier
-                    .width(width)
-                    .height(height),
+                    .width(24.dp)
+                    .height(24.dp)
             )
         } else {
-            Text(text = text)
+            Text(
+                text = text,
+                color = contentColor,
+                style = MaterialTheme.typography.labelLarge
+            )
         }
     }
 }
-
 @Preview(showBackground = true)
 @Composable
 private fun SecondaryButtonPreview_Light() {
-    PassFortTheme(dynamicColor = false) {
+    PassFortTheme {
         Column(
             modifier = Modifier
                 .padding(bottom = 20.dp)

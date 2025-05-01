@@ -79,6 +79,8 @@ fun InputFieldWithCopy(labelResourceString: String,
                        visualTransformation: VisualTransformation = VisualTransformation.None,
                        isTitle: Boolean = false,
                        isReadOnly : Boolean = false,
+                       isCopy: Boolean = true,
+                       errorString: String = ""
 ){
     val clipboardManager = LocalClipboardManager.current
 
@@ -94,22 +96,25 @@ fun InputFieldWithCopy(labelResourceString: String,
             visualTransformation = visualTransformation,
             isTitle = isTitle,
             isReadOnly = isReadOnly,
+            errorString = errorString,
             trailingIcon = {
-                IconButton(
-                    modifier = Modifier.padding(end = 4.dp),
-                    onClick = {
-                        val clipData = ClipData.newPlainText("Copied:", value).apply {
-                            description.extras = PersistableBundle().apply {
-                                putBoolean("android.content.extra.IS_SENSITIVE", true)
+                if (isCopy) {
+                    IconButton(
+                        modifier = Modifier.padding(end = 4.dp),
+                        onClick = {
+                            val clipData = ClipData.newPlainText("Copied:", value).apply {
+                                description.extras = PersistableBundle().apply {
+                                    putBoolean("android.content.extra.IS_SENSITIVE", true)
+                                }
                             }
+                            clipboardManager.setClip(ClipEntry(clipData))
                         }
-                        clipboardManager.setClip(ClipEntry(clipData))
+                    ) {
+                        Icon(
+                            imageVector = ImageVector.vectorResource(R.drawable.icon_button_copy),
+                            contentDescription = "copy"
+                        )
                     }
-                ) {
-                    Icon(
-                        imageVector = ImageVector.vectorResource(R.drawable.icon_button_copy),
-                        contentDescription = "copy"
-                    )
                 }
             }
         )
@@ -180,11 +185,14 @@ fun InputFieldPasswordWithCopy(labelResourceString: String,
 }
 
 @Composable
-fun InputFieldPassword(labelResourceString: String,
-                       value: String,
-                       onValueChange: (String) -> Unit = {},
-){
-    var passwordVisible by remember { mutableStateOf(false) }
+fun InputFieldPassword(
+    labelResourceString: String,
+    value: String,
+    onValueChange: (String) -> Unit = {},
+    errorString: String = "",
+    isCopy: Boolean
+) {
+    var passwordVisible by remember { mutableStateOf(isCopy) }
 
     val visualTransformation = if (!passwordVisible)
         PasswordVisualTransformation() else VisualTransformation.None
@@ -204,6 +212,7 @@ fun InputFieldPassword(labelResourceString: String,
             value = value,
             onValueChange = onValueChange,
             visualTransformation = visualTransformation,
+            errorString = errorString,
             trailingIcon = {
                 IconButton(onClick = { passwordVisible = !passwordVisible }) {
                     Icon(
@@ -307,7 +316,7 @@ fun AuthTextFieldPreview() {
             InputFieldPassword(
                 labelResourceString = "",
                 value = "pass",
-                onValueChange = {}
+                isCopy = false
             )
             InputFieldPasswordWithCopy(
                 labelResourceString = "",
