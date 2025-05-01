@@ -18,6 +18,7 @@ import com.example.passfort.screen.main.HomeScreen
 import com.example.passfort.screen.passwords.PasswordListScreen
 import com.example.passfort.screen.passwords.SettingsScreen
 import com.example.passfort.screen.passwords.PartialBottomSheet
+import com.example.passfort.screen.passwords.PasswordGeneratorScreen
 import com.example.passfort.viewModel.LoginViewModel
 
 @Composable
