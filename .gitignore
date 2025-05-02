@@ -6,6 +6,8 @@
 /.idea/modules.xml
 /.idea/workspace.xml
 /.idea/navEditor.xml
+/.idea/inspectionProfiles
+/.idea/shelf/
 /.idea/assetWizardSettings.xml
 .DS_Store
 app/build
