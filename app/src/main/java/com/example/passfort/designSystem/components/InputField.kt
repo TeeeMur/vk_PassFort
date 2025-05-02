@@ -300,13 +300,12 @@ fun InputFieldBase(
 fun AuthTextFieldPreview() {
     PassFortTheme{
         Column {
-            InputFieldTitle("New Password",{}, {})
+            InputFieldTitle("New Password")
             InputFieldBase(
                 labelResourceString = stringResource(R.string.passwordcreate_inputfield_password),
                 value = "",
                 onValueChange = {},
-                trailingIcon = {
-                }
+                trailingIcon = {}
             )
             InputFieldWithCopy(
                 labelResourceString = "",
