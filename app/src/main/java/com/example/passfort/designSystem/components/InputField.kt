@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
@@ -40,6 +42,37 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.passfort.R
 import com.example.passfort.designSystem.theme.PassFortTheme
+
+@Composable
+fun SearchBar(value: String, placeholder: String, modifier: Modifier = Modifier, onValueChange: (String) -> Unit) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        modifier = modifier
+            .fillMaxWidth()
+            .background(
+                color = MaterialTheme.colorScheme.outline,
+                RoundedCornerShape(16.dp)
+            ),
+        shape = RoundedCornerShape(16.dp),
+        placeholder = {Text(placeholder)},
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Outlined.Search,
+                contentDescription = "Search",
+                modifier = Modifier.padding(start = 4.dp)
+            )
+        },
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedContainerColor = MaterialTheme.colorScheme.outline,
+            unfocusedContainerColor = MaterialTheme.colorScheme.outline,
+            disabledContainerColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f),
+            focusedBorderColor = MaterialTheme.colorScheme.surface,
+            unfocusedBorderColor = Color.Transparent,
+            errorBorderColor = MaterialTheme.colorScheme.error
+        )
+    )
+}
 
 @Composable
 fun InputFieldTitle(value: String, onValueChange: (String) -> Unit = {}, onClick: () -> Unit = {}) {
@@ -228,8 +261,8 @@ fun InputFieldBase(
     isReadOnly : Boolean = false,
     enabled: Boolean = true,
     errorString: String = "",
-    trailingIcon: @Composable (() -> Unit) = {},
-    leadingIcon: @Composable (() -> Unit) = {},
+    trailingIcon: @Composable (() -> Unit)? = null,
+    leadingIcon: @Composable (() -> Unit)? = null,
 ) {
     Column{
         Text(
