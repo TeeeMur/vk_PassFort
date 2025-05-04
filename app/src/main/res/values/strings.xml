@@ -19,6 +19,8 @@
     <string name="passwordgen_toggle_uppercase_chars_name">Прописные буквы</string>
     <string name="passwordgen_bottombutton_text">Записать пароль</string>
 
+    <string name="passwordgen_generatebutton_text">Сгенерировать пароль</string>
+
     <string name="passwordcreate_screen_title">Новый пароль</string>
     <string name="passwordcreate_inputfield_login">Логин</string>
     <string name="passwordcreate_inputfield_password">Пароль</string>

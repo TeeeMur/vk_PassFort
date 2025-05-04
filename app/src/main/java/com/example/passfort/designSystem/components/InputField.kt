@@ -36,6 +36,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.passfort.R
@@ -78,6 +79,7 @@ fun InputFieldWithCopy(labelResourceString: String,
                        onValueChange: (String) -> Unit = {},
                        visualTransformation: VisualTransformation = VisualTransformation.None,
                        isTitle: Boolean = false,
+                       isSingleLine: Boolean = false,
                        isReadOnly : Boolean = false,
 ){
     val clipboardManager = LocalClipboardManager.current
@@ -93,6 +95,7 @@ fun InputFieldWithCopy(labelResourceString: String,
             onValueChange = onValueChange,
             visualTransformation = visualTransformation,
             isTitle = isTitle,
+            isSingleLine = isSingleLine,
             isReadOnly = isReadOnly,
             trailingIcon = {
                 IconButton(
@@ -109,6 +112,45 @@ fun InputFieldWithCopy(labelResourceString: String,
                     Icon(
                         imageVector = ImageVector.vectorResource(R.drawable.icon_button_copy),
                         contentDescription = "copy"
+                    )
+                }
+            }
+        )
+    }
+}
+
+@Composable
+fun InputFieldModalScreen(labelResourceString: String,
+                          value: String,
+                          onValueChange: (String) -> Unit = {},
+                          onCLick: () -> Unit = {},
+                          visualTransformation: VisualTransformation = VisualTransformation.None,
+                          isTitle: Boolean = false,
+                          isSingleLine: Boolean = false,
+                          isReadOnly : Boolean = false,
+){
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp)
+    ) {
+        InputFieldBase(
+            labelResourceString = labelResourceString,
+            value = value,
+            onValueChange = onValueChange,
+            visualTransformation = visualTransformation,
+            isTitle = isTitle,
+            isSingleLine = isSingleLine,
+            isReadOnly = isReadOnly,
+            titleFontSize = 20.sp,
+            trailingIcon = {
+                IconButton(
+                    modifier = Modifier.padding(end = 4.dp),
+                    onClick = onCLick
+                ) {
+                    Icon(
+                        imageVector = ImageVector.vectorResource(R.drawable.icon_arrow_next),
+                        contentDescription = "apply"
                     )
                 }
             }
@@ -225,8 +267,10 @@ fun InputFieldBase(
     onValueChange: (String) -> Unit,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     isTitle: Boolean = false,
+    isSingleLine: Boolean = false,
     isReadOnly : Boolean = false,
     enabled: Boolean = true,
+    titleFontSize: TextUnit = 29.sp,
     errorString: String = "",
     trailingIcon: @Composable (() -> Unit),
 ) {
@@ -238,7 +282,7 @@ fun InputFieldBase(
                 .padding(horizontal = if (isTitle) 0.dp else 5.dp),
             text = labelResourceString,
             textAlign = TextAlign.Left,
-            fontSize = if (isTitle) 29.sp else 18.sp,
+            fontSize = if (isTitle) titleFontSize else 18.sp,
             fontWeight = if (isTitle) FontWeight.Medium else FontWeight.Normal,
             style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
             color = MaterialTheme.colorScheme.inverseSurface,
@@ -257,7 +301,8 @@ fun InputFieldBase(
             onValueChange = onValueChange,
             readOnly = isReadOnly,
             enabled = enabled,
-            singleLine = !isTitle,
+            singleLine = isSingleLine,
+            maxLines = 4,
             visualTransformation = visualTransformation,
             shape = RoundedCornerShape(15.dp),
             trailingIcon = trailingIcon,
@@ -312,6 +357,13 @@ fun AuthTextFieldPreview() {
                 labelResourceString = "",
                 value = "pass",
                 onValueChange = {}
+            )
+            InputFieldModalScreen(
+                labelResourceString = "Dfdg",
+                value = "pass",
+                onValueChange = {},
+                isTitle = true,
+
             )
         }
     }

@@ -8,9 +8,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import com.example.passfort.model.PasswordItem
 import com.example.passfort.model.dbentity.PasswordRecordEntity
+import com.example.passfort.repository.PasswordsListRepo
 import com.example.passfort.screen.EScreenState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import javax.inject.Inject
 
 
 sealed class PasswordListState {
@@ -26,7 +29,10 @@ data class PasswordsScreenListState(
     val eScreenState: EScreenState = EScreenState.LOADING
 )
 
-class PasswordViewModel : ViewModel() {
+@HiltViewModel
+class PasswordViewModel @Inject constructor(
+    private val repository: PasswordsListRepo
+): ViewModel() {
 
     private val _uiState = MutableStateFlow<PasswordListState>(PasswordListState.Loading)
     val uiState: StateFlow<PasswordListState> = _uiState
@@ -35,20 +41,10 @@ class PasswordViewModel : ViewModel() {
         PasswordItem(1, "почта", "arina@mail.ru", daysToExpire = -1, isCompromised = false)
     )
 
-    private val allPasswords = listOf(
-        PasswordItem(2, "Гугл рабочий", "passfort@vk.edu", daysToExpire = 5, isCompromised = false),
-        PasswordItem(3, "бауманка лкс", "passfort@vk.edu", daysToExpire = 10, isCompromised = true),
-        PasswordItem(4, "почта", "arina@mail.ru", daysToExpire = 14, isCompromised = false),
-        PasswordItem(5, "Новая заметка 1", "mail123@mail.com", daysToExpire = -1, isCompromised = false),
-        PasswordItem(6, "Аэрофлот бонус", "aeroflot@mail.ru", daysToExpire = -1, isCompromised = false),
-        PasswordItem(5, "Новая заметка 2", "arina@mail.ru", daysToExpire = -1, isCompromised = false),
-        PasswordItem(5, "Новая заметка 2", "arina@mail.ru", daysToExpire = -1, isCompromised = false),
-        PasswordItem(5, "Новая заметка 2", "arina@mail.ru", daysToExpire = -1, isCompromised = false),
-        PasswordItem(5, "Новая заметка 3", "arina@mail.ru", daysToExpire = -1, isCompromised = false),
-        PasswordItem(5, "Новая заметка 5", "arina@mail.ru", daysToExpire = -1, isCompromised = false),
-    )
+    private var allPasswords = emptyList<PasswordItem>()
 
     init {
+        viewModelScope.launch { loadPasswordRecord() }
         loadPasswords()
     }
 
@@ -68,5 +64,18 @@ class PasswordViewModel : ViewModel() {
 
     fun retry() {
         loadPasswords()
+    }
+
+    suspend fun loadPasswordRecord(){
+        val listPasswords = repository.getAllPasswords()
+        listPasswords.forEach {
+            allPasswords += PasswordItem(
+                id = it.id.toInt(),
+                name = it.passwordRecordName,
+                username = it.passwordRecordLogin,
+                daysToExpire = it.passwordLastChangeDate.hour,
+                isCompromised = false
+            )
+        }
     }
 }
