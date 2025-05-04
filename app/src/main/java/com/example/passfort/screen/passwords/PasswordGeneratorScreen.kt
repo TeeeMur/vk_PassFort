@@ -79,7 +79,7 @@ fun PasswordGenScreen(viewModel: GeneratorViewModel = hiltViewModel()) {
             Spacer(Modifier.padding(bottom = 10.dp))
             PasswordGenOptions(viewModel)
         }
-        BottomButtonLine(viewModel)
+        GenerateBottomButtonLine(viewModel)
     }
 }
 
@@ -100,7 +100,7 @@ fun PasswordGenOptions(viewModel: GeneratorViewModel) {
 }
 
 @Composable
-fun BottomButtonLine(viewModel: GeneratorViewModel) {
+fun GenerateBottomButtonLine(viewModel: GeneratorViewModel) {
     Row(
         modifier = Modifier
             .fillMaxWidth()

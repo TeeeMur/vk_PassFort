@@ -114,7 +114,10 @@ fun PasswordSections(
 ) {
     var pinnedExpanded by remember { mutableStateOf(true) }
 
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
         if (pinnedPasswords.isNotEmpty()) {
             item {
                 Row(
@@ -155,6 +158,9 @@ fun PasswordSections(
         }
         items(allPasswords.size) { index ->
             PasswordCard(allPasswords[index])
+        }
+        item {
+            Spacer(modifier = Modifier.height(48.dp))
         }
     }
 }

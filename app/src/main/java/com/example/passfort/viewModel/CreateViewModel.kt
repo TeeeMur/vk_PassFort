@@ -22,18 +22,19 @@ class CreateViewModel @Inject constructor(
     private val _login: MutableStateFlow<String> = MutableStateFlow("")
     private val _password: MutableStateFlow<String> = MutableStateFlow("")
     private val _note: MutableStateFlow<String> = MutableStateFlow("")
+    private val _changeIntervalDays: MutableStateFlow<Int> = MutableStateFlow(0)
 
     val namePassword: StateFlow<String> = _namePassword.asStateFlow()
     val login: StateFlow<String> = _login.asStateFlow()
     val password: StateFlow<String> = _password.asStateFlow()
     val note: StateFlow<String> = _note.asStateFlow()
+    val changeIntervalDays: StateFlow<Int> = _changeIntervalDays.asStateFlow()
 
     private val _enablePasswordChange: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val enablePasswordChange: StateFlow<Boolean> = _enablePasswordChange.asStateFlow()
 
     init {
         _namePassword.update { "Новый пароль" }
-        viewModelScope.launch { createPassword() }
     }
 
     fun onNamePasswordChange(newNamePassword: String) {
@@ -56,22 +57,24 @@ class CreateViewModel @Inject constructor(
         _enablePasswordChange.update { !it }
     }
 
-    fun setPasswordDaysCount(daysCount: Int) {
-
+    fun setChangeIntervalDaysCount(daysCount: Int) {
+        _changeIntervalDays.update { daysCount }
     }
     
-    suspend fun createPassword() {
-        repository.upsertPassword(
-            password = PasswordRecordEntity(
-                passwordRecordName = "123",
-                passwordRecordLogin = "LOgin",
-                passwordRecordPassword = "345432",
-                passwordLastChangeDate = LocalDateTime.now(),
-                passwordChangeIntervalDays = 0,
-                iconIndex = 0,
-                pinned = false,
-                passwordLastUsedDate = LocalDateTime.now()
+    fun createPassword() {
+        viewModelScope.launch {
+            repository.upsertPassword(
+                password = PasswordRecordEntity(
+                    passwordRecordName = _namePassword.value,
+                    passwordRecordLogin = _login.value,
+                    passwordRecordPassword = _password.value,
+                    passwordLastChangeDate = LocalDateTime.now(),
+                    passwordChangeIntervalDays = _changeIntervalDays.value,
+                    iconIndex = 0,
+                    pinned = false,
+                    passwordLastUsedDate = LocalDateTime.now()
+                )
             )
-        )
+        }
     }
 }

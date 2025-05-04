@@ -41,21 +41,10 @@ class PasswordViewModel @Inject constructor(
         PasswordItem(1, "почта", "arina@mail.ru", daysToExpire = -1, isCompromised = false)
     )
 
-    private var allPasswords = listOf(
-        PasswordItem(2, "Гугл рабочий", "passfort@vk.edu", daysToExpire = 5, isCompromised = false),
-        PasswordItem(3, "бауманка лкс", "passfort@vk.edu", daysToExpire = 10, isCompromised = true),
-        PasswordItem(4, "почта", "arina@mail.ru", daysToExpire = 14, isCompromised = false),
-        PasswordItem(5, "Новая заметка 1", "mail123@mail.com", daysToExpire = -1, isCompromised = false),
-        PasswordItem(6, "Аэрофлот бонус", "aeroflot@mail.ru", daysToExpire = -1, isCompromised = false),
-        PasswordItem(5, "Новая заметка 2", "arina@mail.ru", daysToExpire = -1, isCompromised = false),
-        PasswordItem(5, "Новая заметка 2", "arina@mail.ru", daysToExpire = -1, isCompromised = false),
-        PasswordItem(5, "Новая заметка 2", "arina@mail.ru", daysToExpire = -1, isCompromised = false),
-        PasswordItem(5, "Новая заметка 3", "arina@mail.ru", daysToExpire = -1, isCompromised = false),
-        PasswordItem(5, "Новая заметка 5", "arina@mail.ru", daysToExpire = -1, isCompromised = false),
-    )
+    private var allPasswords = emptyList<PasswordItem>()
 
     init {
-        viewModelScope.launch { addPasswordRecord() }
+        viewModelScope.launch { loadPasswordRecord() }
         loadPasswords()
     }
 
@@ -77,15 +66,16 @@ class PasswordViewModel @Inject constructor(
         loadPasswords()
     }
 
-    suspend fun addPasswordRecord(){
+    suspend fun loadPasswordRecord(){
         val listPasswords = repository.getAllPasswords()
-        var password = listPasswords[0];
-        allPasswords += PasswordItem(
-            id = password.id.toInt(),
-            name = password.passwordRecordName,
-            username = password.passwordRecordLogin,
-            daysToExpire = password.passwordLastChangeDate.hour,
-            isCompromised = false,
-        )
+        listPasswords.forEach {
+            allPasswords += PasswordItem(
+                id = it.id.toInt(),
+                name = it.passwordRecordName,
+                username = it.passwordRecordLogin,
+                daysToExpire = it.passwordLastChangeDate.hour,
+                isCompromised = false
+            )
+        }
     }
 }
