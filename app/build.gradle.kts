@@ -105,5 +105,7 @@ dependencies {
     implementation(libs.kotlinx.collections.immutable)
     // Add extended material icons
     implementation(libs.androidx.material.icons.extended)
+    // draggable main screen
+    implementation(libs.androidx.foundation)
 
 }

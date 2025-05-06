@@ -75,7 +75,9 @@ fun NavigationGraph(
         }
 
         composable(Screen.HomeScreen.route) {
-            MainScreen(navController = navController, navigationBar = {NavigationBar(navController) {showBottomSheet = true} })
+            MainScreen(navController = navController,
+                navigationBar = { NavigationBar(navController){showBottomSheet = true} }
+            )
         }
         composable(Screen.PasswordGenerator.route) {
             PasswordGeneratorScreen(navController) { showBottomSheet = true }

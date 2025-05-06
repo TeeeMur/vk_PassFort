@@ -40,4 +40,7 @@
     <string name="settings">settings</string>
     <string name="profile">profile</string>
     <string name="app_name">passfort</string>
+    <string name="main_screen_recents_title">Недавние</string>
+    <string name="search_passwords_field_placeholder">Начните искать свой пароль</string>
+    <string name="main_screen_pinned_title">Закрепленные</string>
 </resources>
