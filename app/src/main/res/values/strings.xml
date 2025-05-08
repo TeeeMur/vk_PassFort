@@ -43,4 +43,6 @@
     <string name="main_screen_recents_title">Недавние</string>
     <string name="search_passwords_field_placeholder">Начните искать свой пароль</string>
     <string name="main_screen_pinned_title">Закрепленные</string>
+    <string name="password_icon_string_description">Password icon</string>
+    <string name="profile_icon_string_description">Профиль</string>
 </resources>

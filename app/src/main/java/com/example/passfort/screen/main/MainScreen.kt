@@ -3,8 +3,8 @@ package com.example.passfort.screen.main
 import android.annotation.SuppressLint
 import android.content.ClipData
 import android.os.PersistableBundle
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -27,12 +26,15 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -56,6 +58,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.passfort.R
@@ -64,6 +67,7 @@ import com.example.passfort.designSystem.components.SearchBar
 import com.example.passfort.model.dbentity.PasswordRecordEntity
 import com.example.passfort.viewModel.MainScreenViewModel
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlin.math.absoluteValue
 import kotlin.math.pow
@@ -74,20 +78,52 @@ enum class Anchors {
     End
 }
 
+val mainScreenImages = persistentListOf(
+    R.drawable.mainscreen_image1,
+    R.drawable.mainscreen_image2,
+    R.drawable.mainscreen_image3,
+)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MainScreen(
     viewModel: MainScreenViewModel = hiltViewModel(),
     navController: NavController,
-    navigationBar: @Composable () -> Unit = { PreviewNavBar() }
+    navigationBar: @Composable () -> Unit = {
+        PreviewNavBar()
+    }
 ) {
-    val pagerState = rememberPagerState { 5 }
+    val pagerState = rememberPagerState { mainScreenImages.size }
+    val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     Scaffold(
         modifier = Modifier,
-        bottomBar = navigationBar
+        topBar = {
+            TopAppBar(
+                modifier = Modifier
+                    .background(MaterialTheme.colorScheme.primary)
+                    .padding(end = 16.dp),
+                title = {
+                    Text(
+                        text = "Привет, Арина!",
+                        color = MaterialTheme.colorScheme.secondary
+                    )
+                },
+                actions = {
+                    Icon(
+                        imageVector = Icons.Outlined.AccountCircle,
+                        contentDescription = stringResource(R.string.profile_icon_string_description),
+                        tint = MaterialTheme.colorScheme.secondary
+                    )
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.Transparent
+                ),
+                scrollBehavior = topAppBarScrollBehavior
+            )
+        },
+        bottomBar = navigationBar,
     ) { scaffoldPaddingValues ->
-        val density = LocalDensity.current
         val anchors = DraggableAnchors<Anchors> {
             Anchors.Start at 0F
             Anchors.End at -800F
@@ -99,43 +135,44 @@ fun MainScreen(
             )
         }
         val backgroundColorAlpha =
-            (1 - anchoredDraggableState.requireOffset().absoluteValue / anchoredDraggableState.anchors.minPosition().absoluteValue).pow(0.85F)
+            (1 - anchoredDraggableState.requireOffset().absoluteValue / anchoredDraggableState.anchors.minPosition().absoluteValue).pow(
+                0.85F
+            )
         Column(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
                 .wrapContentHeight(
                     align = Alignment.Top,
-                    unbounded = true)
+                    unbounded = true
+                )
                 .background(MaterialTheme.colorScheme.primary.copy(alpha = backgroundColorAlpha))
-                .padding(top = 48.dp),
+                .padding(top = scaffoldPaddingValues.calculateTopPadding()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 4.dp)
                     .onGloballyPositioned {
                         anchoredDraggableState.updateAnchors(
                             DraggableAnchors<Anchors> {
                                 Anchors.Start at 0F
-                                Anchors.End at -with(density) { it.size.height.dp.value; }
+                                Anchors.End at -it.size.height.toFloat()
                             }
                         )
                     },
             ) {
                 HorizontalPager(
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .height(300.dp), // hardcode hooray!!! (maximum height of images + ~30 dp)
                     state = pagerState,
                 ) { index ->
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(280.dp)
-                            .border(8.dp, Color.Blue, RoundedCornerShape(16.dp))
-                            .background(Color.Transparent),
-                        contentAlignment = Alignment.Center
-                    ) { Text("INDEX: $index", fontSize = 36.sp) }
+                    Image(
+                        modifier = Modifier.fillMaxWidth(),
+                        imageVector = ImageVector.vectorResource(mainScreenImages[index]),
+                        contentDescription = null,
+                        alpha = backgroundColorAlpha
+                    )
                 }
                 Row(
                     modifier = Modifier
@@ -143,7 +180,7 @@ fun MainScreen(
                         .padding(vertical = 8.dp),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    repeat(5) { index ->
+                    repeat(mainScreenImages.size) { index ->
                         val backColor =
                             if (index == pagerState.currentPage) MaterialTheme.colorScheme.surface
                             else MaterialTheme.colorScheme.secondary
@@ -165,6 +202,10 @@ fun MainScreen(
                             y = anchoredDraggableState.requireOffset().roundToInt()
                         )
                     }
+                    .anchoredDraggable(
+                        state = anchoredDraggableState,
+                        orientation = Orientation.Vertical
+                    )
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
                     .background(MaterialTheme.colorScheme.background)
@@ -172,17 +213,21 @@ fun MainScreen(
                     .height(
                         LocalWindowInfo.current.containerSize.height.dp
                                 - scaffoldPaddingValues.calculateBottomPadding() * 1.5F
-                                + scaffoldPaddingValues.calculateTopPadding()
                                 - 12.dp
-                    )
-                    .anchoredDraggable(
-                        state = anchoredDraggableState,
-                        orientation = Orientation.Vertical),
+                    ),
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 var searchString by remember { mutableStateOf("") }
-                Box(modifier = Modifier.width(32.dp).height(4.dp).background(color = MaterialTheme.colorScheme.secondary, shape = MaterialTheme.shapes.extraLarge))
+                Box(
+                    modifier = Modifier
+                        .width(32.dp)
+                        .height(4.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.secondary,
+                            shape = MaterialTheme.shapes.extraLarge
+                        )
+                )
                 SearchBar(
                     value = searchString,
                     placeholder = stringResource(R.string.search_passwords_field_placeholder),
@@ -221,12 +266,13 @@ fun MainScreen(
 @Composable
 fun SmallPasswordsList(
     modifier: Modifier = Modifier,
-    title: String = "Recently used",
+    title: String = "Недавние",
     passwordsList: ImmutableList<PasswordRecordEntity>,
     showIcons: Boolean = false
 ) {
     Column(
         modifier = modifier
+            .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
             .background(MaterialTheme.colorScheme.surface)
             .padding(vertical = 16.dp, horizontal = 20.dp),
@@ -237,21 +283,21 @@ fun SmallPasswordsList(
             modifier = Modifier,
             fontWeight = FontWeight.Medium
         )
-        //if (passwordsList.isNotEmpty()) {
-        Column(
-            modifier = Modifier.padding(top = 4.dp),
-            verticalArrangement = Arrangement.SpaceAround
-        ) {
-            repeat(4) {
-                SmallPasswordsListRow(item = null, showIcon = showIcons)
+        if (passwordsList.isNotEmpty()) {
+            Column(
+                modifier = Modifier.padding(top = 4.dp),
+                verticalArrangement = Arrangement.SpaceAround
+            ) {
+                passwordsList.forEach {
+                    SmallPasswordsListRow(item = it, showIcon = showIcons)
+                }
             }
         }
-        //}
     }
 }
 
 @Composable
-fun SmallPasswordsListRow(item: PasswordRecordEntity?, showIcon: Boolean = false) {
+fun SmallPasswordsListRow(item: PasswordRecordEntity, showIcon: Boolean = false) {
     val clipboardManager = LocalClipboardManager.current
     Row(
         modifier = Modifier
@@ -263,12 +309,12 @@ fun SmallPasswordsListRow(item: PasswordRecordEntity?, showIcon: Boolean = false
         if (showIcon) {
             Icon(
                 imageVector = Icons.Default.AccountCircle,
-                contentDescription = "Password icon",
+                contentDescription = stringResource(R.string.password_icon_string_description),
                 modifier = Modifier.padding(end = 4.dp)
             )
         }
         Text(
-            text = "name",
+            text = item.passwordRecordName,
             modifier = Modifier.weight(1f),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
@@ -277,7 +323,7 @@ fun SmallPasswordsListRow(item: PasswordRecordEntity?, showIcon: Boolean = false
             modifier = Modifier.size(30.dp),
             onClick = {
                 val clipData =
-                    ClipData.newPlainText("Copied:", "value" /*item.passwordRecordPassword*/)
+                    ClipData.newPlainText("Copied password:", item.passwordRecordPassword)
                         .apply {
                             description.extras = PersistableBundle().apply {
                                 putBoolean("android.content.extra.IS_SENSITIVE", true)
