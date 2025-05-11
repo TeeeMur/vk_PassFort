@@ -2,6 +2,7 @@ package com.example.passfort.designSystem.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -13,9 +14,37 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.passfort.R
 import kotlinx.coroutines.flow.StateFlow
+
+@Composable
+fun PasswordRemindOptions(
+    enablePasswordChange: StateFlow<Boolean>,
+    setPasswordChange: () -> Unit,
+    setChangeIntervalDaysCount: (Int) -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .padding(bottom = 20.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        ToggleLine(
+            name = stringResource(R.string.passwordcreate_toggle_remind_change_name),
+            valueFlow = enablePasswordChange
+        ) {
+            setPasswordChange()
+        }
+
+        if (enablePasswordChange.collectAsState().value) {
+            SingleChoiceSegmentedButton() {
+                setChangeIntervalDaysCount(it)
+            }
+        }
+    }
+}
 
 @Composable
 fun ToggleLine(name: String, valueFlow: StateFlow<Boolean>, toggleAction: () -> Unit) {

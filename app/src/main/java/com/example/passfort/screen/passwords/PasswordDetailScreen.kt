@@ -2,26 +2,18 @@ package com.example.passfort.screen.passwords
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -34,16 +26,20 @@ import com.example.passfort.R
 import com.example.passfort.designSystem.components.InputFieldPassword
 import com.example.passfort.designSystem.components.InputFieldTitle
 import com.example.passfort.designSystem.components.InputFieldWithCopy
+import com.example.passfort.designSystem.components.PasswordRemindOptions
 import com.example.passfort.designSystem.theme.PassFortTheme
-import com.example.passfort.navigation.Screen
-import com.example.passfort.viewModel.CreateViewModel
+import com.example.passfort.viewModel.DetailViewModel
 import com.yourpackage.ui.components.ButtonAdditionally
+import com.yourpackage.ui.components.BottomButtonLine
 
 @Composable
-fun PasswordEditScreen(
-    viewModel: CreateViewModel = hiltViewModel(),
+fun PasswordDetailScreen(
+    viewModel: DetailViewModel = hiltViewModel(),
+    idPasswordRecord: Int,
     onGeneratePassword: () -> Unit
 ) {
+
+    viewModel.initPassword(idPasswordRecord)
 
     Scaffold(
     ) { padding ->
@@ -82,9 +78,13 @@ fun PasswordEditScreen(
                     value = viewModel.note.collectAsState().value,
                     onValueChange = { viewModel.onNoteChange(it) },
                 )
-                PasswordRemindOptions(viewModel)
+                PasswordRemindOptions(
+                    enablePasswordChange = viewModel.enablePasswordChange,
+                    setPasswordChange = { viewModel.setPasswordChange() },
+                    setChangeIntervalDaysCount = { viewModel.setChangeIntervalDaysCount(it) }
+                )
             }
-            CreateBottomButtonLine(viewModel, onDismiss = {})
+            BottomButtonLine({ viewModel.editPassword() }, onDismiss = {})
         }
     }
 }

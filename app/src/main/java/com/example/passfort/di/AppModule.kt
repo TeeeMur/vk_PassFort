@@ -3,6 +3,10 @@ package com.example.passfort.di
 import android.content.Context
 import androidx.room.Room
 import com.example.passfort.model.PassFortDB
+import com.example.passfort.repository.PasswordsCreateRepo
+import com.example.passfort.repository.PasswordsCreateRepoImpl
+import com.example.passfort.repository.PasswordsDetailRepo
+import com.example.passfort.repository.PasswordsDetailRepoImpl
 import com.example.passfort.repository.PasswordsListRepo
 import com.example.passfort.repository.PasswordsListRepoImpl
 import dagger.Module
@@ -23,7 +27,17 @@ object AppModule {
     }
 
     @Provides
-    fun providePasswordsRepository(db: PassFortDB): PasswordsListRepo {
+    fun providePasswordListRepository(db: PassFortDB): PasswordsListRepo {
         return PasswordsListRepoImpl(db)
+    }
+
+    @Provides
+    fun providePasswordCreateRepository(db: PassFortDB): PasswordsCreateRepo {
+        return PasswordsCreateRepoImpl(db)
+    }
+
+    @Provides
+    fun providePasswordDetailRepository(db: PassFortDB): PasswordsDetailRepo {
+        return PasswordsDetailRepoImpl(db)
     }
 }

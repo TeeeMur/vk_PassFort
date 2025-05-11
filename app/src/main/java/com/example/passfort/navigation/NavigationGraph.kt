@@ -9,8 +9,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.example.passfort.model.PreferencesManager
 import com.example.passfort.screen.auth.LoginScreen
 import com.example.passfort.screen.auth.RegisterScreen
@@ -18,7 +20,7 @@ import com.example.passfort.screen.main.HomeScreen
 import com.example.passfort.screen.passwords.PasswordListScreen
 import com.example.passfort.screen.passwords.SettingsScreen
 import com.example.passfort.screen.passwords.PasswordCreateModalScreen
-import com.example.passfort.screen.passwords.PasswordEditScreen
+import com.example.passfort.screen.passwords.PasswordDetailScreen
 import com.example.passfort.screen.passwords.PasswordGenerateModalScreen
 import com.example.passfort.screen.passwords.PasswordGeneratorScreen
 import com.example.passfort.viewModel.LoginViewModel
@@ -89,6 +91,23 @@ fun NavigationGraph(
                 onAddPassword = {showBottomSheetCreatePassword = true})
         }
 
+        composable(
+            Screen.PasswordDetail.route,
+            arguments = listOf(
+                navArgument("passwordId"){
+                    type = NavType.IntType
+                    nullable = false
+                }
+            )
+        ){
+            it.arguments?.getInt("passwordId")?.let {
+                PasswordDetailScreen(
+                    idPasswordRecord = it,
+                    onGeneratePassword = {showBottomSheetGeneratePassword = true}
+                )
+            }
+        }
+
         composable(Screen.Register.route) {
             RegisterScreen(
                 navController,
@@ -109,11 +128,13 @@ fun NavigationGraph(
             { showBottomSheetCreatePassword = true }
         }
     }
+
     PasswordCreateModalScreen(
         showBottomSheet = showBottomSheetCreatePassword,
         onDismiss = { showBottomSheetCreatePassword = false },
         onGeneratePassword = {showBottomSheetGeneratePassword = true}
     )
+
     PasswordGenerateModalScreen(showBottomSheetGeneratePassword) { showBottomSheetGeneratePassword = false }
 }
 
