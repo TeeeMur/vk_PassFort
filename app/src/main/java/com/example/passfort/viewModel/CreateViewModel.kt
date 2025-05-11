@@ -23,12 +23,14 @@ class CreateViewModel @Inject constructor(
     private val _password: MutableStateFlow<String> = MutableStateFlow("")
     private val _note: MutableStateFlow<String> = MutableStateFlow("")
     private val _changeIntervalDays: MutableStateFlow<Int> = MutableStateFlow(0)
+    private val _isEmptyRecords: MutableStateFlow<Boolean> = MutableStateFlow(false)
 
     val namePassword: StateFlow<String> = _namePassword.asStateFlow()
     val login: StateFlow<String> = _login.asStateFlow()
     val password: StateFlow<String> = _password.asStateFlow()
     val note: StateFlow<String> = _note.asStateFlow()
     val changeIntervalDays: StateFlow<Int> = _changeIntervalDays.asStateFlow()
+    val isEmptyRecords: StateFlow<Boolean> = _isEmptyRecords.asStateFlow()
 
     private val _enablePasswordChange: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val enablePasswordChange: StateFlow<Boolean> = _enablePasswordChange.asStateFlow()
@@ -61,7 +63,13 @@ class CreateViewModel @Inject constructor(
         _changeIntervalDays.update { daysCount }
     }
     
-    fun createPassword() {
+    fun createPassword(): Boolean {
+
+        if (_login.value == "" || _password.value == ""){
+            _isEmptyRecords.update { true }
+            return false
+        }
+
         viewModelScope.launch {
             repository.upsertPassword(
                 password = PasswordRecordEntity(
@@ -76,5 +84,16 @@ class CreateViewModel @Inject constructor(
                 )
             )
         }
+        reset()
+        return true
+    }
+
+    private fun reset(){
+        _namePassword.update { "Новый пароль" }
+        _login.update { "" }
+        _password.update { "" }
+        _note.update { "" }
+        _changeIntervalDays.update { 0 }
+        _isEmptyRecords.update { false }
     }
 }

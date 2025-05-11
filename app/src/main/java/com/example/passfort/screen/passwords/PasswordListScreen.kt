@@ -36,7 +36,8 @@ import com.example.passfort.designSystem.theme.PassFortTheme
 fun PasswordListScreen(
     viewModel: PasswordViewModel = hiltViewModel(),
     navController: NavHostController,
-    onAddPassword: () -> Unit
+    onAddPassword: () -> Unit,
+    onClickPassword: (Int) -> Unit
 ) {
     val uiState = viewModel.uiState.collectAsState().value
     var searchQuery by remember { mutableStateOf("") }
@@ -64,13 +65,13 @@ fun PasswordListScreen(
 
             when (uiState) {
                 is PasswordListState.Loading -> LoadingScreen()
-                is PasswordListState.Error -> ErrorScreen(uiState.message, onRetry = { viewModel.retry() })
+                is PasswordListState.Error -> ErrorScreen(uiState.message)
                 is PasswordListState.Empty -> EmptyScreen()
                 is PasswordListState.Success -> {
                     PasswordSections(
                         pinnedPasswords = uiState.pinnedPasswords,
                         allPasswords = uiState.allPasswords,
-                        navController
+                        onClickPassword = onClickPassword
                     )
                 }
             }
@@ -113,7 +114,8 @@ fun SearchBar(query: String, onQueryChange: (String) -> Unit) {
 fun PasswordSections(
     pinnedPasswords: List<PasswordItem>,
     allPasswords: List<PasswordItem>,
-    navController: NavHostController
+    onClickPassword: (Int) -> Unit
+
 ) {
     var pinnedExpanded by remember { mutableStateOf(true) }
 
@@ -146,8 +148,7 @@ fun PasswordSections(
                 items(pinnedPasswords.size) { index ->
                     PasswordCard(
                         pinnedPasswords[index],
-                        navController,
-                        ""
+                        onClickPassword = onClickPassword
                     )
                 }
             }
@@ -165,8 +166,7 @@ fun PasswordSections(
         }
         items(allPasswords.size) { index ->
             PasswordCard(allPasswords[index],
-                navController,
-                ""
+                onClickPassword = onClickPassword
             )
         }
         item {
@@ -203,7 +203,7 @@ fun ShimmerPasswordCard() {
 }
 
 @Composable
-fun ErrorScreen(message: String, onRetry: () -> Unit) {
+fun ErrorScreen(message: String) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -217,9 +217,6 @@ fun ErrorScreen(message: String, onRetry: () -> Unit) {
                 style = MaterialTheme.typography.bodyMedium
             )
             Spacer(modifier = Modifier.height(8.dp))
-            Button(onClick = onRetry) {
-                Text("Повторить")
-            }
         }
     }
 }
@@ -245,5 +242,5 @@ fun EmptyScreen() {
 fun PreviewListScreen(){
     var viewModel = hiltViewModel<PasswordViewModel>()
     var navController = rememberNavController()
-    PassFortTheme { PasswordListScreen(viewModel,navController, {}) }
+    PassFortTheme { PasswordListScreen(viewModel,navController, {},{}) }
 }

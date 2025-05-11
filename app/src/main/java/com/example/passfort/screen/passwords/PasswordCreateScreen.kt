@@ -57,13 +57,15 @@ fun PasswordCreateScreen(viewModel: CreateViewModel = hiltViewModel(), onDismiss
                 InputFieldWithCopy(
                     labelResourceString = stringResource(R.string.passwordcreate_inputfield_login),
                     value = viewModel.login.collectAsState().value,
-                    onValueChange = { viewModel.onLoginChange(it) }
+                    onValueChange = { viewModel.onLoginChange(it) },
+                    isShowErrorText = viewModel.isEmptyRecords.collectAsState().value,
                 )
                 InputFieldPassword(
                     labelResourceString = stringResource(R.string.passwordcreate_inputfield_password),
                     value = viewModel.password.collectAsState().value,
                     onValueChange = { viewModel.onPasswordChange(it) },
-                )
+                    isShowErrorText = viewModel.isEmptyRecords.collectAsState().value,
+                    )
                 ButtonAdditionally { onGeneratePassword() }
                 InputFieldWithCopy(
                     labelResourceString = stringResource(R.string.passwordcreate_inputfield_note),
@@ -119,8 +121,8 @@ fun CreateBottomButtonLine(
                 .height(64.dp),
             shape = RoundedCornerShape(50.dp),
             onClick = {
-                viewModel.createPassword()
-                onDismiss()
+                if (viewModel.createPassword())
+                    onDismiss()
             }
         ) {
             Text(

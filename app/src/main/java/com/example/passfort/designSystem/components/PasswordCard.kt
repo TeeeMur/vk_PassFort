@@ -34,23 +34,13 @@ import com.example.passfort.navigation.Screen
 @Composable
 fun PasswordCard(
     item: PasswordItem,
-    navController: NavHostController,
-    navigateString: String
+    onClickPassword: (Int) -> Unit
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null
-            ) {
-                navController.navigate(navigateString) {
-                    popUpTo(Screen.PasswordList.route) { inclusive = false }
-                    launchSingleTop = true
-                    restoreState = true
-                }
-            },
+            .clickable{onClickPassword(item.id)},
         colors = CardColors(
             containerColor = MaterialTheme.colorScheme.outline,
             contentColor = MaterialTheme.colorScheme.outline,
@@ -104,8 +94,6 @@ fun PreviewPasCard(){
         0,
         "Figma",
         "asdf@gmail.com",
-        1,
-        false)
-    var navController = rememberNavController()
-    PassFortTheme { PasswordCard(pasData, navController, "") }
+        1)
+    PassFortTheme { PasswordCard(pasData, {}) }
 }

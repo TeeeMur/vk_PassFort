@@ -18,6 +18,7 @@ import com.example.passfort.screen.main.HomeScreen
 import com.example.passfort.screen.passwords.PasswordListScreen
 import com.example.passfort.screen.passwords.SettingsScreen
 import com.example.passfort.screen.passwords.PasswordCreateModalScreen
+import com.example.passfort.screen.passwords.PasswordEditScreen
 import com.example.passfort.screen.passwords.PasswordGenerateModalScreen
 import com.example.passfort.screen.passwords.PasswordGeneratorScreen
 import com.example.passfort.viewModel.LoginViewModel
@@ -83,8 +84,11 @@ fun NavigationGraph(
         }
 
         composable(Screen.PasswordList.route) {
-            PasswordListScreen(navController = navController) { showBottomSheetCreatePassword = true }
+            PasswordListScreen(navController = navController,
+                onClickPassword = {id: Int -> navController.navigate(Screen.PasswordDetail.createRoute(id))},
+                onAddPassword = {showBottomSheetCreatePassword = true})
         }
+
         composable(Screen.Register.route) {
             RegisterScreen(
                 navController,

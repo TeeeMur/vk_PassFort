@@ -81,6 +81,7 @@ fun InputFieldWithCopy(labelResourceString: String,
                        isTitle: Boolean = false,
                        isSingleLine: Boolean = false,
                        isReadOnly : Boolean = false,
+                       isShowErrorText: Boolean = false
 ){
     val clipboardManager = LocalClipboardManager.current
 
@@ -97,6 +98,8 @@ fun InputFieldWithCopy(labelResourceString: String,
             isTitle = isTitle,
             isSingleLine = isSingleLine,
             isReadOnly = isReadOnly,
+            errorString = "Не должна быть пустой",
+            isShowErrorText = (isShowErrorText && value == ""),
             trailingIcon = {
                 IconButton(
                     modifier = Modifier.padding(end = 4.dp),
@@ -225,6 +228,7 @@ fun InputFieldPasswordWithCopy(labelResourceString: String,
 fun InputFieldPassword(labelResourceString: String,
                        value: String,
                        onValueChange: (String) -> Unit = {},
+                       isShowErrorText: Boolean = false
 ){
     var passwordVisible by remember { mutableStateOf(false) }
 
@@ -246,6 +250,8 @@ fun InputFieldPassword(labelResourceString: String,
             value = value,
             onValueChange = onValueChange,
             visualTransformation = visualTransformation,
+            errorString = "Не должна быть пустой",
+            isShowErrorText = (isShowErrorText && value == ""),
             trailingIcon = {
                 IconButton(onClick = { passwordVisible = !passwordVisible }) {
                     Icon(
@@ -272,6 +278,7 @@ fun InputFieldBase(
     enabled: Boolean = true,
     titleFontSize: TextUnit = 29.sp,
     errorString: String = "",
+    isShowErrorText: Boolean = false,
     trailingIcon: @Composable (() -> Unit),
 ) {
     Column{
@@ -316,7 +323,7 @@ fun InputFieldBase(
             ),
         )
 
-        if (errorString.isNotEmpty()) {
+        if (errorString.isNotEmpty() && isShowErrorText) {
             Text(
                 text = errorString,
                 color = MaterialTheme.colorScheme.error,
