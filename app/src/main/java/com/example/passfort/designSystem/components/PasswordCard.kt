@@ -1,6 +1,7 @@
 package com.example.passfort.designSystem.components
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,6 +13,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,17 +24,33 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.passfort.R
 import com.example.passfort.designSystem.theme.PassFortTheme
 import com.example.passfort.model.PasswordItem
+import com.example.passfort.navigation.Screen
 
 @Composable
-fun PasswordCard(item: PasswordItem) {
+fun PasswordCard(
+    item: PasswordItem,
+    navController: NavHostController,
+    navigateString: String
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
-            .clickable {  },
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            ) {
+                navController.navigate(navigateString) {
+                    popUpTo(Screen.PasswordList.route) { inclusive = false }
+                    launchSingleTop = true
+                    restoreState = true
+                }
+            },
         colors = CardColors(
             containerColor = MaterialTheme.colorScheme.outline,
             contentColor = MaterialTheme.colorScheme.outline,
@@ -88,5 +106,6 @@ fun PreviewPasCard(){
         "asdf@gmail.com",
         1,
         false)
-    PassFortTheme { PasswordCard(pasData) }
+    var navController = rememberNavController()
+    PassFortTheme { PasswordCard(pasData, navController, "") }
 }

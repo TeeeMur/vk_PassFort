@@ -32,9 +32,12 @@ import androidx.navigation.compose.rememberNavController
 import com.example.passfort.designSystem.components.PasswordCard
 import com.example.passfort.designSystem.theme.PassFortTheme
 
-
 @Composable
-fun PasswordListScreen(viewModel: PasswordViewModel = hiltViewModel(), navController: NavHostController, onAddPassword: () -> Unit) {
+fun PasswordListScreen(
+    viewModel: PasswordViewModel = hiltViewModel(),
+    navController: NavHostController,
+    onAddPassword: () -> Unit
+) {
     val uiState = viewModel.uiState.collectAsState().value
     var searchQuery by remember { mutableStateOf("") }
 
@@ -66,14 +69,14 @@ fun PasswordListScreen(viewModel: PasswordViewModel = hiltViewModel(), navContro
                 is PasswordListState.Success -> {
                     PasswordSections(
                         pinnedPasswords = uiState.pinnedPasswords,
-                        allPasswords = uiState.allPasswords
+                        allPasswords = uiState.allPasswords,
+                        navController
                     )
                 }
             }
         }
     }
 }
-
 
 @Composable
 fun SearchBar(query: String, onQueryChange: (String) -> Unit) {
@@ -106,11 +109,11 @@ fun SearchBar(query: String, onQueryChange: (String) -> Unit) {
     }
 }
 
-
 @Composable
 fun PasswordSections(
     pinnedPasswords: List<PasswordItem>,
-    allPasswords: List<PasswordItem>
+    allPasswords: List<PasswordItem>,
+    navController: NavHostController
 ) {
     var pinnedExpanded by remember { mutableStateOf(true) }
 
@@ -141,7 +144,11 @@ fun PasswordSections(
             }
             if (pinnedExpanded) {
                 items(pinnedPasswords.size) { index ->
-                    PasswordCard(pinnedPasswords[index])
+                    PasswordCard(
+                        pinnedPasswords[index],
+                        navController,
+                        ""
+                    )
                 }
             }
             item {
@@ -157,7 +164,10 @@ fun PasswordSections(
             )
         }
         items(allPasswords.size) { index ->
-            PasswordCard(allPasswords[index])
+            PasswordCard(allPasswords[index],
+                navController,
+                ""
+            )
         }
         item {
             Spacer(modifier = Modifier.height(48.dp))
@@ -191,7 +201,6 @@ fun ShimmerPasswordCard() {
         Box(modifier = Modifier.fillMaxSize().background(Color.LightGray))
     }
 }
-
 
 @Composable
 fun ErrorScreen(message: String, onRetry: () -> Unit) {

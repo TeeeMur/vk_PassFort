@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -24,7 +25,14 @@ import com.example.passfort.viewModel.CreateViewModel
 import com.yourpackage.ui.components.ButtonAdditionally
 
 @Composable
-fun PasswordEditScreen(viewModel: CreateViewModel = hiltViewModel(),  onGeneratePassword: () -> Unit) {
+fun PasswordEditScreen(
+    viewModel: CreateViewModel = hiltViewModel(),
+    onGeneratePassword: () -> Unit
+) {
+
+    Scaffold {
+
+    }
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -61,9 +69,9 @@ fun PasswordEditScreen(viewModel: CreateViewModel = hiltViewModel(),  onGenerate
 @PreviewLightDark()
 @Composable
 fun EditPasswordPreview() {
-    val viewModel = hiltViewModel<CreateViewModel>()
+    //val viewModel = hiltViewModel<CreateViewModel>()
     PassFortTheme {
-        PasswordCreateScreen(viewModel, {}, {})
+        PasswordEditScreen(onGeneratePassword = {})
     }
 }
 
