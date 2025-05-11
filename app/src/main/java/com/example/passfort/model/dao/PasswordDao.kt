@@ -3,12 +3,13 @@ package com.example.passfort.model.dao
 import androidx.room.Dao
 import androidx.room.Query
 import com.example.passfort.model.dbentity.PasswordRecordEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PasswordDao: BaseDao<PasswordRecordEntity> {
 
     @Query("SELECT * from password_record")
-    suspend fun getAll(): List<PasswordRecordEntity>
+    fun getAll(): Flow<List<PasswordRecordEntity>>
 
     @Query("SELECT * from password_record WHERE pinned = 1")
     suspend fun getPinned(): List<PasswordRecordEntity>

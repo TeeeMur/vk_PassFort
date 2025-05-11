@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -33,46 +34,57 @@ import com.example.passfort.designSystem.components.SingleChoiceSegmentedButton
 import com.example.passfort.designSystem.components.ToggleLine
 import com.example.passfort.designSystem.theme.PassFortTheme
 import com.example.passfort.viewModel.CreateViewModel
+import com.yourpackage.ui.components.ButtonAdditionally
 
 @Composable
-fun PasswordCreateScreen(viewModel: CreateViewModel = hiltViewModel()) {
+fun PasswordCreateScreen(viewModel: CreateViewModel = hiltViewModel(), onDismiss: () -> Unit, onGeneratePassword: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween,
     ) {
-        Column {
-            InputFieldTitle(
-                value = viewModel.namePassword.collectAsState().value,
-                onValueChange = {viewModel.onNamePasswordChange(it)},
-                onClick = {}
-            )
-            InputFieldWithCopy(
-                labelResourceString = stringResource(R.string.passwordcreate_inputfield_login),
-                value = viewModel.login.collectAsState().value,
-                onValueChange = {viewModel.onLoginChange(it)}
-            )
-            InputFieldPassword(
-                labelResourceString = stringResource(R.string.passwordcreate_inputfield_password),
-                value = viewModel.password.collectAsState().value,
-                onValueChange = {viewModel.onPasswordChange(it)},
-            )
-            InputFieldWithCopy(
-                labelResourceString = stringResource(R.string.passwordcreate_inputfield_note),
-                value = viewModel.note.collectAsState().value,
-                onValueChange = {viewModel.onNoteChange(it)},
-            )
-            PasswordRemindOptions(viewModel)
+        InputFieldTitle(
+            value = viewModel.namePassword.collectAsState().value,
+            onValueChange = { viewModel.onNamePasswordChange(it) },
+            onClick = {}
+        )
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.85f)
+        ) {
+            item {
+                InputFieldWithCopy(
+                    labelResourceString = stringResource(R.string.passwordcreate_inputfield_login),
+                    value = viewModel.login.collectAsState().value,
+                    onValueChange = { viewModel.onLoginChange(it) },
+                    isShowErrorText = viewModel.isEmptyRecords.collectAsState().value,
+                )
+                InputFieldPassword(
+                    labelResourceString = stringResource(R.string.passwordcreate_inputfield_password),
+                    value = viewModel.password.collectAsState().value,
+                    onValueChange = { viewModel.onPasswordChange(it) },
+                    isShowErrorText = viewModel.isEmptyRecords.collectAsState().value,
+                    )
+                ButtonAdditionally { onGeneratePassword() }
+                InputFieldWithCopy(
+                    labelResourceString = stringResource(R.string.passwordcreate_inputfield_note),
+                    value = viewModel.note.collectAsState().value,
+                    onValueChange = { viewModel.onNoteChange(it) },
+                )
+                PasswordRemindOptions(viewModel)
+            }
         }
-        BottomButtonLine(viewModel)
+        CreateBottomButtonLine(viewModel, onDismiss)
     }
 }
 
 @Composable
-fun PasswordRemindOptions(viewModel: CreateViewModel) {
-
+fun PasswordRemindOptions(viewModel: CreateViewModel)
+{
     Column(
-        modifier = Modifier,
+        modifier = Modifier
+            .padding(bottom = 20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         ToggleLine(
@@ -84,14 +96,17 @@ fun PasswordRemindOptions(viewModel: CreateViewModel) {
         
         if (viewModel.enablePasswordChange.collectAsState().value) {
             SingleChoiceSegmentedButton() {
-                viewModel.setPasswordDaysCount(it)
+                viewModel.setChangeIntervalDaysCount(it)
             }
         }
     }
 }
 
 @Composable
-fun BottomButtonLine(viewModel: CreateViewModel) {
+fun CreateBottomButtonLine(
+    viewModel: CreateViewModel,
+    onDismiss: () -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -105,7 +120,10 @@ fun BottomButtonLine(viewModel: CreateViewModel) {
                 .padding(bottom = 20.dp)
                 .height(64.dp),
             shape = RoundedCornerShape(50.dp),
-            onClick = {}
+            onClick = {
+                if (viewModel.createPassword())
+                    onDismiss()
+            }
         ) {
             Text(
                 text = stringResource(R.string.passwordcreate_bottombutton_save),
@@ -118,7 +136,7 @@ fun BottomButtonLine(viewModel: CreateViewModel) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PartialBottomSheet(showBottomSheet: Boolean, onDismiss: () -> Unit) {
+fun PasswordCreateModalScreen(showBottomSheet: Boolean, onDismiss: () -> Unit, onGeneratePassword: () -> Unit) {
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
     )
@@ -132,7 +150,10 @@ fun PartialBottomSheet(showBottomSheet: Boolean, onDismiss: () -> Unit) {
             sheetState = sheetState,
             onDismissRequest = onDismiss
         ) {
-            PasswordCreateScreen()
+            PasswordCreateScreen(
+                onGeneratePassword = onGeneratePassword,
+                onDismiss = onDismiss
+            )
         }
     }
 }
@@ -140,8 +161,9 @@ fun PartialBottomSheet(showBottomSheet: Boolean, onDismiss: () -> Unit) {
 @PreviewLightDark()
 @Composable
 fun CreatePasswordPreview() {
+    val viewModel = hiltViewModel<CreateViewModel>()
     PassFortTheme {
-        PasswordCreateScreen()
+        PasswordCreateScreen(viewModel, {}, {})
     }
 }
 
