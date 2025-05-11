@@ -74,8 +74,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-
-
     // Retrofit
     implementation(libs.retrofit)
     // Retrofit with Scalar Converter
@@ -105,7 +103,7 @@ dependencies {
     implementation(libs.kotlinx.collections.immutable)
     // Add extended material icons
     implementation(libs.androidx.material.icons.extended)
-    // draggable main screen
+    // Draggable main screen
     implementation(libs.androidx.foundation)
 
 }

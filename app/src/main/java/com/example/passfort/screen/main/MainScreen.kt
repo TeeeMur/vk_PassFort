@@ -49,7 +49,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.ClipEntry
 import androidx.compose.ui.platform.LocalClipboardManager
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -58,7 +57,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.passfort.R
@@ -267,7 +265,7 @@ fun MainScreen(
 fun SmallPasswordsList(
     modifier: Modifier = Modifier,
     title: String = "Недавние",
-    passwordsList: ImmutableList<PasswordRecordEntity>,
+    passwordsList: List<PasswordRecordEntity>, // TODO() IMMUTABLELIST
     showIcons: Boolean = false
 ) {
     Column(

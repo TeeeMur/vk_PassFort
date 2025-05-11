@@ -16,9 +16,9 @@ class MainScreenViewModel @Inject constructor(private val repo: PasswordsListRep
     private val _recentPasswords: MutableStateFlow<List<PasswordRecordEntity>> = MutableStateFlow(emptyList())
     private val _pinnedPasswords: MutableStateFlow<List<PasswordRecordEntity>> = MutableStateFlow(emptyList())
     private val _thirdPasswords: MutableStateFlow<List<PasswordRecordEntity>> = MutableStateFlow(emptyList())
-    var recentPasswords = _recentPasswords.asStateFlow()
-    var pinnedPasswords = _pinnedPasswords.asStateFlow()
-    var thirdPasswords = _thirdPasswords.asStateFlow()
+    val recentPasswords = _recentPasswords.asStateFlow()
+    val pinnedPasswords = _pinnedPasswords.asStateFlow()
+    val thirdPasswords = _thirdPasswords.asStateFlow()
 
     init {
         update()
@@ -28,6 +28,7 @@ class MainScreenViewModel @Inject constructor(private val repo: PasswordsListRep
         viewModelScope.launch{
             _recentPasswords.update { repo.getAllPasswords() }
             _pinnedPasswords.update { repo.getPinnedPasswords() }
+            _thirdPasswords.update { repo.getPinnedPasswords() }
         }
     }
 

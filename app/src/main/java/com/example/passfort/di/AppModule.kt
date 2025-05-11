@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.example.passfort.model.PassFortDB
 import com.example.passfort.repository.PasswordsListRepo
-import com.example.passfort.repository.PasswordsListRepoImpl
+import com.example.passfort.repository.impl.PasswordsListRepoImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

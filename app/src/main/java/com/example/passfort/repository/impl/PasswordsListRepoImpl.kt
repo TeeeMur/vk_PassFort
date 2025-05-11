@@ -1,7 +1,8 @@
-package com.example.passfort.repository
+package com.example.passfort.repository.impl
 
 import com.example.passfort.model.dbentity.PasswordRecordEntity
 import com.example.passfort.model.PassFortDB
+import com.example.passfort.repository.PasswordsListRepo
 
 class PasswordsListRepoImpl(db: PassFortDB): PasswordsListRepo {
 

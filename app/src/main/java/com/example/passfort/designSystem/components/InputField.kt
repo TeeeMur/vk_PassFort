@@ -44,37 +44,6 @@ import com.example.passfort.R
 import com.example.passfort.designSystem.theme.PassFortTheme
 
 @Composable
-fun SearchBar(value: String, placeholder: String, modifier: Modifier = Modifier, onValueChange: (String) -> Unit) {
-    OutlinedTextField(
-        value = value,
-        onValueChange = onValueChange,
-        modifier = modifier
-            .fillMaxWidth()
-            .background(
-                color = MaterialTheme.colorScheme.outline,
-                RoundedCornerShape(16.dp)
-            ),
-        shape = RoundedCornerShape(16.dp),
-        placeholder = {Text(placeholder)},
-        leadingIcon = {
-            Icon(
-                imageVector = Icons.Outlined.Search,
-                contentDescription = "Search",
-                modifier = Modifier.padding(start = 4.dp)
-            )
-        },
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedContainerColor = MaterialTheme.colorScheme.outline,
-            unfocusedContainerColor = MaterialTheme.colorScheme.outline,
-            disabledContainerColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f),
-            focusedBorderColor = MaterialTheme.colorScheme.surface,
-            unfocusedBorderColor = Color.Transparent,
-            errorBorderColor = MaterialTheme.colorScheme.error
-        )
-    )
-}
-
-@Composable
 fun InputFieldTitle(value: String, onValueChange: (String) -> Unit = {}, onClick: () -> Unit = {}) {
     TextField(
         modifier = Modifier
