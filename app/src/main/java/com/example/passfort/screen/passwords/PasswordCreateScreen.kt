@@ -64,7 +64,6 @@ fun PasswordCreateScreen(viewModel: CreateViewModel = hiltViewModel(), onDismiss
                     labelResourceString = stringResource(R.string.passwordcreate_inputfield_password),
                     value = viewModel.password.collectAsState().value,
                     onValueChange = { viewModel.onPasswordChange(it) },
-                    isShowErrorText = viewModel.isEmptyRecords.collectAsState().value,
                     )
                 ButtonAdditionally { onGeneratePassword() }
                 InputFieldWithCopy(

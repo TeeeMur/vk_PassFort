@@ -21,7 +21,10 @@ object AppModule {
     @Provides
     @Singleton
     fun provideDatabase(@ApplicationContext appContext: Context): PassFortDB {
-        return Room.databaseBuilder(appContext, PassFortDB::class.java, "PassfortDB").build()
+        return Room
+            .databaseBuilder(appContext, PassFortDB::class.java, "PassfortDB")
+            .fallbackToDestructiveMigration()
+            .build()
     }
 
     @Provides

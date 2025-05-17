@@ -2,7 +2,6 @@ package com.example.passfort.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -49,27 +48,12 @@ class PasswordViewModel @Inject constructor(
             _uiState.update {
                 if (it is PasswordListState.Success) {
                     it.copy(
-                        allPasswords = passwordRecords.reversed().map
-                        { password ->
-                            PasswordItem(
-                                id = password.id.toInt(),
-                                name = password.passwordRecordName,
-                                username = password.passwordRecordLogin,
-                                daysToExpire = password.passwordLastChangeDate.hour,
-                            )
-                        }
+                        allPasswords = passwordRecords.reversed().map { password -> password.convertToPasswordItem()}
                     )
                 } else {
                     PasswordListState.Success(
                         allPasswords = passwordRecords.reversed().map
-                        { password ->
-                            PasswordItem(
-                                id = password.id.toInt(),
-                                name = password.passwordRecordName,
-                                username = password.passwordRecordLogin,
-                                daysToExpire = password.passwordLastChangeDate.hour,
-                            )
-                        },
+                        { password -> password.convertToPasswordItem() },
                         pinnedPasswords = emptyList()
                     )
                 }

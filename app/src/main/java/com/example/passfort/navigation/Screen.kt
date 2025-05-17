@@ -6,7 +6,7 @@ sealed class Screen(val route: String) {
     object HomeScreen: Screen("home_screen")
     object PasswordList : Screen("password_list")
     object PasswordDetail : Screen("password_detail/{passwordId}") {
-        fun createRoute(passwordId: Int) = "password_detail/$passwordId"
+        fun createRoute(passwordId: Long) = "password_detail/$passwordId"
     }
     object PasswordGenerator : Screen("password_generator")
     object Settings : Screen("settings")

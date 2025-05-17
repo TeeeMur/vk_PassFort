@@ -3,6 +3,7 @@ package com.example.passfort.model.dao
 import androidx.room.Dao
 import androidx.room.Query
 import com.example.passfort.model.dbentity.PasswordRecordEntity
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.Flow
 
 @Dao

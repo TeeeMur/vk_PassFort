@@ -31,7 +31,7 @@ fun MainPasswordsList(
             modifier = Modifier.fillMaxWidth().padding(start = 4.dp)
         )
         passwordsList.forEach {
-            item -> PasswordCard(item = item.convertToPasswordItem())
+            item -> PasswordCard(item = item.convertToPasswordItem()) {}
         }
     }
 }
