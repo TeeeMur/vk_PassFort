@@ -46,7 +46,7 @@ class DetailViewModel @Inject constructor(
         idPassword: Int
     ){
         viewModelScope.launch {
-            val password = repository.getPassword(idPassword)
+            val password = repository.getPassword(idPassword) ?: return@launch
 
             _idPassword.update { password.id }
             _namePassword.update { password.recordName }
