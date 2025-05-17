@@ -55,6 +55,8 @@ class DetailViewModel @Inject constructor(
             _note.update { password.recordNote }
             _changeIntervalDays.update { password.passwordChangeIntervalDays }
             _isPinned.update { password.pinned }
+
+            _enablePasswordChange.update { _changeIntervalDays.value > 0 }
         }
     }
 

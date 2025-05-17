@@ -63,6 +63,7 @@ fun PasswordCreateScreen(viewModel: CreateViewModel = hiltViewModel(), onDismiss
                     onValueChange = { viewModel.onNoteChange(it) },
                 )
                 PasswordRemindOptions(
+                    passwordIntervalDays = viewModel.changeIntervalDays.collectAsState().value,
                     enablePasswordChange = viewModel.enablePasswordChange,
                     setPasswordChange = { viewModel.setPasswordChange() },
                     setChangeIntervalDaysCount = { viewModel.setChangeIntervalDaysCount(it) }

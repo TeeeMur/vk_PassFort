@@ -99,12 +99,13 @@ fun PasswordDetailScreen(
                     onValueChange = { viewModel.onNoteChange(it) },
                 )
                 PasswordRemindOptions(
+                    passwordIntervalDays = viewModel.changeIntervalDays.collectAsState().value,
                     enablePasswordChange = viewModel.enablePasswordChange,
                     setPasswordChange = { viewModel.setPasswordChange() },
                     setChangeIntervalDaysCount = { viewModel.setChangeIntervalDaysCount(it) }
                 )
             }
-            BottomButtonLine({ viewModel.editPassword() }, onDismiss = {})
+            BottomButtonLine({ viewModel.editPassword() }, onDismiss = OnBackScreen)
         }
     }
 }

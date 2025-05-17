@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun PasswordRemindOptions(
+    passwordIntervalDays: Int,
     enablePasswordChange: StateFlow<Boolean>,
     setPasswordChange: () -> Unit,
     setChangeIntervalDaysCount: (Int) -> Unit
@@ -39,9 +40,12 @@ fun PasswordRemindOptions(
         }
 
         if (enablePasswordChange.collectAsState().value) {
-            SingleChoiceSegmentedButton() {
+            SingleChoiceSegmentedButton(passwordIntervalDays) {
                 setChangeIntervalDaysCount(it)
             }
+        }
+        else{
+            setChangeIntervalDaysCount(0)
         }
     }
 }
