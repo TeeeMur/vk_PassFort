@@ -1,4 +1,4 @@
-package com.example.passfort.model.dbutils
+package com.example.passfort.dbutils
 
 import androidx.room.TypeConverter
 import java.time.LocalDateTime

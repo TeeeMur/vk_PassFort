@@ -1,4 +1,4 @@
-package com.example.passfort.model.dbentity
+package com.example.passfort.dbentity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

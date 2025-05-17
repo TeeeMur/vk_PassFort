@@ -1,6 +1,7 @@
-package com.example.passfort.model
+package com.example.passfort.root
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.core.content.edit
 
 class PreferencesManager(context: Context) {

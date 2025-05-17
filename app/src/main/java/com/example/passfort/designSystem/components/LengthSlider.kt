@@ -27,8 +27,6 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -38,29 +36,19 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.BaselineShift
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextGeometricTransform
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.passfort.R
-import com.example.passfort.designSystem.theme.PassFortTheme
 import com.example.passfort.viewModel.GeneratorViewModel
-
-private const val MIN_PASSWORD_LENGTH = 6
-private const val MAX_PASSWORD_LENGTH = 128
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PasswordLengthSlider(viewModel: GeneratorViewModel) {
     var lengthTextFieldValue by remember { mutableStateOf(viewModel.passwordLength.value.toString()) }
-    var lengthSliderValue by remember { mutableFloatStateOf(viewModel.passwordLength.value.toFloat()) }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -84,11 +72,10 @@ fun PasswordLengthSlider(viewModel: GeneratorViewModel) {
                 Slider(
                     modifier = Modifier
                         .fillMaxWidth(0.75f),
-                    value = lengthSliderValue,
-                    onValueChange = { lengthSliderValue = it; lengthTextFieldValue = it.toInt().toString() },
+                    value = lengthTextFieldValue.toFloat(),
+                    onValueChange = { lengthTextFieldValue = it.toInt().toString() },
                     onValueChangeFinished = {
-                        if (lengthSliderValue.toInt() in MIN_PASSWORD_LENGTH..MAX_PASSWORD_LENGTH)
-                            viewModel.setPasswordLength(lengthSliderValue.toInt())
+                        viewModel.setPasswordLength(lengthTextFieldValue.toInt())
                     },
                     track = { sliderState ->
                         SliderDefaults.Track(
@@ -97,55 +84,39 @@ fun PasswordLengthSlider(viewModel: GeneratorViewModel) {
                             sliderState = sliderState,
                         )
                     },
-                    valueRange = MIN_PASSWORD_LENGTH.toFloat()..MAX_PASSWORD_LENGTH.toFloat()
+                    valueRange = 6f..128f
                 )
-                BasicTextField(
+
+                OutlinedTextField(
                     modifier = Modifier
-                        .height(35.dp)
-                        .padding(start = 35.dp)
+                        .heightIn(50.dp)
+                        .height(40.dp)
+                        .padding(start = 30.dp)
                         .align(Alignment.CenterVertically)
                         .background(
-                            color = MaterialTheme.colorScheme.outline,
-                            RoundedCornerShape(10.dp)
+                            color = colorResource(R.color.text_field_color),
+                            RoundedCornerShape(20.dp)
                         ),
-                    textStyle = TextStyle(
-                        color = MaterialTheme.colorScheme.inverseSurface,
-                        fontSize = 16.sp,
-                        textAlign = TextAlign.Center,
-                        baselineShift = BaselineShift.Subscript
-                    ),
                     value = lengthTextFieldValue,
                     onValueChange = {
-                        if (it.isEmpty()) {lengthTextFieldValue = it;}
+                        if (it.isEmpty()) lengthTextFieldValue = it
                         else if (it.isDigitsOnly()) {
-                            if (it.toInt() in 1..MAX_PASSWORD_LENGTH) {
-                                lengthSliderValue = it.toFloat()
+                            if (it.toInt() in 1..128) {
                                 lengthTextFieldValue = it
-                                if (lengthSliderValue.toInt() in MIN_PASSWORD_LENGTH..MAX_PASSWORD_LENGTH)
-                                    viewModel.setPasswordLength(it.toInt())
+                                viewModel.setPasswordLength(it.toInt())
                             }
-                        }
-                    },
+                        }},
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    /*colors = OutlinedTextFieldDefaults.colors(
+                    colors = OutlinedTextFieldDefaults.colors(
                         unfocusedBorderColor = Color.Transparent,
                         focusedBorderColor = Color.Transparent,
                         unfocusedContainerColor = MaterialTheme.colorScheme.outline,
                         focusedContainerColor = MaterialTheme.colorScheme.outline,
-                    ),*/
+                    ),
                     singleLine = true,
-
-                    )
+                )
 
             }
         }
-    }
-}
-
-@PreviewLightDark()
-@Composable
-fun LengthSliderPreview(viewModel: GeneratorViewModel = hiltViewModel()) {
-    PassFortTheme {
-        PasswordLengthSlider(viewModel)
     }
 }

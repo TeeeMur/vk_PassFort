@@ -25,11 +25,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.example.passfort.R
-import com.example.passfort.designSystem.components.InputFieldBase
-import com.example.passfort.designSystem.theme.PassFortTheme
+import com.example.passfort.designSystem.components.AuthTextField
 import com.example.passfort.viewModel.LoginUiState
 import com.yourpackage.ui.components.AuthButton
 
@@ -54,7 +52,7 @@ fun LoginScreen(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(0.8f)
+                .weight(1f)
                 .background(MaterialTheme.colorScheme.primary),
             contentAlignment = Alignment.Center
         ) {
@@ -70,7 +68,7 @@ fun LoginScreen(
                 .fillMaxWidth()
                 .weight(1f)
                 .clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
-                .background(MaterialTheme.colorScheme.background)
+                .background(MaterialTheme.colorScheme.surface)
                 .padding(horizontal = 24.dp, vertical = 16.dp)
         ) {
             LoginForm(
@@ -112,14 +110,15 @@ fun LoginForm(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 20.dp, bottom = 160.dp)
+                .padding(bottom = 160.dp)
         ) {
-            InputFieldBase(
-                labelResourceString = stringResource(R.string.login_username_label),
+            AuthTextField(
+                label = stringResource(R.string.login_username_label),
                 value = username,
                 onValueChange = onUsernameChange,
+                isPassword = false,
                 enabled = !isLoading,
-                trailingIcon = {}
+                modifier = Modifier.fillMaxWidth()
             )
 
             if (usernameError != null) {
@@ -136,12 +135,13 @@ fun LoginForm(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            InputFieldBase(
-                labelResourceString = stringResource(R.string.login_password_label),
+            AuthTextField(
+                label = stringResource(R.string.login_password_label),
                 value = password,
                 onValueChange = onPasswordChange,
+                isPassword = true,
                 enabled = !isLoading,
-                trailingIcon = {}
+                modifier = Modifier.fillMaxWidth()
             )
 
             if (passwordError != null) {
@@ -214,27 +214,25 @@ fun LoginForm(
     }
 }
 
-@PreviewLightDark()
+@Preview(showBackground = true)
 @Composable
 fun LoginScreenPreview() {
-    PassFortTheme {
-        Surface {
-            val previewState = LoginUiState(
-                username = "preview@user.com",
-                password = "password",
-                isLoading = false,
-                usernameError = "2323",
+    Surface {
+        val previewState = LoginUiState(
+            username = "preview@user.com",
+            password = "password",
+            isLoading = false,
+            usernameError = "2323",
 
-                )
-            LoginScreen(
-                uiState = previewState,
-                onUsernameChange = {},
-                onPasswordChange = {},
-                onLoginAttempt = {},
-                onNavigateToRegister = {},
-                onNavigateToForgotPassword = {},
-                onNavigateToPrivacyPolicy = {}
-            )
-        }
+        )
+        LoginScreen(
+            uiState = previewState,
+            onUsernameChange = {},
+            onPasswordChange = {},
+            onLoginAttempt = {},
+            onNavigateToRegister = {},
+            onNavigateToForgotPassword = {},
+            onNavigateToPrivacyPolicy = {}
+        )
     }
 }
