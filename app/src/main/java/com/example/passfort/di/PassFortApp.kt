@@ -1,4 +1,4 @@
-package com.example.passfort.root
+package com.example.passfort.di
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp

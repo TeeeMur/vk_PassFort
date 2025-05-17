@@ -1,21 +1,24 @@
 package com.example.passfort.viewModel
 
+import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.passfort.dbentity.PasswordRecordEntity
-import com.example.passfort.repository.PasswordsRepo
-import com.example.passfort.ui.PasswordsScreenListState
-import com.example.passfort.ui.ScreenState
+import com.example.passfort.model.dbentity.PasswordRecordEntity
+import com.example.passfort.repository.PasswordsListRepo
+import com.example.passfort.screen.EScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.last
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class PasswordsViewModel @Inject constructor(private val repo: PasswordsRepo): ViewModel() {
+class PasswordsViewModel @Inject constructor(private val repo: PasswordsListRepo): ViewModel() {
 
     private val _passwordsStateFlow: MutableStateFlow<PasswordsScreenListState> = MutableStateFlow(PasswordsScreenListState())
     val passwords = _passwordsStateFlow.asStateFlow()
@@ -23,15 +26,15 @@ class PasswordsViewModel @Inject constructor(private val repo: PasswordsRepo): V
     fun refreshPasswords() {
         viewModelScope.launch {
             _passwordsStateFlow.update { value ->
-                value.copy(screenState = ScreenState.LOADING)
+                value.copy(eScreenState = EScreenState.LOADING)
             }
             _passwordsStateFlow.update { value ->
                 try {
-                    val resPinnedList = repo.getPinnedPasswords().toImmutableList()
+                    val resPinnedList = repo.getNonPinnedPasswords().toImmutableList()
                     val resNotPinnedList = repo.getNonPinnedPasswords().toImmutableList()
-                    PasswordsScreenListState(resPinnedList, resNotPinnedList, ScreenState.SUCCESS)
+                    PasswordsScreenListState(resPinnedList, resNotPinnedList, EScreenState.SUCCESS)
                 } catch(_: Exception) {
-                    value.copy(screenState = ScreenState.ERROR)
+                    value.copy(eScreenState = EScreenState.ERROR)
                 }
             }
         }

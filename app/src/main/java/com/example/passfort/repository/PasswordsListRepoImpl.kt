@@ -1,17 +1,18 @@
 package com.example.passfort.repository
 
-import com.example.passfort.dbentity.PasswordRecordEntity
+import com.example.passfort.model.dbentity.PasswordRecordEntity
 import com.example.passfort.model.PassFortDB
+import kotlinx.coroutines.flow.Flow
 
-class PasswordsRepoImpl(db: PassFortDB): PasswordsRepo {
+class PasswordsListRepoImpl(db: PassFortDB): PasswordsListRepo {
 
     val passwordDao = db.getPasswordDao()
 
-    override suspend fun getAllPasswords(): List<PasswordRecordEntity> {
+    override suspend fun getAllPasswords(): Flow<List<PasswordRecordEntity>> {
         return passwordDao.getAll()
     }
 
-    override suspend fun getPinnedPasswords(): List<PasswordRecordEntity> {
+    override suspend fun getPinnedPasswords(): Flow<List<PasswordRecordEntity>> {
         return passwordDao.getPinned()
     }
 

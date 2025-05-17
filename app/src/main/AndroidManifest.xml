@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PassFort"
         tools:targetApi="31"
-        android:name=".root.PassFortApp">
+        android:name=".di.PassFortApp">
         <activity
                 android:name=".MainActivity"
                 android:exported="true"

@@ -9,16 +9,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.passfort.root.PreferencesManager
+import androidx.navigation.navArgument
+import com.example.passfort.model.PreferencesManager
 import com.example.passfort.screen.auth.LoginScreen
 import com.example.passfort.screen.auth.RegisterScreen
 import com.example.passfort.screen.main.HomeScreen
-import com.example.passfort.screen.passwords.AddPasswordScreen
 import com.example.passfort.screen.passwords.PasswordListScreen
 import com.example.passfort.screen.passwords.SettingsScreen
-import com.example.passfort.ui.screen.passwordcreate.PartialBottomSheet
+import com.example.passfort.screen.passwords.PasswordCreateModalScreen
+import com.example.passfort.screen.passwords.PasswordDetailScreen
+import com.example.passfort.screen.passwords.PasswordGenerateModalScreen
+import com.example.passfort.screen.passwords.PasswordGeneratorScreen
 import com.example.passfort.viewModel.LoginViewModel
 
 @Composable
@@ -29,7 +33,8 @@ fun NavigationGraph(
     onLoginSuccess: () -> Unit,
     onLogout: () -> Unit
 ) {
-    var showBottomSheet by remember { mutableStateOf(false) }
+    var showBottomSheetCreatePassword by remember { mutableStateOf(false) }
+    var showBottomSheetGeneratePassword by remember { mutableStateOf(false) }
 
     NavHost(
         navController = navController,
@@ -74,18 +79,36 @@ fun NavigationGraph(
         }
 
         composable(Screen.HomeScreen.route) {
-            HomeScreen(navController) { showBottomSheet = true }
+            HomeScreen(navController) { showBottomSheetCreatePassword = true }
         }
         composable(Screen.PasswordGenerator.route) {
-            PasswordGeneratorScreen(navController) { showBottomSheet = true }
+            PasswordGeneratorScreen(navController) { showBottomSheetCreatePassword = true }
         }
 
-        composable(Screen.AddPassword.route) {
-            AddPasswordScreen(navController) { showBottomSheet = true }
-        }
         composable(Screen.PasswordList.route) {
-            PasswordListScreen(navController = navController) { showBottomSheet = true }
+            PasswordListScreen(navController = navController,
+                onClickPassword = {id: Int -> navController.navigate(Screen.PasswordDetail.createRoute(id))},
+                onAddPassword = {showBottomSheetCreatePassword = true})
         }
+
+        composable(
+            Screen.PasswordDetail.route,
+            arguments = listOf(
+                navArgument("passwordId"){
+                    type = NavType.IntType
+                    nullable = false
+                }
+            )
+        ){
+            it.arguments?.getInt("passwordId")?.let {
+                PasswordDetailScreen(
+                    idPasswordRecord = it,
+                    onGeneratePassword = {showBottomSheetGeneratePassword = true},
+                    OnBackScreen = {navController.navigate(Screen.PasswordList.route)}
+                )
+            }
+        }
+
         composable(Screen.Register.route) {
             RegisterScreen(
                 navController,
@@ -103,10 +126,17 @@ fun NavigationGraph(
                     }
                 }
             )
-            { showBottomSheet = true }
+            { showBottomSheetCreatePassword = true }
         }
     }
-    PartialBottomSheet(showBottomSheet) { showBottomSheet = false }
+
+    PasswordCreateModalScreen(
+        showBottomSheet = showBottomSheetCreatePassword,
+        onDismiss = { showBottomSheetCreatePassword = false },
+        onGeneratePassword = {showBottomSheetGeneratePassword = true}
+    )
+
+    PasswordGenerateModalScreen(showBottomSheetGeneratePassword) { showBottomSheetGeneratePassword = false }
 }
 
 
