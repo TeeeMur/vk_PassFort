@@ -36,6 +36,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,7 +49,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.ClipEntry
-import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -60,6 +61,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.passfort.R
+import com.example.passfort.designSystem.components.MainPasswordsList
 import com.example.passfort.designSystem.components.PreviewNavBar
 import com.example.passfort.designSystem.components.SearchBar
 import com.example.passfort.model.dbentity.PasswordRecordEntity
@@ -83,7 +85,7 @@ val mainScreenImages = persistentListOf(
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "StateFlowValueCalledInComposition")
 @Composable
 fun MainScreen(
     viewModel: MainScreenViewModel = hiltViewModel(),
@@ -233,27 +235,13 @@ fun MainScreen(
                 ) { searchString = it }
                 SmallPasswordsList(
                     modifier = Modifier.padding(vertical = 6.dp),
-                    title = stringResource(R.string.main_screen_recents_title),
-                    passwordsList = viewModel.recentPasswords.collectAsState().value.toImmutableList(),
+                    title = stringResource(R.string.main_screen_pinned_title),
+                    passwordsList = viewModel.pinnedPasswords.collectAsState().value.toImmutableList(),
                     showIcons = true
                 )
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 6.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    SmallPasswordsList(
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(end = 12.dp),
-                        title = stringResource(R.string.main_screen_pinned_title),
-                        passwordsList = viewModel.pinnedPasswords.collectAsState().value.toImmutableList()
-                    )
-                    SmallPasswordsList(
-                        modifier = Modifier.weight(1f),
-                        title = "Какие-то третьи",
-                        passwordsList = viewModel.thirdPasswords.collectAsState().value.toImmutableList()
+                if (viewModel.recentPasswords.value.isNotEmpty()) {
+                    MainPasswordsList(
+                        passwordsList = viewModel.recentPasswords.collectAsState().value.toImmutableList(),
                     )
                 }
             }
@@ -264,8 +252,8 @@ fun MainScreen(
 @Composable
 fun SmallPasswordsList(
     modifier: Modifier = Modifier,
+    passwordsList: ImmutableList<PasswordRecordEntity>,
     title: String = "Недавние",
-    passwordsList: List<PasswordRecordEntity>, // TODO() IMMUTABLELIST
     showIcons: Boolean = false
 ) {
     Column(
@@ -296,7 +284,14 @@ fun SmallPasswordsList(
 
 @Composable
 fun SmallPasswordsListRow(item: PasswordRecordEntity, showIcon: Boolean = false) {
-    val clipboardManager = LocalClipboardManager.current
+    val clipData = ClipData.newPlainText("Copied password:", item.passwordRecordPassword)
+        .apply {
+            description.extras = PersistableBundle().apply {
+                putBoolean("android.content.extra.IS_SENSITIVE", true)
+            }
+        }
+    var copy = false
+    val clipboardManager = LocalClipboard.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -320,20 +315,16 @@ fun SmallPasswordsListRow(item: PasswordRecordEntity, showIcon: Boolean = false)
         IconButton(
             modifier = Modifier.size(30.dp),
             onClick = {
-                val clipData =
-                    ClipData.newPlainText("Copied password:", item.passwordRecordPassword)
-                        .apply {
-                            description.extras = PersistableBundle().apply {
-                                putBoolean("android.content.extra.IS_SENSITIVE", true)
-                            }
-                        }
-                clipboardManager.setClip(ClipEntry(clipData))
+                copy = !copy
             }
         ) {
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.icon_button_copy),
                 contentDescription = "copy"
             )
+        }
+        LaunchedEffect(copy) {
+            clipboardManager.setClipEntry(ClipEntry(clipData))
         }
     }
 }

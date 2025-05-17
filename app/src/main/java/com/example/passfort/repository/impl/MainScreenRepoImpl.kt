@@ -10,10 +10,6 @@ class MainScreenRepoImpl(db: PassFortDB): MainScreenRepo {
         return passwordDao.getPinned()
     }
 
-    override suspend fun getRecentPasswords(): List<PasswordRecordEntity> {
-        TODO("Not yet implemented")
-    }
-
     override suspend fun getRecentPasswords(count: Int): List<PasswordRecordEntity> {
         return passwordDao.getRecent(count)
     }

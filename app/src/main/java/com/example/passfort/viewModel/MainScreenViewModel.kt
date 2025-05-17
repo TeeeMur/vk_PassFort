@@ -3,7 +3,7 @@ package com.example.passfort.viewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.passfort.model.dbentity.PasswordRecordEntity
-import com.example.passfort.repository.PasswordsListRepo
+import com.example.passfort.repository.MainScreenRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -12,13 +12,11 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MainScreenViewModel @Inject constructor(private val repo: PasswordsListRepo): ViewModel() {
+class MainScreenViewModel @Inject constructor(private val repo: MainScreenRepo): ViewModel() {
     private val _recentPasswords: MutableStateFlow<List<PasswordRecordEntity>> = MutableStateFlow(emptyList())
     private val _pinnedPasswords: MutableStateFlow<List<PasswordRecordEntity>> = MutableStateFlow(emptyList())
-    private val _thirdPasswords: MutableStateFlow<List<PasswordRecordEntity>> = MutableStateFlow(emptyList())
     val recentPasswords = _recentPasswords.asStateFlow()
     val pinnedPasswords = _pinnedPasswords.asStateFlow()
-    val thirdPasswords = _thirdPasswords.asStateFlow()
 
     init {
         update()
@@ -26,9 +24,8 @@ class MainScreenViewModel @Inject constructor(private val repo: PasswordsListRep
 
     fun update() {
         viewModelScope.launch{
-            _recentPasswords.update { repo.getAllPasswords() }
+            _recentPasswords.update { repo.getRecentPasswords(5) }
             _pinnedPasswords.update { repo.getPinnedPasswords() }
-            _thirdPasswords.update { repo.getPinnedPasswords() }
         }
     }
 

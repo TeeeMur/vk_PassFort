@@ -50,14 +50,14 @@ fun PasswordCard(item: PasswordItem) {
                     .weight(1f)
             ) {
                 Text(
-                    text = item.name,
+                    text = item.itemName,
                     fontFamily = FontFamily.Default,
                     fontWeight = FontWeight.Medium,
                     fontSize = 18.sp,
                     color = MaterialTheme.colorScheme.inverseSurface
                 )
                 Text(
-                    text = item.username,
+                    text = item.itemLogin,
                     fontFamily = FontFamily.Default,
                     fontWeight = FontWeight.Normal,
                     fontSize = 16.sp,
@@ -82,9 +82,9 @@ fun PasswordCard(item: PasswordItem) {
 fun PreviewPasCard(){
     var pasData = PasswordItem(
         0,
+        0,
         "Figma",
         "asdf@gmail.com",
-        1,
-        false)
+        "lsdak")
     PassFortTheme { PasswordCard(pasData) }
 }

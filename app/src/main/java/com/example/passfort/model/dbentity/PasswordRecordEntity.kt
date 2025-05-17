@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
+import com.example.passfort.model.PasswordItem
 import com.example.passfort.model.dbutils.DBDateConverters
 import com.example.passfort.model.dbutils.DBDateTimeConverters
 import java.time.LocalDate
@@ -23,4 +24,14 @@ data class PasswordRecordEntity(
     @ColumnInfo(name = "pinned") var pinned: Boolean,
     @field:TypeConverters(DBDateTimeConverters::class)
     @ColumnInfo(name = "last_use") val passwordLastUsedDate: LocalDateTime
-)
+) {
+    fun convertToPasswordItem(): PasswordItem {
+        return PasswordItem(
+            id = id,
+            iconId = iconIndex,
+            itemLogin = passwordRecordLogin,
+            itemName = passwordRecordName,
+            itemPassword = passwordRecordPassword,
+        )
+    }
+}
