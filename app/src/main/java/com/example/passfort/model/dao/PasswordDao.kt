@@ -12,7 +12,7 @@ interface PasswordDao: BaseDao<PasswordRecordEntity> {
     fun getAll(): Flow<List<PasswordRecordEntity>>
 
     @Query("SELECT * from password_record WHERE pinned = 1")
-    suspend fun getPinned(): List<PasswordRecordEntity>
+    fun getPinned(): Flow<List<PasswordRecordEntity>>
 
     @Query("SELECT * from password_record WHERE pinned == 0")
     suspend fun getNonPinned(): List<PasswordRecordEntity>

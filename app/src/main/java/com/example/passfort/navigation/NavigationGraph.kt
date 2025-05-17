@@ -103,7 +103,8 @@ fun NavigationGraph(
             it.arguments?.getInt("passwordId")?.let {
                 PasswordDetailScreen(
                     idPasswordRecord = it,
-                    onGeneratePassword = {showBottomSheetGeneratePassword = true}
+                    onGeneratePassword = {showBottomSheetGeneratePassword = true},
+                    OnBackScreen = {navController.navigate(Screen.PasswordList.route)}
                 )
             }
         }

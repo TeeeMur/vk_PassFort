@@ -35,6 +35,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -53,7 +54,8 @@ fun InputFieldTitle(value: String, onValueChange: (String) -> Unit = {}, onClick
         singleLine = true,
         onValueChange = onValueChange,
         textStyle = LocalTextStyle.current.copy(
-            fontSize = MaterialTheme.typography.headlineMedium.fontSize
+            fontSize = MaterialTheme.typography.headlineMedium.fontSize,
+            textDecoration = TextDecoration.Underline
         ),
         colors = OutlinedTextFieldDefaults.colors(
             unfocusedBorderColor = Color.Transparent,

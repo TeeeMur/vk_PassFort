@@ -84,7 +84,7 @@ fun PasswordCreateModalScreen(showBottomSheet: Boolean, onDismiss: () -> Unit, o
         ModalBottomSheet(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.9f),
+                .fillMaxHeight(0.95f),
             containerColor = MaterialTheme.colorScheme.background,
             sheetState = sheetState,
             onDismissRequest = onDismiss

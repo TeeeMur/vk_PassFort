@@ -13,13 +13,12 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
-
 @HiltViewModel
 class DetailViewModel @Inject constructor(
     private val repository: PasswordsDetailRepo
 ) : ViewModel() {
 
-    private val _idPassword: MutableStateFlow<Int> = MutableStateFlow(0)
+    private val _idPassword: MutableStateFlow<Long> = MutableStateFlow(0)
     private val _namePassword: MutableStateFlow<String> = MutableStateFlow("")
     private val _login: MutableStateFlow<String> = MutableStateFlow("")
     private val _password: MutableStateFlow<String> = MutableStateFlow("")
@@ -49,10 +48,11 @@ class DetailViewModel @Inject constructor(
         viewModelScope.launch {
             val password = repository.getPassword(idPassword)
 
-            _namePassword.update { password.passwordRecordName }
-            _login.update { password.passwordRecordLogin }
-            _password.update { password.passwordRecordPassword }
-            _note.update { password.passwordRecordPassword }
+            _idPassword.update { password.id }
+            _namePassword.update { password.recordName }
+            _login.update { password.recordLogin }
+            _password.update { password.recordPassword }
+            _note.update { password.recordNote }
             _changeIntervalDays.update { password.passwordChangeIntervalDays }
             _isPinned.update { password.pinned }
         }
@@ -83,13 +83,32 @@ class DetailViewModel @Inject constructor(
         onChanged()
     }
 
-    fun setPinnedState(isPined: Boolean) {
-        _isPinned.update { isPined }
+    fun setPinnedState() {
+        _isPinned.update { !_isPinned.value }
         onChanged()
     }
 
     fun setPasswordChange() {
         _enablePasswordChange.update { !it }
+    }
+
+    fun deletePassword() {
+        viewModelScope.launch {
+            repository.deletePassword(
+                password = PasswordRecordEntity(
+                    id = _idPassword.value,
+                    recordName = _namePassword.value,
+                    recordLogin = _login.value,
+                    recordPassword = _password.value,
+                    recordNote = _note.value,
+                    passwordLastChangeDate = LocalDateTime.now(),
+                    passwordChangeIntervalDays = _changeIntervalDays.value,
+                    iconIndex = 0,
+                    pinned = _isPinned.value,
+                    passwordLastUsedDate = LocalDateTime.now()
+                )
+            )
+        }
     }
 
     fun editPassword(): Boolean {
@@ -102,9 +121,11 @@ class DetailViewModel @Inject constructor(
         viewModelScope.launch {
             repository.upsertPassword(
                 password = PasswordRecordEntity(
-                    passwordRecordName = _namePassword.value,
-                    passwordRecordLogin = _login.value,
-                    passwordRecordPassword = _password.value,
+                    id = _idPassword.value,
+                    recordName = _namePassword.value,
+                    recordLogin = _login.value,
+                    recordPassword = _password.value,
+                    recordNote = _note.value,
                     passwordLastChangeDate = LocalDateTime.now(),
                     passwordChangeIntervalDays = _changeIntervalDays.value,
                     iconIndex = 0,
@@ -127,3 +148,4 @@ class DetailViewModel @Inject constructor(
         }
     }
 }
+

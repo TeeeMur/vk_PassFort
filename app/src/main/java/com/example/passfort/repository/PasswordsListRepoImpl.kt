@@ -12,7 +12,7 @@ class PasswordsListRepoImpl(db: PassFortDB): PasswordsListRepo {
         return passwordDao.getAll()
     }
 
-    override suspend fun getPinnedPasswords(): List<PasswordRecordEntity> {
+    override suspend fun getPinnedPasswords(): Flow<List<PasswordRecordEntity>> {
         return passwordDao.getPinned()
     }
 

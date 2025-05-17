@@ -53,9 +53,16 @@ class PasswordViewModel @Inject constructor(
                         { password ->
                             PasswordItem(
                                 id = password.id.toInt(),
-                                name = password.passwordRecordName,
-                                username = password.passwordRecordLogin,
-                                daysToExpire = password.passwordLastChangeDate.hour,
+                                name = password.recordName,
+                                username = password.recordLogin,
+                            )
+                        },
+                        pinnedPasswords = passwordRecords.reversed().sortedBy { it -> it.pinned }.map
+                        { password ->
+                            PasswordItem(
+                                id = password.id.toInt(),
+                                name = password.recordName,
+                                username = password.recordLogin,
                             )
                         }
                     )
@@ -65,12 +72,18 @@ class PasswordViewModel @Inject constructor(
                         { password ->
                             PasswordItem(
                                 id = password.id.toInt(),
-                                name = password.passwordRecordName,
-                                username = password.passwordRecordLogin,
-                                daysToExpire = password.passwordLastChangeDate.hour,
+                                name = password.recordName,
+                                username = password.recordLogin,
                             )
                         },
-                        pinnedPasswords = emptyList()
+                        pinnedPasswords = passwordRecords.sortedBy { it -> it.pinned }.reversed().map
+                        { password ->
+                            PasswordItem(
+                                id = password.id.toInt(),
+                                name = password.recordName,
+                                username = password.recordLogin,
+                            )
+                        }
                     )
                 }
             }

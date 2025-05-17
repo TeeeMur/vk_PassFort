@@ -93,7 +93,6 @@ fun PreviewPasCard(){
     var pasData = PasswordItem(
         0,
         "Figma",
-        "asdf@gmail.com",
-        1)
+        "asdf@gmail.com",)
     PassFortTheme { PasswordCard(pasData, {}) }
 }
