@@ -10,7 +10,7 @@ import com.example.passfort.model.dbentity.PasswordRecordEntity
 import com.example.passfort.model.dbentity.TOTPRecordEntity
 
 @Database(
-    version = 3,
+    version = 4,
     entities = [
         PasswordRecordEntity::class,
         NoteRecordEntity::class,

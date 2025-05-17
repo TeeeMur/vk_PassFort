@@ -11,6 +11,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,16 +22,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.passfort.R
 import com.example.passfort.designSystem.theme.PassFortTheme
 import com.example.passfort.model.PasswordItem
+import com.example.passfort.navigation.Screen
 
 @Composable
-fun PasswordCard(item: PasswordItem) {
+fun PasswordCard(
+    item: PasswordItem,
+    onClickPassword: (Int) -> Unit
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
+            .padding(vertical = 8.dp)
+            .clickable{onClickPassword(item.id)},
         colors = CardColors(
             containerColor = MaterialTheme.colorScheme.outline,
             contentColor = MaterialTheme.colorScheme.outline,
@@ -50,14 +58,14 @@ fun PasswordCard(item: PasswordItem) {
                     .weight(1f)
             ) {
                 Text(
-                    text = item.itemName,
+                    text = item.name,
                     fontFamily = FontFamily.Default,
                     fontWeight = FontWeight.Medium,
                     fontSize = 18.sp,
                     color = MaterialTheme.colorScheme.inverseSurface
                 )
                 Text(
-                    text = item.itemLogin,
+                    text = item.username,
                     fontFamily = FontFamily.Default,
                     fontWeight = FontWeight.Normal,
                     fontSize = 16.sp,
