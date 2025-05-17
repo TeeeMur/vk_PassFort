@@ -24,14 +24,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.example.passfort.R
 import com.example.passfort.designSystem.components.InputFieldBase
 import com.example.passfort.designSystem.theme.PassFortTheme
 import com.example.passfort.viewModel.LoginUiState
-import com.yourpackage.ui.components.AuthButton
+import com.example.passfort.designSystem.components.AuthButton
 
 
 @Composable

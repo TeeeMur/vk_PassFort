@@ -1,5 +1,6 @@
 package com.example.passfort.designSystem.components
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,9 +16,10 @@ import com.example.passfort.model.dbentity.PasswordRecordEntity
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable
-fun MainPasswordsList(
+fun MainScreenBottomList(
+    @SuppressLint("ModifierParameter") titleModifier: Modifier = Modifier,
     passwordsList: ImmutableList<PasswordRecordEntity>,
-    title: String = "Недавние"
+    title: String = "Недавние",
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -28,7 +30,7 @@ fun MainPasswordsList(
             text = title,
             fontSize = 24.sp,
             textAlign = TextAlign.Left,
-            modifier = Modifier.fillMaxWidth().padding(start = 4.dp)
+            modifier = titleModifier.fillMaxWidth().padding(vertical = 4.dp)
         )
         passwordsList.forEach {
             item -> PasswordCard(item = item.convertToPasswordItem()) {}

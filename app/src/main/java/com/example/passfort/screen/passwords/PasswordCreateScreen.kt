@@ -34,7 +34,7 @@ import com.example.passfort.designSystem.components.SingleChoiceSegmentedButton
 import com.example.passfort.designSystem.components.ToggleLine
 import com.example.passfort.designSystem.theme.PassFortTheme
 import com.example.passfort.viewModel.CreateViewModel
-import com.yourpackage.ui.components.ButtonAdditionally
+import com.example.passfort.designSystem.components.ButtonAdditionally
 
 @Composable
 fun PasswordCreateScreen(viewModel: CreateViewModel = hiltViewModel(), onDismiss: () -> Unit, onGeneratePassword: () -> Unit) {

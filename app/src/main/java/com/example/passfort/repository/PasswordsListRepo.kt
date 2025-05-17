@@ -4,9 +4,9 @@ import com.example.passfort.model.dbentity.PasswordRecordEntity
 import kotlinx.coroutines.flow.Flow
 
 interface PasswordsListRepo {
-    suspend fun getAllPasswords(): Flow<List<PasswordRecordEntity>>
-    suspend fun getPinnedPasswords(): List<PasswordRecordEntity>
-    suspend fun getNonPinnedPasswords(): List<PasswordRecordEntity>
+    fun getAllPasswords(): Flow<List<PasswordRecordEntity>>
+    fun getPinnedPasswords(): Flow<List<PasswordRecordEntity>>
+    fun getNonPinnedPasswords(): Flow<List<PasswordRecordEntity>>
     suspend fun upsertPassword(password: PasswordRecordEntity)
     suspend fun deletePassword(password: PasswordRecordEntity)
 }

@@ -24,12 +24,6 @@ sealed class PasswordListState {
     data class Success(val pinnedPasswords: List<PasswordItem>, val allPasswords: List<PasswordItem>) : PasswordListState()
 }
 
-data class PasswordsScreenListState(
-    val passwordsPinnedList: ImmutableList<PasswordRecordEntity> = persistentListOf(),
-    val passwordsNotPinnedList: ImmutableList<PasswordRecordEntity> = persistentListOf(),
-    val eScreenState: EScreenState = EScreenState.LOADING
-)
-
 @HiltViewModel
 class PasswordViewModel @Inject constructor(
     private val repository: PasswordsListRepo

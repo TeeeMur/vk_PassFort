@@ -61,7 +61,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.passfort.R
-import com.example.passfort.designSystem.components.MainPasswordsList
+import com.example.passfort.designSystem.components.MainScreenBottomList
 import com.example.passfort.designSystem.components.PreviewNavBar
 import com.example.passfort.designSystem.components.SearchBar
 import com.example.passfort.model.dbentity.PasswordRecordEntity
@@ -233,16 +233,21 @@ fun MainScreen(
                     placeholder = stringResource(R.string.search_passwords_field_placeholder),
                     modifier = Modifier.padding(vertical = 8.dp)
                 ) { searchString = it }
-                SmallPasswordsList(
-                    modifier = Modifier.padding(vertical = 6.dp),
-                    title = stringResource(R.string.main_screen_pinned_title),
-                    passwordsList = viewModel.pinnedPasswords.collectAsState().value.toImmutableList(),
-                    showIcons = true
-                )
-                if (viewModel.recentPasswords.value.isNotEmpty()) {
-                    MainPasswordsList(
-                        passwordsList = viewModel.recentPasswords.collectAsState().value.toImmutableList(),
-                    )
+                if (viewModel.recentPasswords.value.isNotEmpty() or viewModel.pinnedPasswords.value.isNotEmpty()) {
+                    if (viewModel.pinnedPasswords.value.isNotEmpty()) {
+                        SmallPasswordsList(
+                            modifier = Modifier.padding(vertical = 6.dp),
+                            title = stringResource(R.string.main_screen_pinned_title),
+                            passwordsList = viewModel.pinnedPasswords.collectAsState().value,
+                            showIcons = true
+                        )
+                    }
+                    if (viewModel.recentPasswords.value.isNotEmpty()) {
+                        MainScreenBottomList(
+                            passwordsList = viewModel.recentPasswords.collectAsState().value,
+                            titleModifier = Modifier.padding(top = 8.dp, start = 6.dp)
+                        )
+                    }
                 }
             }
         }
@@ -260,7 +265,7 @@ fun SmallPasswordsList(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
-            .background(MaterialTheme.colorScheme.surface)
+            .background(MaterialTheme.colorScheme.outline)
             .padding(vertical = 16.dp, horizontal = 20.dp),
     ) {
         Text(
