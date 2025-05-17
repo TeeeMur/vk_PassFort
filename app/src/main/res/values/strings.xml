@@ -31,6 +31,8 @@
     <string name="input_field_show_password">Показать пароль</string>
     <string name="input_field_hide_password">Скрыть пароль</string>
 
+    <string name="input_field_error_necessary">Обязательное поле</string>
+
     <string name="login">login</string>
     <string name="register">register</string>
     <string name="home_screen">home_screen</string>

@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.passfort.designSystem.components.NavigationBar
 import com.example.passfort.designSystem.components.PasswordCard
 import com.example.passfort.designSystem.theme.PassFortTheme
 
@@ -44,7 +45,7 @@ fun PasswordListScreen(
 
     Scaffold(
         bottomBar = {
-            com.example.passfort.designSystem.components.NavigationBar(
+            NavigationBar(
                 navController,
                 onAddPassword
             )
@@ -53,8 +54,10 @@ fun PasswordListScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = padding.calculateTopPadding(),
-                    bottom = 40.dp)
+                .padding(
+                    top = padding.calculateTopPadding(),
+                    bottom = 40.dp
+                )
                 .padding(20.dp)
         ) {
             SearchBar(
@@ -114,7 +117,7 @@ fun SearchBar(query: String, onQueryChange: (String) -> Unit) {
 fun PasswordSections(
     pinnedPasswords: List<PasswordItem>,
     allPasswords: List<PasswordItem>,
-    onClickPassword: (Int) -> Unit
+    onClickPassword: (Int) -> Unit,
 
 ) {
     var pinnedExpanded by remember { mutableStateOf(true) }
@@ -148,7 +151,13 @@ fun PasswordSections(
                 items(pinnedPasswords.size) { index ->
                     PasswordCard(
                         pinnedPasswords[index],
-                        onClickPassword = onClickPassword
+                        onClickPassword = onClickPassword,
+                        isRevealed = true,
+                        actions = {},
+                        modifier = Modifier,
+                        onExpanded = {},
+                        onCollapsed = {},
+                        content = {},
                     )
                 }
             }
@@ -165,8 +174,15 @@ fun PasswordSections(
             )
         }
         items(allPasswords.size) { index ->
-            PasswordCard(allPasswords[index],
-                onClickPassword = onClickPassword
+            PasswordCard(
+                allPasswords[index],
+                onClickPassword = onClickPassword,
+                isRevealed = true,
+                actions = {},
+                modifier = Modifier,
+                onExpanded = {},
+                onCollapsed = {},
+                content = {},
             )
         }
         item {
@@ -198,7 +214,9 @@ fun ShimmerPasswordCard() {
         shape = MaterialTheme.shapes.medium,
         elevation = CardDefaults.cardElevation(1.dp)
     ) {
-        Box(modifier = Modifier.fillMaxSize().background(Color.LightGray))
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .background(Color.LightGray))
     }
 }
 

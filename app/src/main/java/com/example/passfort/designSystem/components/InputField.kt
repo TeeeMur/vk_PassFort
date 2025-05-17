@@ -98,7 +98,7 @@ fun InputFieldWithCopy(labelResourceString: String,
             isTitle = isTitle,
             isSingleLine = isSingleLine,
             isReadOnly = isReadOnly,
-            errorString = "Не должна быть пустой",
+            errorString = stringResource(R.string.input_field_error_necessary),
             isShowErrorText = (isShowErrorText && value == ""),
             trailingIcon = {
                 IconButton(
@@ -250,7 +250,7 @@ fun InputFieldPassword(labelResourceString: String,
             value = value,
             onValueChange = onValueChange,
             visualTransformation = visualTransformation,
-            errorString = "Не должна быть пустой",
+            errorString = stringResource(R.string.input_field_error_necessary),
             isShowErrorText = (isShowErrorText && value == ""),
             trailingIcon = {
                 IconButton(onClick = { passwordVisible = !passwordVisible }) {
