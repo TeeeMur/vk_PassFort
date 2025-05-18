@@ -29,7 +29,6 @@ data class RegisterUiState(
 
 sealed class RegisterEvent {
     object Success : RegisterEvent()
-    //data class Failure(val message: String) : RegisterEvent() для передачи ошибок в UI,
 }
 
 @HiltViewModel

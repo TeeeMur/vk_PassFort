@@ -12,7 +12,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.passfort.model.PreferencesManager
 import com.example.passfort.screen.auth.LoginScreen
 import com.example.passfort.screen.auth.RegisterScreen
 import com.example.passfort.screen.main.HomeScreen
@@ -40,9 +39,7 @@ fun NavigationGraph(
         startDestination = if (isUserLoggedIn) Screen.HomeScreen.route else Screen.Login.route
     ) {
         composable(Screen.Login.route) {
-            // val context = LocalContext.current // PreferencesManager больше не нужен здесь напрямую
-            // val preferencesManager = remember { PreferencesManager(context.applicationContext) } // Удалите это
-            val viewModel: LoginViewModel = hiltViewModel() // <-- Изменено на hiltViewModel()
+            val viewModel: LoginViewModel = hiltViewModel()
             val uiState = viewModel.uiState
 
             LaunchedEffect(Unit) {
@@ -51,17 +48,17 @@ fun NavigationGraph(
 
             LaunchedEffect(uiState.loginSuccess) {
                 if (uiState.loginSuccess) {
-                    onLoginSuccess() // Этот колбэк теперь в основном для синхронизации состояния в MainActivity
+                    onLoginSuccess()
                     navController.navigate(Screen.HomeScreen.route) {
                         popUpTo(Screen.Login.route) { inclusive = true }
                     }
-                    viewModel.consumeLoginSuccessEvent() // Сбрасываем событие
+                    viewModel.consumeLoginSuccessEvent()
                 }
             }
 
             LoginScreen(
                 uiState = uiState,
-                onUsernameChange = viewModel::onUsernameChange, // Передаем email как username
+                onUsernameChange = viewModel::onUsernameChange,
                 onPasswordChange = viewModel::onPasswordChange,
                 onLoginAttempt = viewModel::onLoginAttempt,
                 onNavigateToRegister = { navController.navigate(Screen.Register.route) },

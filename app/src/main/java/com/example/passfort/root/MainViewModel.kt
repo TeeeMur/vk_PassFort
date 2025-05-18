@@ -1,7 +1,6 @@
 package com.example.passfort.root
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.passfort.model.PreferencesManager
 import com.google.firebase.auth.FirebaseAuth
@@ -12,6 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,13 +25,13 @@ class MainViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val authStateFlow = callbackFlow { // Теперь должно работать
+            val authStateFlow = callbackFlow {
                 val listener = FirebaseAuth.AuthStateListener { auth ->
                     val loggedIn = auth.currentUser != null
-                    trySend(loggedIn) // trySend - метод ProducerScope, должен быть доступен
+                    trySend(loggedIn)
                 }
                 firebaseAuth.addAuthStateListener(listener)
-                awaitClose { // Теперь должно работать
+                awaitClose {
                     firebaseAuth.removeAuthStateListener(listener)
                 }
             }
@@ -59,13 +59,11 @@ class MainViewModel @Inject constructor(
     }
 
     fun login() {
-        // Логика здесь может быть минимальной, т.к. AuthStateListener обрабатывает состояние
-        // Log.d("MainViewModel", "login() callback. Current state: ${_isUserLoggedIn.value}")
+        Timber.tag("MainViewModel").d("login() callback. Current state: ${_isUserLoggedIn.value}")
     }
 
     fun logout() {
         firebaseAuth.signOut()
-        // AuthStateListener обработает изменение состояния
-        // Log.d("MainViewModel", "logout() called. Firebase signOut initiated.")
+        Timber.tag("MainViewModel").d("logout() called. Firebase signOut initiated.")
     }
 }
