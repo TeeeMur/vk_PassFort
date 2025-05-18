@@ -12,11 +12,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.passfort.designSystem.components.NavigationBar
 import androidx.navigation.navArgument
 import com.example.passfort.model.PreferencesManager
 import com.example.passfort.screen.auth.LoginScreen
 import com.example.passfort.screen.auth.RegisterScreen
-import com.example.passfort.screen.main.HomeScreen
+import com.example.passfort.screen.main.MainScreen
 import com.example.passfort.screen.passwords.PasswordListScreen
 import com.example.passfort.screen.passwords.SettingsScreen
 import com.example.passfort.screen.passwords.PasswordCreateModalScreen
@@ -79,7 +80,9 @@ fun NavigationGraph(
         }
 
         composable(Screen.HomeScreen.route) {
-            HomeScreen(navController) { showBottomSheetCreatePassword = true }
+            MainScreen(navController = navController,
+                navigationBar = { NavigationBar(navController){showBottomSheetCreatePassword = true} }
+            )
         }
         composable(Screen.PasswordGenerator.route) {
             PasswordGeneratorScreen(navController) { showBottomSheetCreatePassword = true }
@@ -87,7 +90,7 @@ fun NavigationGraph(
 
         composable(Screen.PasswordList.route) {
             PasswordListScreen(navController = navController,
-                onClickPassword = {id: Int -> navController.navigate(Screen.PasswordDetail.createRoute(id))},
+                onClickPassword = {id: Long -> navController.navigate(Screen.PasswordDetail.createRoute(id))},
                 onAddPassword = {showBottomSheetCreatePassword = true})
         }
 

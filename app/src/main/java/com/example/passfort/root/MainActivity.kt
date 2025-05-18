@@ -1,4 +1,4 @@
-package com.example.passfort
+package com.example.passfort.root
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -12,8 +12,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.passfort.designSystem.theme.PassFortTheme
 import com.example.passfort.navigation.NavigationGraph
-import com.example.passfort.root.MainViewModel
-import com.example.passfort.root.MainViewModelFactory
 import com.example.passfort.model.PreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
 

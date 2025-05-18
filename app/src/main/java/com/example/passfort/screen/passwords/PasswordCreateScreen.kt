@@ -17,14 +17,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.passfort.R
+import com.example.passfort.designSystem.components.BottomButtonLine
+import com.example.passfort.designSystem.components.ButtonAdditionally
 import com.example.passfort.designSystem.components.InputFieldPassword
 import com.example.passfort.designSystem.components.InputFieldTitle
 import com.example.passfort.designSystem.components.InputFieldWithCopy
 import com.example.passfort.designSystem.components.PasswordRemindOptions
 import com.example.passfort.designSystem.theme.PassFortTheme
 import com.example.passfort.viewModel.CreateViewModel
-import com.yourpackage.ui.components.ButtonAdditionally
-import com.yourpackage.ui.components.BottomButtonLine
 
 @Composable
 fun PasswordCreateScreen(viewModel: CreateViewModel = hiltViewModel(), onDismiss: () -> Unit, onGeneratePassword: () -> Unit) {
@@ -54,7 +54,6 @@ fun PasswordCreateScreen(viewModel: CreateViewModel = hiltViewModel(), onDismiss
                     labelResourceString = stringResource(R.string.passwordcreate_inputfield_password),
                     value = viewModel.password.collectAsState().value,
                     onValueChange = { viewModel.onPasswordChange(it) },
-                    isShowErrorText = viewModel.isEmptyRecords.collectAsState().value,
                     )
                 ButtonAdditionally { onGeneratePassword() }
                 InputFieldWithCopy(

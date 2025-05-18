@@ -1,4 +1,4 @@
-package com.yourpackage.ui.components
+package com.example.passfort.designSystem.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

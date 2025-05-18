@@ -30,8 +30,8 @@ class PasswordsViewModel @Inject constructor(private val repo: PasswordsListRepo
             }
             _passwordsStateFlow.update { value ->
                 try {
-                    val resPinnedList = repo.getNonPinnedPasswords().toImmutableList()
-                    val resNotPinnedList = repo.getNonPinnedPasswords().toImmutableList()
+                    val resPinnedList = emptyList<PasswordRecordEntity>().toImmutableList()
+                    val resNotPinnedList = emptyList<PasswordRecordEntity>().toImmutableList()
                     PasswordsScreenListState(resPinnedList, resNotPinnedList, EScreenState.SUCCESS)
                 } catch(_: Exception) {
                     value.copy(eScreenState = EScreenState.ERROR)

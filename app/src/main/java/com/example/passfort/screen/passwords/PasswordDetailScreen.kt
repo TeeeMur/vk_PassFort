@@ -40,15 +40,14 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.passfort.R
+import com.example.passfort.designSystem.components.BottomButtonLine
+import com.example.passfort.designSystem.components.ButtonAdditionally
 import com.example.passfort.designSystem.components.InputFieldPassword
 import com.example.passfort.designSystem.components.InputFieldTitle
 import com.example.passfort.designSystem.components.InputFieldWithCopy
 import com.example.passfort.designSystem.components.PasswordRemindOptions
 import com.example.passfort.designSystem.theme.PassFortTheme
 import com.example.passfort.viewModel.DetailViewModel
-import com.yourpackage.ui.components.ButtonAdditionally
-import com.yourpackage.ui.components.BottomButtonLine
-import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
 fun PasswordDetailScreen(
@@ -107,14 +106,6 @@ fun PasswordDetailScreen(
             }
             BottomButtonLine({ viewModel.editPassword() }, onDismiss = OnBackScreen)
         }
-    }
-}
-
-@PreviewLightDark()
-@Composable
-fun EditPasswordPreview() {
-    PassFortTheme {
-        ButtonRows({}, {}, {})
     }
 }
 
