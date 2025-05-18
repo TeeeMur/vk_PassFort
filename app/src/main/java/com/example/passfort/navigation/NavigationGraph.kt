@@ -1,6 +1,5 @@
 package com.example.passfort.navigation
 
-import RegisterViewModel
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -8,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -20,6 +20,8 @@ import com.example.passfort.screen.passwords.PasswordListScreen
 import com.example.passfort.screen.passwords.SettingsScreen
 import com.example.passfort.screen.passwords.PartialBottomSheet
 import com.example.passfort.screen.passwords.PasswordGeneratorScreen
+import com.example.passfort.ui.register.RegisterEvent
+import com.example.passfort.ui.register.RegisterViewModel
 import com.example.passfort.viewModel.LoginViewModel
 import kotlinx.coroutines.flow.collectLatest
 
@@ -38,9 +40,9 @@ fun NavigationGraph(
         startDestination = if (isUserLoggedIn) Screen.HomeScreen.route else Screen.Login.route
     ) {
         composable(Screen.Login.route) {
-            val context = LocalContext.current
-            val preferencesManager = remember { PreferencesManager(context.applicationContext) }
-            val viewModel: LoginViewModel = viewModel(factory = LoginViewModel.provideFactory(preferencesManager))
+            // val context = LocalContext.current // PreferencesManager больше не нужен здесь напрямую
+            // val preferencesManager = remember { PreferencesManager(context.applicationContext) } // Удалите это
+            val viewModel: LoginViewModel = hiltViewModel() // <-- Изменено на hiltViewModel()
             val uiState = viewModel.uiState
 
             LaunchedEffect(Unit) {
@@ -49,17 +51,17 @@ fun NavigationGraph(
 
             LaunchedEffect(uiState.loginSuccess) {
                 if (uiState.loginSuccess) {
-                    onLoginSuccess()
+                    onLoginSuccess() // Этот колбэк теперь в основном для синхронизации состояния в MainActivity
                     navController.navigate(Screen.HomeScreen.route) {
                         popUpTo(Screen.Login.route) { inclusive = true }
                     }
-                    viewModel.consumeLoginSuccessEvent()
+                    viewModel.consumeLoginSuccessEvent() // Сбрасываем событие
                 }
             }
 
             LoginScreen(
                 uiState = uiState,
-                onUsernameChange = viewModel::onUsernameChange,
+                onUsernameChange = viewModel::onUsernameChange, // Передаем email как username
                 onPasswordChange = viewModel::onPasswordChange,
                 onLoginAttempt = viewModel::onLoginAttempt,
                 onNavigateToRegister = { navController.navigate(Screen.Register.route) },
@@ -79,7 +81,7 @@ fun NavigationGraph(
             PasswordListScreen(navController = navController) { showBottomSheet = true }
         }
         composable(Screen.Register.route) {
-            val registerViewModel: RegisterViewModel = viewModel()
+            val registerViewModel: RegisterViewModel = hiltViewModel()
 
             LaunchedEffect(Unit) {
                 registerViewModel.resetState()

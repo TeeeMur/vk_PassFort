@@ -7,19 +7,27 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.passfort.model.PreferencesManager
+import com.example.passfort.repository.AuthRepository
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
 data class LoginUiState(
     val username: String = "",
     val password: String = "",
-    val isLoading: Boolean = false,
     val usernameError: String? = null,
     val passwordError: String? = null,
+    val loginError: String? = null,
+    val isLoading: Boolean = false,
     val loginSuccess: Boolean = false
 )
 
-class LoginViewModel (
+@HiltViewModel
+class LoginViewModel @Inject constructor(
+    private val authRepository: AuthRepository,
     private val preferencesManager: PreferencesManager
 ) : ViewModel() {
 
@@ -27,37 +35,65 @@ class LoginViewModel (
         private set
 
     fun onUsernameChange(newUsername: String) {
-        uiState = uiState.copy(username = newUsername, usernameError = null, loginSuccess = false)
+        uiState = uiState.copy(username = newUsername, usernameError = null, loginError = null)
     }
 
     fun onPasswordChange(newPassword: String) {
-        uiState = uiState.copy(password = newPassword, passwordError = null, loginSuccess = false)
+        uiState = uiState.copy(password = newPassword, passwordError = null, loginError = null)
     }
 
     fun onLoginAttempt() {
-        if (uiState.isLoading || uiState.loginSuccess) return
+        if (uiState.isLoading) return
+
+        val validationErrorsState = validateInputs()
+        if (validationErrorsState != null) {
+            uiState = validationErrorsState
+            return
+        }
 
         viewModelScope.launch {
-            uiState = uiState.copy(isLoading = true, usernameError = null,passwordError = null, loginSuccess = false)
-            kotlinx.coroutines.delay(1000)
+            uiState = uiState.copy(isLoading = true, loginError = null)
+            val result = authRepository.login(
+                username = uiState.username,
+                password = uiState.password
+            )
 
-            if (uiState.username.isNotBlank() && uiState.password.isNotBlank()) {
-                preferencesManager.saveAuthState(true)
-                uiState = uiState.copy(isLoading = false, loginSuccess = true)
-            } else {
-                uiState = uiState.copy(
-                    isLoading = false,
-                    passwordError = "Введите пароль",
-                    usernameError = "Введите логин",
-                    loginSuccess = false
-                )
-            }
+            result.fold(
+                onSuccess = {
+                    preferencesManager.setUserLoggedIn(true)
+                    uiState = uiState.copy(isLoading = false, loginSuccess = true)
+                },
+                onFailure = { exception ->
+                    val errorMessage = when (exception) {
+                        is FirebaseAuthInvalidUserException -> "Пользователь с такой почтой не найден."
+                        is FirebaseAuthInvalidCredentialsException -> "Неверный пароль. Попробуйте снова."
+                        else -> exception.message ?: "Ошибка входа. Попробуйте снова."
+                    }
+                    uiState = uiState.copy(
+                        isLoading = false,
+                        loginError = errorMessage
+                    )
+                }
+            )
         }
     }
 
-    fun consumeLoginSuccessEvent() {
-        if (uiState.loginSuccess) {
-            uiState = uiState.copy(loginSuccess = false)
+    private fun validateInputs(): LoginUiState? {
+        val usernameError = when {
+            uiState.username.isBlank() -> "Введите почту"
+            !android.util.Patterns.EMAIL_ADDRESS.matcher(uiState.username).matches() -> "Неверный формат почты"
+            else -> null
+        }
+        val passwordError = if (uiState.password.isBlank()) "Введите пароль" else null
+
+        return if (usernameError == null && passwordError == null) {
+            null
+        } else {
+            uiState.copy(
+                usernameError = usernameError,
+                passwordError = passwordError,
+                isLoading = false
+            )
         }
     }
 
@@ -65,18 +101,7 @@ class LoginViewModel (
         uiState = LoginUiState()
     }
 
-    // --- Фабрика (ВРЕМЕННО, пока Hilt не работает) ---
-    companion object {
-        fun provideFactory(
-            preferencesManager: PreferencesManager
-        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
-                    return LoginViewModel(preferencesManager) as T
-                }
-                throw IllegalArgumentException("Unknown ViewModel class")
-            }
-        }
+    fun consumeLoginSuccessEvent() {
+        uiState = uiState.copy(loginSuccess = false)
     }
 }

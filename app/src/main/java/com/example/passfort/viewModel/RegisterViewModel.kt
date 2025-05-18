@@ -1,14 +1,18 @@
-
-
+package com.example.passfort.ui.register
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.passfort.repository.AuthRepository
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 data class RegisterUiState(
     val name: String = "",
@@ -19,10 +23,19 @@ data class RegisterUiState(
     val emailError: String? = null,
     val passwordError: String? = null,
     val confirmPasswordError: String? = null,
+    val registrationError: String? = null,
     val isLoading: Boolean = false
 )
 
-class RegisterViewModel : ViewModel() {
+sealed class RegisterEvent {
+    object Success : RegisterEvent()
+    //data class Failure(val message: String) : RegisterEvent() для передачи ошибок в UI,
+}
+
+@HiltViewModel
+class RegisterViewModel @Inject constructor(
+    private val authRepository: AuthRepository
+) : ViewModel() {
 
     var uiState by mutableStateOf(RegisterUiState())
         private set
@@ -31,50 +44,72 @@ class RegisterViewModel : ViewModel() {
     val eventFlow = _eventFlow.asSharedFlow()
 
     fun onNameChange(newName: String) {
-        uiState = uiState.copy(name = newName, nameError = null)
+        uiState = uiState.copy(name = newName, nameError = null, registrationError = null)
     }
 
     fun onEmailChange(newEmail: String) {
-        uiState = uiState.copy(email = newEmail, emailError = null)
+        uiState = uiState.copy(email = newEmail, emailError = null, registrationError = null)
     }
 
     fun onPasswordChange(newPassword: String) {
-        uiState = uiState.copy(password = newPassword, passwordError = null)
+        uiState = uiState.copy(password = newPassword, passwordError = null, registrationError = null)
     }
 
     fun onConfirmPasswordChange(newConfirmPassword: String) {
-        uiState = uiState.copy(confirmPassword = newConfirmPassword, confirmPasswordError = null)
+        uiState = uiState.copy(confirmPassword = newConfirmPassword, confirmPasswordError = null, registrationError = null)
     }
 
     fun onRegisterAttempt() {
         if (uiState.isLoading) return
 
+        val validationErrorsState = validateInputs()
+        if (validationErrorsState != null) {
+            uiState = validationErrorsState
+            return
+        }
+
         viewModelScope.launch {
-            uiState = uiState.copy(
-                isLoading = true,
-                nameError = null,
-                emailError = null,
-                passwordError = null,
-                confirmPasswordError = null
+            uiState = uiState.copy(isLoading = true, registrationError = null)
+
+            val result = authRepository.register(
+                name = uiState.name,
+                email = uiState.email,
+                password = uiState.password
             )
 
-            kotlinx.coroutines.delay(1000)
-
-            val errors = validateInputs()
-
-            if (errors == null) {
-                uiState = uiState.copy(isLoading = false)
-                _eventFlow.emit(RegisterEvent.Success)
-            } else {
-                uiState = errors.copy(isLoading = false)
-            }
+            result.fold(
+                onSuccess = {
+                    uiState = uiState.copy(isLoading = false)
+                    _eventFlow.emit(RegisterEvent.Success)
+                },
+                onFailure = { exception ->
+                    val errorMessage = when (exception) {
+                        is FirebaseAuthUserCollisionException -> "Этот email уже используется."
+                        is FirebaseAuthWeakPasswordException -> "Пароль слишком слабый. Используйте не менее 6 символов."
+                        else -> exception.message ?: "Ошибка регистрации. Попробуйте снова."
+                    }
+                    uiState = uiState.copy(
+                        isLoading = false,
+                        registrationError = errorMessage
+                    )
+                }
+            )
         }
     }
 
     private fun validateInputs(): RegisterUiState? {
         val nameError = if (uiState.name.isBlank()) "Введите имя" else null
-        val emailError = if (uiState.email.isBlank()) "Введите почту" else null
-        val passwordError = if (uiState.password.isBlank()) "Введите пароль" else null
+        val emailError = when {
+            uiState.email.isBlank() -> "Введите почту"
+            !android.util.Patterns.EMAIL_ADDRESS.matcher(uiState.email).matches() -> "Неверный формат почты"
+            else -> null
+        }
+
+        val passwordError = when {
+            uiState.password.isBlank() -> "Введите пароль"
+            uiState.password.length < 6 -> "Пароль должен быть не менее 6 символов"
+            else -> null
+        }
         val confirmPasswordError = when {
             uiState.confirmPassword.isBlank() -> "Повторите пароль"
             uiState.confirmPassword != uiState.password -> "Пароли не совпадают"
@@ -88,7 +123,8 @@ class RegisterViewModel : ViewModel() {
                 nameError = nameError,
                 emailError = emailError,
                 passwordError = passwordError,
-                confirmPasswordError = confirmPasswordError
+                confirmPasswordError = confirmPasswordError,
+                isLoading = false
             )
         }
     }
@@ -96,8 +132,4 @@ class RegisterViewModel : ViewModel() {
     fun resetState() {
         uiState = RegisterUiState()
     }
-}
-
-sealed class RegisterEvent {
-    object Success : RegisterEvent()
 }

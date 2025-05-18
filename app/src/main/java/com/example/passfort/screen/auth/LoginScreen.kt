@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,12 +21,10 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.example.passfort.R
 import com.example.passfort.designSystem.components.InputFieldPassword
 import com.example.passfort.designSystem.components.InputFieldWithCopy
-import com.example.passfort.designSystem.theme.PassFortTheme
 import com.example.passfort.viewModel.LoginUiState
 import com.yourpackage.ui.components.AuthButton
 
@@ -75,6 +72,7 @@ fun LoginScreen(
                 username = uiState.username,
                 password = uiState.password,
                 isLoading = uiState.isLoading,
+                isLogin = uiState.loginError,
                 usernameError = uiState.usernameError,
                 passwordError = uiState.passwordError,
                 onUsernameChange = onUsernameChange,
@@ -101,99 +99,94 @@ fun LoginForm(
     onRegister: () -> Unit,
     onForgotPassword: () -> Unit,
     onPrivacyPolicy: () -> Unit,
+    isLogin: String?,
 ) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxWidth()
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
     ) {
-        InputFieldWithCopy(
-            labelResourceString = stringResource(R.string.login_username_label),
-            value = username,
-            onValueChange = onUsernameChange,
-            isReadOnly = isLoading,
-            errorString = usernameError ?: "",
-            isCopy = false
-        )
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            InputFieldWithCopy(
+                labelResourceString = stringResource(R.string.login_username_label),
+                value = username,
+                onValueChange = onUsernameChange,
+                isReadOnly = isLoading,
+                errorString = usernameError ?: "",
+                isCopy = false
+            )
 
-        InputFieldPassword(
-            labelResourceString = stringResource(R.string.login_password_label),
-            value = password,
-            onValueChange = onPasswordChange,
-            errorString = passwordError ?: "",
-            isCopy = false
-        )
+            InputFieldPassword(
+                labelResourceString = stringResource(R.string.login_password_label),
+                value = password,
+                onValueChange = onPasswordChange,
+                errorString = passwordError ?: "",
+                isCopy = false
+            )
 
-        Spacer(modifier = Modifier.height(8.dp))
+            if (isLogin != null) {
+                Text(
+                    text = isLogin,
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 25.dp, top = 4.dp, bottom = 4.dp)
+                )
+            }
 
-        Text(
-            text = stringResource(R.string.login_forgot_password_button),
-            modifier = Modifier
-                .align(Alignment.Start)
-                .clickable(enabled = !isLoading, onClick = onForgotPassword)
-                .padding(start = 25.dp, top = 4.dp, bottom = 8.dp),
-            color = MaterialTheme.colorScheme.primary
-        )
+            Spacer(modifier = Modifier.height(8.dp))
 
+            Text(
+                text = stringResource(R.string.login_forgot_password_button),
+                modifier = Modifier
+                    .align(Alignment.Start)
+                    .clickable(enabled = !isLoading, onClick = onForgotPassword)
+                    .padding(start = 25.dp, top = 4.dp, bottom = 8.dp),
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
         Spacer(modifier = Modifier.height(24.dp))
 
-        AuthButton(
-            text = stringResource(R.string.login_login_button),
-            onClick = onLogin,
-            isLoading = isLoading,
+        Column(
             modifier = Modifier
-                .padding(horizontal = 20.dp)
-                .fillMaxWidth(),
-            fillMaxWidth = true,
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        AuthButton(
-            text = stringResource(R.string.login_register_button),
-            onClick = onRegister,
-            isLoading = false,
-            enabled = !isLoading,
-            modifier = Modifier
-                .padding(horizontal = 20.dp)
-                .fillMaxWidth(),
-            containerColor = MaterialTheme.colorScheme.secondary,
-            contentColor = MaterialTheme.colorScheme.onSecondary,
-            fillMaxWidth = true
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Text(
-            text = stringResource(R.string.login_privacy_policy_button),
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .clickable(enabled = !isLoading, onClick = onPrivacyPolicy),
-            color = MaterialTheme.colorScheme.secondary
-        )
-    }
-}
-
-
-@PreviewLightDark()
-@Composable
-fun LoginScreenPreview() {
-    PassFortTheme {
-        Surface {
-            val previewState = LoginUiState(
-                username = "preview@user.com",
-                password = "password",
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 24.dp)
+                .fillMaxWidth()
+        ) {
+            AuthButton(
+                text = stringResource(R.string.login_login_button),
+                onClick = onLogin,
+                isLoading = isLoading,
+                modifier = Modifier
+                    .padding(horizontal = 20.dp)
+                    .fillMaxWidth(),
+                fillMaxWidth = true,
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            AuthButton(
+                text = stringResource(R.string.login_register_button),
+                onClick = onRegister,
                 isLoading = false,
-                usernameError = "2323",
+                enabled = !isLoading,
+                modifier = Modifier
+                    .padding(horizontal = 20.dp)
+                    .fillMaxWidth(),
+                containerColor = MaterialTheme.colorScheme.secondary,
+                contentColor = MaterialTheme.colorScheme.onSecondary,
+                fillMaxWidth = true
+            )
 
-                )
-            LoginScreen(
-                uiState = previewState,
-                onUsernameChange = {},
-                onPasswordChange = {},
-                onLoginAttempt = {},
-                onNavigateToRegister = {},
-                onNavigateToForgotPassword = {},
-                onNavigateToPrivacyPolicy = {}
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = stringResource(R.string.login_privacy_policy_button),
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .clickable(enabled = !isLoading, onClick = onPrivacyPolicy),
+                color = MaterialTheme.colorScheme.secondary
             )
         }
     }
