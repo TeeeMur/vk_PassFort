@@ -23,4 +23,7 @@ interface PasswordDao: BaseDao<PasswordRecordEntity> {
 
     @Query("SELECT * from password_record WHERE password_name LIKE :name")
     suspend fun getByName(name: String): List<PasswordRecordEntity>
+
+    @Query("SELECT * from password_record WHERE id LIKE :id")
+    suspend fun getById(id: Int): PasswordRecordEntity
 }

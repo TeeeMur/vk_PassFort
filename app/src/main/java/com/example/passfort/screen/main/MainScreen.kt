@@ -48,6 +48,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -75,6 +76,9 @@ import com.example.passfort.model.dbentity.PasswordRecordEntity
 import com.example.passfort.viewModel.MainScreenViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.onEach
 import kotlin.math.absoluteValue
 import kotlin.math.pow
 import kotlin.math.roundToInt
@@ -314,7 +318,7 @@ fun SmallPasswordsList(
 
 @Composable
 fun SmallPasswordsListRow(item: PasswordRecordEntity, showIcon: Boolean = false) {
-    val clipData = ClipData.newPlainText("Copied password:", item.passwordRecordPassword)
+    val clipData = ClipData.newPlainText("Copied password:", item.recordPassword)
         .apply {
             description.extras = PersistableBundle().apply {
                 putBoolean("android.content.extra.IS_SENSITIVE", true)
@@ -337,7 +341,7 @@ fun SmallPasswordsListRow(item: PasswordRecordEntity, showIcon: Boolean = false)
             )
         }
         Text(
-            text = item.passwordRecordName,
+            text = item.recordName,
             modifier = Modifier.weight(1f),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
@@ -354,7 +358,9 @@ fun SmallPasswordsListRow(item: PasswordRecordEntity, showIcon: Boolean = false)
             )
         }
         LaunchedEffect(copy) {
-            clipboardManager.setClipEntry(ClipEntry(clipData))
+            snapshotFlow { copy }.drop(1).onEach {
+                clipboardManager.setClipEntry(ClipEntry(clipData))
+            }
         }
     }
 }
