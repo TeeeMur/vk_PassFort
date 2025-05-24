@@ -16,7 +16,7 @@ import com.example.passfort.model.dbentity.PasswordRecordEntity
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable
-fun MainScreenBottomList(
+fun RecentsList(
     @SuppressLint("ModifierParameter") titleModifier: Modifier = Modifier,
     passwordsList: ImmutableList<PasswordRecordEntity>,
     title: String = "Недавние",
