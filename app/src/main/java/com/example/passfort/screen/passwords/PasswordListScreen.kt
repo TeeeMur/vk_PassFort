@@ -1,69 +1,84 @@
 package com.example.passfort.screen.passwords
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
-import com.example.passfort.viewModel.PasswordViewModel
-import com.example.passfort.viewModel.PasswordListState
-import com.example.passfort.model.PasswordItem
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ContentCopy
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.unit.sp
-import com.valentinilk.shimmer.shimmer
-import androidx.compose.foundation.clickable
-import androidx.compose.material.icons.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.Warning
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
-import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.passfort.designSystem.components.NavigationBar
+import com.example.passfort.R
 import com.example.passfort.designSystem.components.PasswordCard
+import com.example.passfort.designSystem.components.SearchBar
 import com.example.passfort.designSystem.theme.PassFortTheme
+import com.example.passfort.model.PasswordItem
+import com.example.passfort.viewModel.PasswordListState
+import com.example.passfort.viewModel.PasswordViewModel
+import com.valentinilk.shimmer.shimmer
 
 @Composable
 fun PasswordListScreen(
     viewModel: PasswordViewModel = hiltViewModel(),
     navController: NavHostController,
     onAddPassword: () -> Unit,
-    onClickPassword: (Int) -> Unit
+    onClickPassword: (Long) -> Unit
 ) {
     val uiState = viewModel.uiState.collectAsState().value
     var searchQuery by remember { mutableStateOf("") }
 
     Scaffold(
         bottomBar = {
-            NavigationBar(
+            com.example.passfort.designSystem.components.NavigationBar(
                 navController,
-                onAddPassword
+                onAddPassword,
             )
         }
     ) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(
-                    top = padding.calculateTopPadding(),
-                    bottom = 40.dp
-                )
+                .padding(top = padding.calculateTopPadding(),
+                    bottom = 40.dp)
                 .padding(20.dp)
         ) {
+            var searchValue by remember {mutableStateOf("")}
             SearchBar(
-                query = searchQuery,
-                onQueryChange = { searchQuery = it }
-            )
+                value = searchValue,
+                placeholder = stringResource(id = R.string.search_passwords_field_placeholder),
+            ) {
+                searchValue = it
+            }
             Spacer(modifier = Modifier.height(12.dp))
 
             when (uiState) {
@@ -83,41 +98,10 @@ fun PasswordListScreen(
 }
 
 @Composable
-fun SearchBar(query: String, onQueryChange: (String) -> Unit) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(48.dp)
-            .background(Color(0xFFE0E0E0), shape = MaterialTheme.shapes.medium)
-            .padding(horizontal = 12.dp, vertical = 8.dp),
-        contentAlignment = Alignment.CenterStart
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(Icons.Filled.Search, contentDescription = "Поиск", tint = Color.Gray)
-            Spacer(modifier = Modifier.width(8.dp))
-            if (query.isEmpty()) {
-                Text(
-                    text = "Search password",
-                    color = Color.Gray,
-                    style = MaterialTheme.typography.bodyMedium,
-                )
-            }
-            BasicTextField(
-                value = query,
-                onValueChange = onQueryChange,
-                textStyle = MaterialTheme.typography.bodyMedium.copy(color = Color.Black),
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
-    }
-}
-
-@Composable
 fun PasswordSections(
     pinnedPasswords: List<PasswordItem>,
     allPasswords: List<PasswordItem>,
-    onClickPassword: (Int) -> Unit,
+    onClickPassword: (Long) -> Unit
 
 ) {
     var pinnedExpanded by remember { mutableStateOf(true) }
@@ -142,7 +126,7 @@ fun PasswordSections(
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Icon(
-                        imageVector = if (pinnedExpanded) Icons.Filled.KeyboardArrowDown else Icons.Filled.KeyboardArrowRight,
+                        imageVector = if (pinnedExpanded) Icons.Filled.KeyboardArrowDown else Icons.AutoMirrored.Filled.KeyboardArrowRight,
                         contentDescription = if (pinnedExpanded) "Свернуть" else "Развернуть"
                     )
                 }
@@ -151,13 +135,7 @@ fun PasswordSections(
                 items(pinnedPasswords.size) { index ->
                     PasswordCard(
                         pinnedPasswords[index],
-                        onClickPassword = onClickPassword,
-                        isRevealed = true,
-                        actions = {},
-                        modifier = Modifier,
-                        onExpanded = {},
-                        onCollapsed = {},
-                        content = {},
+                        onClickPassword = onClickPassword
                     )
                 }
             }
@@ -174,15 +152,8 @@ fun PasswordSections(
             )
         }
         items(allPasswords.size) { index ->
-            PasswordCard(
-                allPasswords[index],
-                onClickPassword = onClickPassword,
-                isRevealed = true,
-                actions = {},
-                modifier = Modifier,
-                onExpanded = {},
-                onCollapsed = {},
-                content = {},
+            PasswordCard(allPasswords[index],
+                onClickPassword = onClickPassword
             )
         }
         item {
@@ -214,9 +185,7 @@ fun ShimmerPasswordCard() {
         shape = MaterialTheme.shapes.medium,
         elevation = CardDefaults.cardElevation(1.dp)
     ) {
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .background(Color.LightGray))
+        Box(modifier = Modifier.fillMaxSize().background(Color.LightGray))
     }
 }
 

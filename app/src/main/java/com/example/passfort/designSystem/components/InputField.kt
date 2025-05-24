@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
@@ -19,15 +21,18 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.ClipEntry
+import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -35,12 +40,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.passfort.R
 import com.example.passfort.designSystem.theme.PassFortTheme
+import kotlinx.coroutines.flow.drop
 
 @Composable
 fun InputFieldTitle(value: String, onValueChange: (String) -> Unit = {}, onClick: () -> Unit = {}) {
@@ -53,7 +60,8 @@ fun InputFieldTitle(value: String, onValueChange: (String) -> Unit = {}, onClick
         singleLine = true,
         onValueChange = onValueChange,
         textStyle = LocalTextStyle.current.copy(
-            fontSize = MaterialTheme.typography.headlineMedium.fontSize
+            fontSize = MaterialTheme.typography.headlineMedium.fontSize,
+            textDecoration = TextDecoration.Underline
         ),
         colors = OutlinedTextFieldDefaults.colors(
             unfocusedBorderColor = Color.Transparent,
@@ -83,8 +91,13 @@ fun InputFieldWithCopy(labelResourceString: String,
                        isReadOnly : Boolean = false,
                        isShowErrorText: Boolean = false
 ){
-    val clipboardManager = LocalClipboardManager.current
-
+    val clipboardManager = LocalClipboard.current
+    val clipData = ClipData.newPlainText("Copied:", value).apply {
+        description.extras = PersistableBundle().apply {
+            putBoolean("android.content.extra.IS_SENSITIVE", true)
+        }
+    }
+    var stateCopy by remember { mutableStateOf(false) }
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -98,18 +111,13 @@ fun InputFieldWithCopy(labelResourceString: String,
             isTitle = isTitle,
             isSingleLine = isSingleLine,
             isReadOnly = isReadOnly,
-            errorString = stringResource(R.string.input_field_error_necessary),
+            errorString = "Не должна быть пустой",
             isShowErrorText = (isShowErrorText && value == ""),
             trailingIcon = {
                 IconButton(
                     modifier = Modifier.padding(end = 4.dp),
                     onClick = {
-                        val clipData = ClipData.newPlainText("Copied:", value).apply {
-                            description.extras = PersistableBundle().apply {
-                                putBoolean("android.content.extra.IS_SENSITIVE", true)
-                            }
-                        }
-                        clipboardManager.setClip(ClipEntry(clipData))
+                        stateCopy = !stateCopy
                     }
                 ) {
                     Icon(
@@ -119,6 +127,11 @@ fun InputFieldWithCopy(labelResourceString: String,
                 }
             }
         )
+    }
+    LaunchedEffect(stateCopy) {
+        snapshotFlow { stateCopy }
+            .drop(1)
+            .collect { clipboardManager.setClipEntry(ClipEntry(clipData)) }
     }
 }
 
@@ -178,13 +191,19 @@ fun InputFieldPasswordWithCopy(labelResourceString: String,
     else
         ImageVector.vectorResource(R.drawable.icon_button_password_show)
 
-    val clipboardManager = LocalClipboardManager.current
+    val clipboardManager = LocalClipboard.current
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 20.dp)
     ) {
+        val clipData = ClipData.newPlainText("Copied:", value).apply {
+            description.extras = PersistableBundle().apply {
+                putBoolean("android.content.extra.IS_SENSITIVE", true)
+            }
+        }
+        var copy = false
         InputFieldBase(
             labelResourceString = labelResourceString,
             value = value,
@@ -205,12 +224,7 @@ fun InputFieldPasswordWithCopy(labelResourceString: String,
                     IconButton(
                         modifier = Modifier.padding(end = 4.dp),
                         onClick = {
-                            val clipData = ClipData.newPlainText("Copied:", value).apply {
-                                description.extras = PersistableBundle().apply {
-                                    putBoolean("android.content.extra.IS_SENSITIVE", true)
-                                }
-                            }
-                            clipboardManager.setClip(ClipEntry(clipData))
+                            copy = !copy
                         }
                     ) {
                         Icon(
@@ -221,6 +235,9 @@ fun InputFieldPasswordWithCopy(labelResourceString: String,
                 }
             }
         )
+        LaunchedEffect(copy) {
+            clipboardManager.setClipEntry(ClipEntry(clipData))
+        }
     }
 }
 
@@ -228,7 +245,6 @@ fun InputFieldPasswordWithCopy(labelResourceString: String,
 fun InputFieldPassword(labelResourceString: String,
                        value: String,
                        onValueChange: (String) -> Unit = {},
-                       isShowErrorText: Boolean = false
 ){
     var passwordVisible by remember { mutableStateOf(false) }
 
@@ -250,8 +266,8 @@ fun InputFieldPassword(labelResourceString: String,
             value = value,
             onValueChange = onValueChange,
             visualTransformation = visualTransformation,
-            errorString = stringResource(R.string.input_field_error_necessary),
-            isShowErrorText = (isShowErrorText && value == ""),
+            errorString = "Не должна быть пустой",
+            isShowErrorText = (value == ""),
             trailingIcon = {
                 IconButton(onClick = { passwordVisible = !passwordVisible }) {
                     Icon(

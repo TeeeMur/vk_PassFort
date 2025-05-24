@@ -36,9 +36,17 @@ import kotlinx.coroutines.flow.StateFlow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SingleChoiceSegmentedButton(switchAction: (Int) -> Unit) {
+fun SingleChoiceSegmentedButton(
+    intervalsDays: Int,
+    switchAction: (Int) -> Unit
+) {
     var selectedIndex by remember { mutableIntStateOf(0) }
     val options = listOf("60", "120", "180")
+
+    selectedIndex = options.indexOf(intervalsDays.toString())
+    if (intervalsDays == 0) {
+        switchAction(options[0].toInt())
+    }
 
     SingleChoiceSegmentedButtonRow(
         modifier = Modifier
@@ -86,6 +94,6 @@ fun SingleChoiceSegmentedButton(switchAction: (Int) -> Unit) {
 @Composable
 fun SegmentsButtonPreview() {
     PassFortTheme{
-        SingleChoiceSegmentedButton({})
+        SingleChoiceSegmentedButton(120, {})
     }
 }

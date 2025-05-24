@@ -1,6 +1,5 @@
-package com.yourpackage.ui.components
+package com.example.passfort.designSystem.components
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.MaterialTheme
@@ -9,19 +8,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -34,7 +27,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.passfort.R
 import com.example.passfort.designSystem.theme.PassFortTheme
-import com.example.passfort.viewModel.GeneratorViewModel
 
 @Composable
 fun SecondaryButton(
@@ -166,10 +158,45 @@ fun ButtonAdditionally(onClick: () -> Unit) {
     }
 }
 
+@Composable
+fun BottomButtonLine(
+    onClick: () -> Boolean,
+    onDismiss: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp)
+            .wrapContentHeight(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 20.dp)
+                .height(64.dp),
+            shape = RoundedCornerShape(50.dp),
+            onClick = {
+                if (onClick())
+                    onDismiss()
+            }
+        ) {
+            Text(
+                text = stringResource(R.string.passwordcreate_bottombutton_save),
+                color = MaterialTheme.colorScheme.inversePrimary,
+                fontSize = 18.sp,
+            )
+        }
+    }
+}
+
 @PreviewLightDark
 @Composable
 fun ButtonsPreview(){
     PassFortTheme {
-        ButtonAdditionally(){}
+        Column {
+            ButtonAdditionally() {}
+            BottomButtonLine({ true }, {})
+        }
     }
 }

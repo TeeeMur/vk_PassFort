@@ -52,10 +52,21 @@ class PasswordViewModel @Inject constructor(
                         allPasswords = passwordRecords.reversed().map
                         { password ->
                             PasswordItem(
-                                id = password.id.toInt(),
-                                name = password.passwordRecordName,
-                                username = password.passwordRecordLogin,
-                                daysToExpire = password.passwordLastChangeDate.hour,
+                                id = password.id,
+                                iconId = 0,
+                                itemName = password.recordName,
+                                itemLogin = password.recordLogin,
+                                itemPassword = password.recordPassword
+                            )
+                        },
+                        pinnedPasswords = passwordRecords.reversed().filter { it -> it.pinned }.map
+                        { password ->
+                            PasswordItem(
+                                id = password.id,
+                                iconId = 0,
+                                itemName = password.recordName,
+                                itemLogin = password.recordLogin,
+                                itemPassword = password.recordPassword
                             )
                         }
                     )
@@ -64,13 +75,23 @@ class PasswordViewModel @Inject constructor(
                         allPasswords = passwordRecords.reversed().map
                         { password ->
                             PasswordItem(
-                                id = password.id.toInt(),
-                                name = password.passwordRecordName,
-                                username = password.passwordRecordLogin,
-                                daysToExpire = password.passwordLastChangeDate.hour,
+                                id = password.id,
+                                iconId = 0,
+                                itemName = password.recordName,
+                                itemLogin = password.recordLogin,
+                                itemPassword = password.recordPassword
                             )
                         },
-                        pinnedPasswords = emptyList()
+                        pinnedPasswords = passwordRecords.reversed().filter { it -> it.pinned }.map
+                        { password ->
+                            PasswordItem(
+                                id = password.id,
+                                iconId = 0,
+                                itemName = password.recordName,
+                                itemLogin = password.recordLogin,
+                                itemPassword = password.recordPassword
+                            )
+                        }
                     )
                 }
             }
