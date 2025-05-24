@@ -1,5 +1,6 @@
 package com.example.passfort.screen.auth
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.border
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,51 +17,74 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.passfort.viewModel.PinCodeState
 import com.example.passfort.viewModel.PinCodeViewModel
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Backspace
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
+import android.app.Activity
+import androidx.compose.ui.platform.LocalContext
 
+@SuppressLint("ContextCastToActivity")
 @Composable
 fun PinCodeScreen(
-    userName: String = "Арина Асхабова",
+    correctPin: String,
+    onSuccess: () -> Unit,
+    userName: String = "Арина",
     viewModel: PinCodeViewModel = viewModel()
 ) {
+    val activity = LocalContext.current as? Activity
     val uiState by viewModel.uiState.collectAsState()
-    val pin by viewModel.pin.collectAsState()
+    val pin     by viewModel.pin.collectAsState()
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    LaunchedEffect(pin) {
+        if (pin.length == correctPin.length) {
+            viewModel.verifyPin(pin, correctPin)
+        }
+    }
+
+    LaunchedEffect(uiState) {
+        if (uiState is PinCodeState.Success) {
+            onSuccess()
+            viewModel.resetState()
+        }
+    }
+
+    Box(Modifier.fillMaxSize()) {
         when (uiState) {
-            is PinCodeState.Input -> {
+            is PinCodeState.Input   -> PinCodeInputScreen(
+                userName,
+                pin,
+                onDigitClick = viewModel::onDigitClick,
+                onDeleteClick = viewModel::onDelete,
+                onExitClick   = { activity?.finish() }
+            )
+            is PinCodeState.Loading -> LoadingScreen(userName)
+            is PinCodeState.Error   -> {
                 PinCodeInputScreen(
-                    userName = userName,
-                    pin = pin,
+                    userName,
+                    pin,
                     onDigitClick = viewModel::onDigitClick,
-                    onDeleteClick = viewModel::onDelete
-                )
-            }
-            is PinCodeState.Loading -> {
-                LoadingScreen(userName)
-            }
-            is PinCodeState.Error -> {
-                PinCodeInputScreen(
-                    userName = userName,
-                    pin = pin,
-                    onDigitClick = viewModel::onDigitClick,
-                    onDeleteClick = viewModel::onDelete
+                    onDeleteClick = viewModel::onDelete,
+                    onExitClick   = { activity?.finish() }
                 )
                 ErrorDialog(
                     message = (uiState as PinCodeState.Error).message,
-                    onDismiss = { viewModel.retry() }
+                    onDismiss = viewModel::retry
                 )
             }
+            is PinCodeState.Success -> { /* пусто */ }
         }
     }
 }
+
 
 @Composable
 fun PinCodeInputScreen(
     userName: String,
     pin: String,
     onDigitClick: (Char) -> Unit,
-    onDeleteClick: () -> Unit
+    onDeleteClick: () -> Unit,
+    onExitClick: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -71,7 +95,7 @@ fun PinCodeInputScreen(
         Column(
             modifier = Modifier
                 .align(Alignment.Center)
-                .offset(y = (-50).dp),
+                .offset(y = (-100).dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
@@ -108,7 +132,8 @@ fun PinCodeInputScreen(
         ) {
             PinKeyboard(
                 onDigitClick = onDigitClick,
-                onDeleteClick = onDeleteClick
+                onDeleteClick = onDeleteClick,
+                onExitClick   = onExitClick
             )
         }
     }
@@ -124,6 +149,7 @@ fun PinIndicator(filled: Boolean) {
         modifier = Modifier
             .size(size)
             .border(2.dp, borderColor, CircleShape)
+            .clip(CircleShape)
             .background(fillColor, CircleShape),
         contentAlignment = Alignment.Center
     ) {
@@ -134,7 +160,8 @@ fun PinIndicator(filled: Boolean) {
 @Composable
 fun PinKeyboard(
     onDigitClick: (Char) -> Unit,
-    onDeleteClick: () -> Unit
+    onDeleteClick: () -> Unit,
+    onExitClick: () -> Unit
 ) {
     val rows = listOf(
         listOf('1','2','3'),
@@ -159,6 +186,26 @@ fun PinKeyboard(
             }
             Spacer(modifier = Modifier.height(16.dp))
         }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .offset(y = (-86).dp),
+
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            TextButton(onClick = onExitClick, modifier = Modifier.offset(x = (40).dp)) {
+                Text("Выйти", color = MaterialTheme.colorScheme.primary)
+            }
+            Spacer(Modifier.weight(1f))
+            IconButton(onClick = onDeleteClick, modifier = Modifier.offset(x = (-60).dp)) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.Backspace,
+                    contentDescription = "Стереть",
+                    tint = MaterialTheme.colorScheme.primary
+                )
+            }
+        }
     }
 }
 
@@ -175,6 +222,7 @@ fun PinKey(
         modifier = Modifier
             .size(size)
             .border(2.dp, borderColor, CircleShape)
+            .clip(CircleShape)
             .background(Color.Transparent, CircleShape)
             .clickable {
                 if (digit == '<') {

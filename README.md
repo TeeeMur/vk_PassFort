@@ -5,7 +5,7 @@ Application which provides:
 * Safe and fast synchronization between devices
 * Reminders to change your password
 * Password generator with generating parameters
-
+ 
 ## Свидетели дизайна team:
 * [Askhabova Arina](https://github.com/arishask)
 * [Kontsevich Daniil](https://github.com/kontsevich-daniil)
