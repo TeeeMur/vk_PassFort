@@ -85,16 +85,16 @@ fun PasswordGenScreen(viewModel: GeneratorViewModel = hiltViewModel()) {
 
 @Composable
 fun PasswordGenOptions(viewModel: GeneratorViewModel) {
-    ToggleLine(stringResource(R.string.passwordgen_toggle_digits_name), viewModel.enableDigits) {
+    ToggleLine(stringResource(R.string.passwordgen_toggle_digits_name), viewModel.enableDigits.collectAsState().value) {
         viewModel.setDigits()
     }
-    ToggleLine(stringResource(R.string.passwordgen_toggle_lowercase_chars_name), viewModel.enableLowercaseCharacters) {
+    ToggleLine(stringResource(R.string.passwordgen_toggle_lowercase_chars_name), viewModel.enableLowercaseCharacters.collectAsState().value) {
         viewModel.setLowercaseCharacters()
     }
-    ToggleLine(stringResource(R.string.passwordgen_toggle_uppercase_chars_name), viewModel.enableUppercaseCharacters) {
+    ToggleLine(stringResource(R.string.passwordgen_toggle_uppercase_chars_name), viewModel.enableUppercaseCharacters.collectAsState().value) {
         viewModel.setUppercaseCharacters()
     }
-    ToggleLine(stringResource(R.string.passwordgen_toggle_specChar_name), viewModel.enableSpecSymbols) {
+    ToggleLine(stringResource(R.string.passwordgen_toggle_specChar_name), viewModel.enableSpecSymbols.collectAsState().value) {
         viewModel.setSpecSymbols()
     }
 }

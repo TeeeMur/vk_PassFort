@@ -23,7 +23,7 @@ import kotlinx.coroutines.flow.StateFlow
 @Composable
 fun PasswordRemindOptions(
     passwordIntervalDays: Int,
-    enablePasswordChange: StateFlow<Boolean>,
+    enablePasswordChange: Boolean,
     setPasswordChange: () -> Unit,
     setChangeIntervalDaysCount: (Int) -> Unit
 ) {
@@ -39,7 +39,7 @@ fun PasswordRemindOptions(
             setPasswordChange()
         }
 
-        if (enablePasswordChange.collectAsState().value) {
+        if (enablePasswordChange) {
             SingleChoiceSegmentedButton(passwordIntervalDays) {
                 setChangeIntervalDaysCount(it)
             }
@@ -51,7 +51,7 @@ fun PasswordRemindOptions(
 }
 
 @Composable
-fun ToggleLine(name: String, valueFlow: StateFlow<Boolean>, toggleAction: () -> Unit) {
+fun ToggleLine(name: String, valueFlow: Boolean, toggleAction: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -66,7 +66,7 @@ fun ToggleLine(name: String, valueFlow: StateFlow<Boolean>, toggleAction: () -> 
             fontSize = 16.sp
         )
         Switch(
-            checked = valueFlow.collectAsState().value,
+            checked = valueFlow,
             onCheckedChange = { toggleAction() },
             colors = SwitchDefaults.colors(
                 checkedThumbColor = MaterialTheme.colorScheme.background,

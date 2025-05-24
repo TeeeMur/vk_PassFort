@@ -99,7 +99,7 @@ fun PasswordDetailScreen(
                 )
                 PasswordRemindOptions(
                     passwordIntervalDays = viewModel.changeIntervalDays.collectAsState().value,
-                    enablePasswordChange = viewModel.enablePasswordChange,
+                    enablePasswordChange = viewModel.enablePasswordChange.collectAsState().value,
                     setPasswordChange = { viewModel.setPasswordChange() },
                     setChangeIntervalDaysCount = { viewModel.setChangeIntervalDaysCount(it) }
                 )
