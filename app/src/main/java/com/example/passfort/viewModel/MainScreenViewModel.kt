@@ -32,10 +32,11 @@ class MainScreenViewModel @Inject constructor(private val repo: MainScreenRepo):
                 _recentPasswords.update { oldIt -> newIt.toImmutableList() }
                 Log.d("RECENT", "${newIt}")
             }.launchIn(viewModelScope)
-            repo.getPinnedPasswords().collect { newIt ->
+
+            repo.getPinnedPasswords().onEach { newIt ->
                 Log.d("PINNED", "${newIt}")
                 _pinnedPasswords.update { oldIt -> newIt.toImmutableList() }
-            }
+            }.launchIn(viewModelScope)
 
     }
 
