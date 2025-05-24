@@ -22,7 +22,7 @@ object AppModule {
     @Singleton
     fun provideDatabase(@ApplicationContext appContext: Context): PassFortDB {
         return Room
-            .databaseBuilder(appContext, PassFortDB::class.java, "PassfortDB")
+            .databaseBuilder(appContext, PassFortDB::class.java , "PassfortDB")
             .fallbackToDestructiveMigration()
             .build()
     }

@@ -13,17 +13,22 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.outlined.AccountCircle
@@ -38,6 +43,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,6 +56,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.ClipEntry
 import androidx.compose.ui.platform.LocalClipboard
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -61,14 +68,13 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.passfort.R
-import com.example.passfort.designSystem.components.MainScreenBottomList
 import com.example.passfort.designSystem.components.PreviewNavBar
+import com.example.passfort.designSystem.components.RecentsList
 import com.example.passfort.designSystem.components.SearchBar
 import com.example.passfort.model.dbentity.PasswordRecordEntity
 import com.example.passfort.viewModel.MainScreenViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toImmutableList
 import kotlin.math.absoluteValue
 import kotlin.math.pow
 import kotlin.math.roundToInt
@@ -94,8 +100,27 @@ fun MainScreen(
         PreviewNavBar()
     }
 ) {
+    val anchors = DraggableAnchors<Anchors> {
+        Anchors.Start at 0F
+        Anchors.End at -800F
+    }
+    val anchoredDraggableState = remember {
+        AnchoredDraggableState(
+            initialValue = Anchors.Start,
+            anchors = anchors,
+        )
+    }
+    val contentScrollState = rememberScrollState()
+    var contentScrollEnabled = remember{derivedStateOf{
+        anchoredDraggableState.currentValue == Anchors.End
+    }}
+    var anchoredDragsEnabled = remember{derivedStateOf{
+        contentScrollState.value == 0
+    }}
     val pagerState = rememberPagerState { mainScreenImages.size }
-    val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    val screenHeightInDp = with(LocalDensity.current) {
+        LocalWindowInfo.current.containerSize.height.toDp()
+    }
     Scaffold(
         modifier = Modifier,
         topBar = {
@@ -118,22 +143,11 @@ fun MainScreen(
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color.Transparent
-                ),
-                scrollBehavior = topAppBarScrollBehavior
+                )
             )
         },
         bottomBar = navigationBar,
     ) { scaffoldPaddingValues ->
-        val anchors = DraggableAnchors<Anchors> {
-            Anchors.Start at 0F
-            Anchors.End at -800F
-        }
-        val anchoredDraggableState = remember {
-            AnchoredDraggableState(
-                initialValue = Anchors.Start,
-                anchors = anchors
-            )
-        }
         val backgroundColorAlpha =
             (1 - anchoredDraggableState.requireOffset().absoluteValue / anchoredDraggableState.anchors.minPosition().absoluteValue).pow(
                 0.85F
@@ -204,16 +218,18 @@ fun MainScreen(
                     }
                     .anchoredDraggable(
                         state = anchoredDraggableState,
-                        orientation = Orientation.Vertical
+                        orientation = Orientation.Vertical,
+                        enabled = anchoredDragsEnabled.value
                     )
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
                     .background(MaterialTheme.colorScheme.background)
                     .padding(horizontal = 16.dp, vertical = 8.dp)
                     .height(
-                        LocalWindowInfo.current.containerSize.height.dp
-                                - scaffoldPaddingValues.calculateBottomPadding() * 1.5F
-                                - 12.dp
+                        screenHeightInDp
+                                - scaffoldPaddingValues.calculateTopPadding()
+                                - WindowInsets.statusBars.getTop(LocalDensity.current).dp
+                                + scaffoldPaddingValues.calculateBottomPadding() / 1.3f
                     ),
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -234,19 +250,28 @@ fun MainScreen(
                     modifier = Modifier.padding(vertical = 8.dp)
                 ) { searchString = it }
                 if (viewModel.recentPasswords.value.isNotEmpty() or viewModel.pinnedPasswords.value.isNotEmpty()) {
-                    if (viewModel.pinnedPasswords.value.isNotEmpty()) {
-                        SmallPasswordsList(
-                            modifier = Modifier.padding(vertical = 6.dp),
-                            title = stringResource(R.string.main_screen_pinned_title),
-                            passwordsList = viewModel.pinnedPasswords.collectAsState().value,
-                            showIcons = true
-                        )
-                    }
-                    if (viewModel.recentPasswords.value.isNotEmpty()) {
-                        MainScreenBottomList(
-                            passwordsList = viewModel.recentPasswords.collectAsState().value,
-                            titleModifier = Modifier.padding(top = 8.dp, start = 6.dp)
-                        )
+                    Column(
+                        modifier = Modifier.fillMaxSize()
+                            .wrapContentHeight()
+                            .verticalScroll(
+                                contentScrollState,
+                                enabled = contentScrollEnabled.value
+                            )
+                    ) {
+                        if (viewModel.pinnedPasswords.value.isNotEmpty()) {
+                            SmallPasswordsList(
+                                modifier = Modifier.padding(vertical = 6.dp),
+                                title = stringResource(R.string.main_screen_pinned_title),
+                                passwordsList = viewModel.pinnedPasswords.collectAsState().value,
+                                showIcons = true
+                            )
+                        }
+                        if (viewModel.recentPasswords.value.isNotEmpty()) {
+                            RecentsList(
+                                passwordsList = viewModel.recentPasswords.collectAsState().value,
+                                titleModifier = Modifier.padding(top = 8.dp, start = 6.dp)
+                            )
+                        }
                     }
                 }
             }
