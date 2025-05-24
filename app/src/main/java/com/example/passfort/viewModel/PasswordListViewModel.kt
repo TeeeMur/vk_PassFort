@@ -2,6 +2,7 @@ package com.example.passfort.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -24,6 +25,12 @@ sealed class PasswordListState {
     data class Success(val pinnedPasswords: List<PasswordItem>, val allPasswords: List<PasswordItem>) : PasswordListState()
 }
 
+data class PasswordsScreenListState(
+    val passwordsPinnedList: ImmutableList<PasswordRecordEntity> = persistentListOf(),
+    val passwordsNotPinnedList: ImmutableList<PasswordRecordEntity> = persistentListOf(),
+    val eScreenState: EScreenState = EScreenState.LOADING
+)
+
 @HiltViewModel
 class PasswordViewModel @Inject constructor(
     private val repository: PasswordsListRepo
@@ -42,13 +49,49 @@ class PasswordViewModel @Inject constructor(
             _uiState.update {
                 if (it is PasswordListState.Success) {
                     it.copy(
-                        allPasswords = passwordRecords.reversed().map { password -> password.convertToPasswordItem()}
+                        allPasswords = passwordRecords.reversed().map
+                        { password ->
+                            PasswordItem(
+                                id = password.id,
+                                iconId = 0,
+                                itemName = password.recordName,
+                                itemLogin = password.recordLogin,
+                                itemPassword = password.recordPassword
+                            )
+                        },
+                        pinnedPasswords = passwordRecords.reversed().filter { it -> it.pinned }.map
+                        { password ->
+                            PasswordItem(
+                                id = password.id,
+                                iconId = 0,
+                                itemName = password.recordName,
+                                itemLogin = password.recordLogin,
+                                itemPassword = password.recordPassword
+                            )
+                        }
                     )
                 } else {
                     PasswordListState.Success(
                         allPasswords = passwordRecords.reversed().map
-                        { password -> password.convertToPasswordItem() },
-                        pinnedPasswords = emptyList()
+                        { password ->
+                            PasswordItem(
+                                id = password.id,
+                                iconId = 0,
+                                itemName = password.recordName,
+                                itemLogin = password.recordLogin,
+                                itemPassword = password.recordPassword
+                            )
+                        },
+                        pinnedPasswords = passwordRecords.reversed().filter { it -> it.pinned }.map
+                        { password ->
+                            PasswordItem(
+                                id = password.id,
+                                iconId = 0,
+                                itemName = password.recordName,
+                                itemLogin = password.recordLogin,
+                                itemPassword = password.recordPassword
+                            )
+                        }
                     )
                 }
             }

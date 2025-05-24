@@ -73,9 +73,10 @@ class CreateViewModel @Inject constructor(
         viewModelScope.launch {
             repository.upsertPassword(
                 password = PasswordRecordEntity(
-                    passwordRecordName = _namePassword.value,
-                    passwordRecordLogin = _login.value,
-                    passwordRecordPassword = _password.value,
+                    recordName = _namePassword.value,
+                    recordLogin = _login.value,
+                    recordPassword = _password.value,
+                    recordNote = _note.value,
                     passwordLastChangeDate = LocalDateTime.now(),
                     passwordChangeIntervalDays = _changeIntervalDays.value,
                     iconIndex = 0,

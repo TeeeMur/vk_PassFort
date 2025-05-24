@@ -32,12 +32,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.passfort.R
 import com.example.passfort.designSystem.theme.PassFortTheme
 import com.example.passfort.model.PasswordItem
-import com.example.passfort.navigation.Screen
 import kotlinx.coroutines.flow.drop
 
 @Composable
@@ -120,6 +117,6 @@ fun PreviewPasCard(){
         0,
         "Figma",
         "asdf@gmail.com",
-        "lsdak")
-    PassFortTheme { PasswordCard(pasData){} }
+        "")
+    PassFortTheme { PasswordCard(pasData, {}) }
 }

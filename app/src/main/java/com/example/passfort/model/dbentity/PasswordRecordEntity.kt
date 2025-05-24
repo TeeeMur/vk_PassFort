@@ -14,9 +14,10 @@ import java.time.LocalDateTime
 @Entity(tableName = "password_record")
 data class PasswordRecordEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    @ColumnInfo(name = "password_name", index = true) val passwordRecordName: String,
-    @ColumnInfo(name = "password_login", index = true) val passwordRecordLogin: String,
-    @ColumnInfo(name = "password_password") var passwordRecordPassword: String,
+    @ColumnInfo(name = "password_name", index = true) val recordName: String,
+    @ColumnInfo(name = "password_login", index = true) val recordLogin: String,
+    @ColumnInfo(name = "password_password") var recordPassword: String,
+    @ColumnInfo(name = "password_note") var recordNote: String,
     @field:TypeConverters(DBDateTimeConverters::class)
     @ColumnInfo(name = "last_change_at", index = true) val passwordLastChangeDate: LocalDateTime,
     @ColumnInfo(name = "change_interval") val passwordChangeIntervalDays: Int,
@@ -29,9 +30,9 @@ data class PasswordRecordEntity(
         return PasswordItem(
             id = id,
             iconId = iconIndex,
-            itemLogin = passwordRecordLogin,
-            itemName = passwordRecordName,
-            itemPassword = passwordRecordPassword,
+            itemLogin = recordLogin,
+            itemName = recordName,
+            itemPassword = recordPassword,
         )
     }
 }

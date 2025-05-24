@@ -12,6 +12,8 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,14 +26,18 @@ class MainScreenViewModel @Inject constructor(private val repo: MainScreenRepo):
     val pinnedPasswords = _pinnedPasswords.asStateFlow()
 
     init {
-        viewModelScope.launch {
-            repo.getRecentPasswords(5).collect { newIt ->
+
+            repo.getRecentPasswords(5)
+                .onEach { newIt ->
                 _recentPasswords.update { oldIt -> newIt.toImmutableList() }
-            }
-            repo.getPinnedPasswords().collect { newIt ->
+                Log.d("RECENT", "${newIt}")
+            }.launchIn(viewModelScope)
+
+            repo.getPinnedPasswords().onEach { newIt ->
+                Log.d("PINNED", "${newIt}")
                 _pinnedPasswords.update { oldIt -> newIt.toImmutableList() }
-            }
-        }
+            }.launchIn(viewModelScope)
+
     }
 
 }
