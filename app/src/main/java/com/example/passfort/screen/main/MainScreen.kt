@@ -5,6 +5,7 @@ import android.content.ClipData
 import android.os.PersistableBundle
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
@@ -23,12 +24,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.outlined.AccountCircle
@@ -67,7 +67,6 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.example.passfort.R
 import com.example.passfort.designSystem.components.PreviewNavBar
 import com.example.passfort.designSystem.components.RecentsList
@@ -76,9 +75,7 @@ import com.example.passfort.model.dbentity.PasswordRecordEntity
 import com.example.passfort.viewModel.MainScreenViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.drop
-import kotlinx.coroutines.flow.onEach
 import kotlin.math.absoluteValue
 import kotlin.math.pow
 import kotlin.math.roundToInt
@@ -99,10 +96,10 @@ val mainScreenImages = persistentListOf(
 @Composable
 fun MainScreen(
     viewModel: MainScreenViewModel = hiltViewModel(),
-    navController: NavController,
+    onClickPassword: (Long) -> Unit,
     navigationBar: @Composable () -> Unit = {
         PreviewNavBar()
-    }
+    },
 ) {
     val anchors = DraggableAnchors<Anchors> {
         Anchors.Start at 0F
@@ -114,12 +111,9 @@ fun MainScreen(
             anchors = anchors,
         )
     }
-    val contentScrollState = rememberScrollState()
-    var contentScrollEnabled = remember{derivedStateOf{
+    val recentsLazyColumnState = rememberLazyListState()
+    val lazyListScrollEnabled by remember{derivedStateOf{
         anchoredDraggableState.currentValue == Anchors.End
-    }}
-    var anchoredDragsEnabled = remember{derivedStateOf{
-        contentScrollState.value == 0
     }}
     val pagerState = rememberPagerState { mainScreenImages.size }
     val screenHeightInDp = with(LocalDensity.current) {
@@ -223,7 +217,6 @@ fun MainScreen(
                     .anchoredDraggable(
                         state = anchoredDraggableState,
                         orientation = Orientation.Vertical,
-                        enabled = anchoredDragsEnabled.value
                     )
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
@@ -233,7 +226,7 @@ fun MainScreen(
                         screenHeightInDp
                                 - scaffoldPaddingValues.calculateTopPadding()
                                 - WindowInsets.statusBars.getTop(LocalDensity.current).dp
-                                + scaffoldPaddingValues.calculateBottomPadding() / 1.3f
+                                + scaffoldPaddingValues.calculateBottomPadding()
                     ),
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -253,27 +246,29 @@ fun MainScreen(
                     placeholder = stringResource(R.string.search_passwords_field_placeholder),
                     modifier = Modifier.padding(vertical = 8.dp)
                 ) { searchString = it }
-                if (viewModel.recentPasswords.value.isNotEmpty() or viewModel.pinnedPasswords.value.isNotEmpty()) {
+                val recents = viewModel.recentPasswords.collectAsState()
+                val pinned = viewModel.pinnedPasswords.collectAsState()
+                if (recents.value.isNotEmpty() or pinned.value.isNotEmpty()) {
                     Column(
                         modifier = Modifier.fillMaxSize()
-                            .wrapContentHeight()
-                            .verticalScroll(
-                                contentScrollState,
-                                enabled = contentScrollEnabled.value
-                            )
+                            .padding(bottom = scaffoldPaddingValues.calculateBottomPadding() / 2f)
                     ) {
-                        if (viewModel.pinnedPasswords.value.isNotEmpty()) {
-                            SmallPasswordsList(
+                        if (pinned.value.isNotEmpty()) {
+                            BackgroundList(
                                 modifier = Modifier.padding(vertical = 6.dp),
                                 title = stringResource(R.string.main_screen_pinned_title),
-                                passwordsList = viewModel.pinnedPasswords.collectAsState().value,
-                                showIcons = true
+                                viewModel = viewModel,
+                                showIcons = true,
+                                onClickPassword = onClickPassword
                             )
                         }
-                        if (viewModel.recentPasswords.value.isNotEmpty()) {
+                        if (pinned.value.isNotEmpty()) {
                             RecentsList(
-                                passwordsList = viewModel.recentPasswords.collectAsState().value,
-                                titleModifier = Modifier.padding(top = 8.dp, start = 6.dp)
+                                viewModel = viewModel,
+                                titleModifier = Modifier.padding(top = 8.dp, start = 6.dp),
+                                scrollEnabled = lazyListScrollEnabled,
+                                onClickPassword = onClickPassword,
+                                listState = recentsLazyColumnState
                             )
                         }
                     }
@@ -284,11 +279,12 @@ fun MainScreen(
 }
 
 @Composable
-fun SmallPasswordsList(
+fun BackgroundList(
     modifier: Modifier = Modifier,
-    passwordsList: ImmutableList<PasswordRecordEntity>,
+    viewModel: MainScreenViewModel,
     title: String = "Недавние",
-    showIcons: Boolean = false
+    showIcons: Boolean = false,
+    onClickPassword: (Long) -> Unit
 ) {
     Column(
         modifier = modifier
@@ -303,13 +299,13 @@ fun SmallPasswordsList(
             modifier = Modifier,
             fontWeight = FontWeight.Medium
         )
-        if (passwordsList.isNotEmpty()) {
+        if (viewModel.pinnedPasswords.value.isNotEmpty()) {
             Column(
                 modifier = Modifier.padding(top = 4.dp),
                 verticalArrangement = Arrangement.SpaceAround
             ) {
-                passwordsList.forEach {
-                    SmallPasswordsListRow(item = it, showIcon = showIcons)
+                viewModel.pinnedPasswords.collectAsState().value.forEach {
+                    SmallPasswordsListRow(item = it, showIcon = showIcons, onClickPassword = onClickPassword)
                 }
             }
         }
@@ -317,19 +313,20 @@ fun SmallPasswordsList(
 }
 
 @Composable
-fun SmallPasswordsListRow(item: PasswordRecordEntity, showIcon: Boolean = false) {
+fun SmallPasswordsListRow(item: PasswordRecordEntity, showIcon: Boolean = false, onClickPassword: (Long) -> Unit) {
     val clipData = ClipData.newPlainText("Copied password:", item.recordPassword)
         .apply {
             description.extras = PersistableBundle().apply {
                 putBoolean("android.content.extra.IS_SENSITIVE", true)
             }
         }
-    var copy = false
+    var copy by remember{mutableStateOf(false)}
     val clipboardManager = LocalClipboard.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 6.dp),
+            .padding(vertical = 6.dp)
+            .clickable(onClick = {onClickPassword(item.id)}),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -347,7 +344,7 @@ fun SmallPasswordsListRow(item: PasswordRecordEntity, showIcon: Boolean = false)
             overflow = TextOverflow.Ellipsis
         )
         IconButton(
-            modifier = Modifier.size(30.dp),
+            modifier = Modifier.size(32.dp),
             onClick = {
                 copy = !copy
             }
@@ -358,7 +355,7 @@ fun SmallPasswordsListRow(item: PasswordRecordEntity, showIcon: Boolean = false)
             )
         }
         LaunchedEffect(copy) {
-            snapshotFlow { copy }.drop(1).onEach {
+            snapshotFlow { copy }.drop(1).collect {
                 clipboardManager.setClipEntry(ClipEntry(clipData))
             }
         }

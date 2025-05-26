@@ -18,7 +18,7 @@ interface PasswordDao: BaseDao<PasswordRecordEntity> {
     @Query("SELECT * from password_record WHERE pinned == 0")
     fun getNonPinned(): Flow<List<PasswordRecordEntity>>
 
-    @Query("SELECT * from password_record ORDER BY last_use LIMIT :count")
+    @Query("SELECT * from password_record ORDER BY last_use DESC LIMIT :count")
     fun getRecent(count: Int): Flow<List<PasswordRecordEntity>>
 
     @Query("SELECT * from password_record WHERE password_name LIKE :name")
