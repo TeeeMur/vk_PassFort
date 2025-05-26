@@ -21,11 +21,19 @@ class PasswordsListRepoImpl(db: PassFortDB): PasswordsListRepo {
         return passwordDao.getNonPinned()
     }
 
-    override suspend fun upsertPassword(passwordEntity: PasswordRecordEntity){
+    override suspend fun upsertPassword(passwordEntity: PasswordRecordEntity) {
         passwordDao.upsertObj(passwordEntity)
     }
 
-    override suspend fun deletePassword(passwordEntity: PasswordRecordEntity) {
-        passwordDao.deleteObj(passwordEntity)
+    override suspend fun getByIdPassword(id: Long): PasswordRecordEntity{
+        return passwordDao.getById(id)
+    }
+
+    override suspend fun pinPassword(passwordEntity: PasswordRecordEntity){
+        passwordDao.upsertObj(passwordEntity)
+    }
+
+    override suspend fun deletePassword(passwordID:Long) {
+        passwordDao.deleteById(passwordID)
     }
 }

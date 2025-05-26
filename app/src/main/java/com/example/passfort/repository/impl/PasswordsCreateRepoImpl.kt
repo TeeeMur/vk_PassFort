@@ -1,8 +1,8 @@
-package com.example.passfort.repository
+package com.example.passfort.repository.impl
 
 import com.example.passfort.model.dbentity.PasswordRecordEntity
 import com.example.passfort.model.PassFortDB
-import kotlinx.coroutines.flow.Flow
+import com.example.passfort.repository.PasswordsCreateRepo
 
 class PasswordsCreateRepoImpl(db: PassFortDB): PasswordsCreateRepo {
 

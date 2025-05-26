@@ -15,4 +15,15 @@ class MainScreenRepoImpl(db: PassFortDB): MainScreenRepo {
         return passwordDao.getRecent(count)
     }
 
+    override suspend fun getByIdPassword(id: Long): PasswordRecordEntity{
+        return passwordDao.getById(id)
+    }
+
+    override suspend fun pinPassword(passwordEntity: PasswordRecordEntity){
+        passwordDao.upsertObj(passwordEntity)
+    }
+
+    override suspend fun deletePassword(passwordID:Long) {
+        passwordDao.deleteById(passwordID)
+    }
 }

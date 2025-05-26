@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -43,6 +44,8 @@ import com.example.passfort.designSystem.components.PasswordCard
 import com.example.passfort.designSystem.components.SearchBar
 import com.example.passfort.designSystem.theme.PassFortTheme
 import com.example.passfort.model.PasswordItem
+import com.example.passfort.viewModel.CreateViewModel
+import com.example.passfort.viewModel.DetailViewModel
 import com.example.passfort.viewModel.PasswordListState
 import com.example.passfort.viewModel.PasswordViewModel
 import com.valentinilk.shimmer.shimmer
@@ -52,7 +55,7 @@ fun PasswordListScreen(
     viewModel: PasswordViewModel = hiltViewModel(),
     navController: NavHostController,
     onAddPassword: () -> Unit,
-    onClickPassword: (Long) -> Unit
+    onClickPassword: (Long) -> Unit,
 ) {
     val uiState = viewModel.uiState.collectAsState().value
     var searchQuery by remember { mutableStateOf("") }
@@ -89,7 +92,9 @@ fun PasswordListScreen(
                     PasswordSections(
                         pinnedPasswords = uiState.pinnedPasswords,
                         allPasswords = uiState.allPasswords,
-                        onClickPassword = onClickPassword
+                        onClickPassword = onClickPassword,
+                        onPinPassword = { viewModel.pinPassword(it) },
+                        onDeletePassword = { viewModel.deletePassword(it) }
                     )
                 }
             }
@@ -101,14 +106,15 @@ fun PasswordListScreen(
 fun PasswordSections(
     pinnedPasswords: List<PasswordItem>,
     allPasswords: List<PasswordItem>,
-    onClickPassword: (Long) -> Unit
-
+    onClickPassword: (Long) -> Unit,
+    onPinPassword: (Long) -> Unit,
+    onDeletePassword: (Long) -> Unit
 ) {
+    val scrollState = rememberLazyListState()
     var pinnedExpanded by remember { mutableStateOf(true) }
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
+    LazyColumn(modifier = Modifier.fillMaxSize(),
+        state = scrollState
     ) {
         if (pinnedPasswords.isNotEmpty()) {
             item {
@@ -126,7 +132,8 @@ fun PasswordSections(
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Icon(
-                        imageVector = if (pinnedExpanded) Icons.Filled.KeyboardArrowDown else Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                        imageVector = if (pinnedExpanded) Icons.Filled.KeyboardArrowDown
+                        else Icons.AutoMirrored.Filled.KeyboardArrowRight,
                         contentDescription = if (pinnedExpanded) "Свернуть" else "Развернуть"
                     )
                 }
@@ -135,7 +142,9 @@ fun PasswordSections(
                 items(pinnedPasswords.size) { index ->
                     PasswordCard(
                         pinnedPasswords[index],
-                        onClickPassword = onClickPassword
+                        onClickPassword = onClickPassword,
+                        onPin = { onPinPassword(it) },
+                        onDelete = { onPinPassword(it) }
                     )
                 }
             }
@@ -153,7 +162,9 @@ fun PasswordSections(
         }
         items(allPasswords.size) { index ->
             PasswordCard(allPasswords[index],
-                onClickPassword = onClickPassword
+                onClickPassword = onClickPassword,
+                onPin = onPinPassword,
+                onDelete = onDeletePassword
             )
         }
         item {

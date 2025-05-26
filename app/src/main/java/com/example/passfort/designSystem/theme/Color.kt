@@ -15,3 +15,5 @@ val border_stroke_dark = Color (0xff343240)
 val outline_dark = Color(0xff212131)
 
 val inverse = Color(0xFFFFFFFF)
+val red = Color(0xFFC12525)
+val yellow = Color(0xFFFCCD03)

@@ -27,10 +27,8 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.outlined.AccountCircle
@@ -75,7 +73,6 @@ import com.example.passfort.designSystem.components.RecentsList
 import com.example.passfort.designSystem.components.SearchBar
 import com.example.passfort.model.dbentity.PasswordRecordEntity
 import com.example.passfort.viewModel.MainScreenViewModel
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.drop
 import kotlin.math.absoluteValue
@@ -269,8 +266,10 @@ fun MainScreen(
                                 viewModel = viewModel,
                                 titleModifier = Modifier.padding(top = 8.dp, start = 6.dp),
                                 scrollEnabled = lazyListScrollEnabled,
+                                listState = recentsLazyColumnState,
                                 onClickPassword = onClickPassword,
-                                listState = recentsLazyColumnState
+                                onPin = { viewModel.pinPassword(it) },
+                                onDelete = { viewModel.deletePassword(it) }
                             )
                         }
                     }
@@ -301,21 +300,29 @@ fun BackgroundList(
             modifier = Modifier,
             fontWeight = FontWeight.Medium
         )
-        if (viewModel.pinnedPasswords.value.isNotEmpty()) {
-            Column(
-                modifier = Modifier.padding(top = 4.dp),
-                verticalArrangement = Arrangement.SpaceAround
-            ) {
-                viewModel.pinnedPasswords.collectAsState().value.forEach {
-                    SmallPasswordsListRow(item = it, showIcon = showIcons, onClickPassword = onClickPassword)
-                }
+        val pinned = viewModel.pinnedPasswords.collectAsState()
+
+        Column(
+            modifier = Modifier.padding(top = 4.dp),
+            verticalArrangement = Arrangement.SpaceAround
+        ) {
+            pinned.value.forEach {
+                SmallPasswordsListRow(
+                    item = it,
+                    showIcon = showIcons,
+                    onClickPassword = onClickPassword
+                )
             }
         }
     }
 }
 
 @Composable
-fun SmallPasswordsListRow(item: PasswordRecordEntity, showIcon: Boolean = false, onClickPassword: (Long) -> Unit) {
+fun SmallPasswordsListRow(
+    item: PasswordRecordEntity,
+    showIcon: Boolean = false,
+    onClickPassword: (Long) -> Unit
+) {
     val clipData = ClipData.newPlainText("Copied password:", item.recordPassword)
         .apply {
             description.extras = PersistableBundle().apply {

@@ -5,9 +5,9 @@ import androidx.room.Room
 import com.example.passfort.model.PassFortDB
 import com.example.passfort.repository.MainScreenRepo
 import com.example.passfort.repository.PasswordsCreateRepo
-import com.example.passfort.repository.PasswordsCreateRepoImpl
+import com.example.passfort.repository.impl.PasswordsCreateRepoImpl
 import com.example.passfort.repository.PasswordsDetailRepo
-import com.example.passfort.repository.PasswordsDetailRepoImpl
+import com.example.passfort.repository.impl.PasswordsDetailRepoImpl
 import com.example.passfort.repository.PasswordsListRepo
 import com.example.passfort.repository.impl.MainScreenRepoImpl
 import com.example.passfort.repository.impl.PasswordsListRepoImpl

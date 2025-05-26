@@ -39,18 +39,4 @@ class PasswordsViewModel @Inject constructor(private val repo: PasswordsListRepo
             }
         }
     }
-
-    fun upsertPassword(passwordRecordEntity: PasswordRecordEntity) {
-        viewModelScope.launch {
-            repo.upsertPassword(passwordRecordEntity)
-            this@PasswordsViewModel.refreshPasswords()
-        }
-    }
-
-    fun deletePassword(passwordRecordEntity: PasswordRecordEntity) {
-        viewModelScope.launch {
-            repo.deletePassword(passwordRecordEntity)
-            this@PasswordsViewModel.refreshPasswords()
-        }
-    }
 }
