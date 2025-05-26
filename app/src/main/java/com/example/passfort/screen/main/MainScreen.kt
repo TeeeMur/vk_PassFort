@@ -256,11 +256,12 @@ fun MainScreen(
                 if (viewModel.recentPasswords.value.isNotEmpty() or viewModel.pinnedPasswords.value.isNotEmpty()) {
                     Column(
                         modifier = Modifier.fillMaxSize()
-                            .wrapContentHeight()
+                            .wrapContentHeight(align = Alignment.Top)
                             .verticalScroll(
                                 contentScrollState,
                                 enabled = contentScrollEnabled.value
-                            )
+                            ),
+                        verticalArrangement = Arrangement.Top
                     ) {
                         if (viewModel.pinnedPasswords.value.isNotEmpty()) {
                             SmallPasswordsList(

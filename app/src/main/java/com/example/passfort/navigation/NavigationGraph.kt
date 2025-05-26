@@ -127,7 +127,9 @@ fun NavigationGraph(
             PasswordListScreen(navController = navController,
                 onClickPassword = {id: Long -> navController.navigate(Screen.PasswordDetail.createRoute(id))
                 },
-                onAddPassword = {showBottomSheetCreatePassword = true})
+                onAddPassword = {showBottomSheetCreatePassword = true},
+                onItemClick = {},
+                onItemDelete = {})
         }
 
         composable(
