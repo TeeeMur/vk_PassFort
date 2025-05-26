@@ -11,5 +11,6 @@ sealed class Screen(val route: String) {
     object PasswordGenerator : Screen("password_generator")
     object Settings : Screen("settings")
     object Profile : Screen("profile")
-
+    object CreatePin : Screen("create_pin")
+    object EnterPin : Screen("enter_pin")
 }

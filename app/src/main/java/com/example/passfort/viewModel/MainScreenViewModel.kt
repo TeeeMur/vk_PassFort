@@ -25,7 +25,7 @@ class MainScreenViewModel @Inject constructor(private val repo: MainScreenRepo) 
     val pinnedPasswords = _pinnedPasswords.asStateFlow()
 
     init {
-        repo.getRecentPasswords(10).onEach { newIt ->
+        repo.getRecentPasswords(5).onEach { newIt ->
             _recentPasswords.update { oldIt -> newIt.toImmutableList() }
         }.launchIn(viewModelScope)
         repo.getPinnedPasswords().onEach { newIt ->

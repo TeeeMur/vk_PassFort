@@ -1,5 +1,6 @@
 package com.example.passfort.navigation
-
+import com.example.passfort.screen.auth.PinCodeScreen
+import com.example.passfort.screen.auth.CreatePinScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -38,10 +39,17 @@ fun NavigationGraph(
     var showBottomSheetCreatePassword by remember { mutableStateOf(false) }
     var showBottomSheetGeneratePassword by remember { mutableStateOf(false) }
 
+    val context = LocalContext.current
+    val preferencesManager = remember { PreferencesManager(context.applicationContext) }
+    var pinEntered by remember { mutableStateOf(false) }
     NavHost(
         navController = navController,
-        startDestination = if (isUserLoggedIn) Screen.HomeScreen.route
-        else Screen.Login.route
+        startDestination = when {
+            !isUserLoggedIn -> Screen.Login.route
+            !preferencesManager.hasPin() -> Screen.CreatePin.route
+            !pinEntered -> Screen.EnterPin.route
+            else -> Screen.HomeScreen.route
+        }
     ) {
         composable(Screen.Login.route) {
 
@@ -76,6 +84,32 @@ fun NavigationGraph(
                 onNavigateToForgotPassword = {
                 },
                 onNavigateToPrivacyPolicy = {
+                }
+            )
+        }
+
+        composable(Screen.CreatePin.route) {
+            CreatePinScreen(
+                onPinCreated = { pin ->
+                    preferencesManager.savePin(pin)
+                    // После создания PIN-кода переход на экран ввода PIN
+                    navController.navigate(Screen.EnterPin.route) {
+                        popUpTo(Screen.CreatePin.route) { inclusive = true }
+                    }
+                }
+            )
+        }
+
+        composable(Screen.EnterPin.route) {
+            val savedPin = preferencesManager.getPin() ?: ""
+            PinCodeScreen(
+                correctPin = savedPin,
+                onSuccess = {
+                    // После успешного ввода PIN переход на основной экран
+                    pinEntered = true
+                    navController.navigate(Screen.HomeScreen.route) {
+                        popUpTo(Screen.EnterPin.route) { inclusive = true }
+                    }
                 }
             )
         }
