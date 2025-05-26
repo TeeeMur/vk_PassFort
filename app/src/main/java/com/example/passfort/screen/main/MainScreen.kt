@@ -226,6 +226,7 @@ fun MainScreen(
                                 - scaffoldPaddingValues.calculateTopPadding()
                                 - WindowInsets.statusBars.getTop(LocalDensity.current).dp
                                 + scaffoldPaddingValues.calculateBottomPadding()
+                                + 16.dp
                     ),
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally
