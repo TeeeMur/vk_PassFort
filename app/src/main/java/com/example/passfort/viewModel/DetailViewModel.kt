@@ -43,7 +43,7 @@ class DetailViewModel @Inject constructor(
     val enablePasswordChange: StateFlow<Boolean> = _enablePasswordChange.asStateFlow()
 
     fun initPassword(
-        idPassword: Int
+        idPassword: Long
     ){
         viewModelScope.launch {
             val password = repository.getPassword(idPassword) ?: return@launch

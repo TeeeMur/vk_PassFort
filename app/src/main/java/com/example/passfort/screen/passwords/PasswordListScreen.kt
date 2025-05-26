@@ -44,6 +44,8 @@ import com.example.passfort.designSystem.components.PasswordCard
 import com.example.passfort.designSystem.components.SearchBar
 import com.example.passfort.designSystem.theme.PassFortTheme
 import com.example.passfort.model.PasswordItem
+import com.example.passfort.viewModel.CreateViewModel
+import com.example.passfort.viewModel.DetailViewModel
 import com.example.passfort.viewModel.PasswordListState
 import com.example.passfort.viewModel.PasswordViewModel
 import com.valentinilk.shimmer.shimmer
@@ -54,8 +56,6 @@ fun PasswordListScreen(
     navController: NavHostController,
     onAddPassword: () -> Unit,
     onClickPassword: (Long) -> Unit,
-    onItemClick: (Long) -> Unit,
-    onItemDelete: (PasswordItem) -> Unit
 ) {
     val uiState = viewModel.uiState.collectAsState().value
     var searchQuery by remember { mutableStateOf("") }
@@ -93,9 +93,8 @@ fun PasswordListScreen(
                         pinnedPasswords = uiState.pinnedPasswords,
                         allPasswords = uiState.allPasswords,
                         onClickPassword = onClickPassword,
-                        onDeletePassword = { passwordItem ->
-                            //
-                        }
+                        onPinPassword = { viewModel.pinPassword(it) },
+                        onDeletePassword = { viewModel.deletePassword(it) }
                     )
                 }
             }
@@ -108,8 +107,8 @@ fun PasswordSections(
     pinnedPasswords: List<PasswordItem>,
     allPasswords: List<PasswordItem>,
     onClickPassword: (Long) -> Unit,
-    onDeletePassword: (PasswordItem) -> Unit
-
+    onPinPassword: (Long) -> Unit,
+    onDeletePassword: (Long) -> Unit
 ) {
     val scrollState = rememberLazyListState()
     var pinnedExpanded by remember { mutableStateOf(true) }
@@ -144,7 +143,8 @@ fun PasswordSections(
                     PasswordCard(
                         pinnedPasswords[index],
                         onClickPassword = onClickPassword,
-                             
+                        onPin = { onPinPassword(it) },
+                        onDelete = { onPinPassword(it) }
                     )
                 }
             }
@@ -162,7 +162,9 @@ fun PasswordSections(
         }
         items(allPasswords.size) { index ->
             PasswordCard(allPasswords[index],
-                onClickPassword = onClickPassword
+                onClickPassword = onClickPassword,
+                onPin = onPinPassword,
+                onDelete = onDeletePassword
             )
         }
         item {
@@ -238,5 +240,5 @@ fun EmptyScreen() {
 fun PreviewListScreen(){
     var viewModel = hiltViewModel<PasswordViewModel>()
     var navController = rememberNavController()
-    PassFortTheme { PasswordListScreen(viewModel,navController, {},{}, {}, {}) }
+    PassFortTheme { PasswordListScreen(viewModel,navController, {},{}) }
 }

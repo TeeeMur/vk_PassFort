@@ -13,8 +13,10 @@ import com.example.passfort.screen.EScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 
@@ -56,7 +58,8 @@ class PasswordViewModel @Inject constructor(
                                 iconId = 0,
                                 itemName = password.recordName,
                                 itemLogin = password.recordLogin,
-                                itemPassword = password.recordPassword
+                                itemPassword = password.recordPassword,
+                                isPinned = password.pinned
                             )
                         },
                         pinnedPasswords = passwordRecords.reversed().filter { it -> it.pinned }.map
@@ -66,7 +69,8 @@ class PasswordViewModel @Inject constructor(
                                 iconId = 0,
                                 itemName = password.recordName,
                                 itemLogin = password.recordLogin,
-                                itemPassword = password.recordPassword
+                                itemPassword = password.recordPassword,
+                                isPinned = password.pinned
                             )
                         }
                     )
@@ -79,7 +83,8 @@ class PasswordViewModel @Inject constructor(
                                 iconId = 0,
                                 itemName = password.recordName,
                                 itemLogin = password.recordLogin,
-                                itemPassword = password.recordPassword
+                                itemPassword = password.recordPassword,
+                                isPinned = password.pinned
                             )
                         },
                         pinnedPasswords = passwordRecords.reversed().filter { it -> it.pinned }.map
@@ -89,12 +94,27 @@ class PasswordViewModel @Inject constructor(
                                 iconId = 0,
                                 itemName = password.recordName,
                                 itemLogin = password.recordLogin,
-                                itemPassword = password.recordPassword
+                                itemPassword = password.recordPassword,
+                                isPinned = password.pinned
                             )
                         }
                     )
                 }
             }
+        }
+    }
+
+    fun pinPassword(passwordId: Long) {
+        viewModelScope.launch {
+            var password = repository.getByIdPassword(passwordId)
+            password.pinned = !password.pinned
+            repository.pinPassword(password)
+        }
+    }
+
+    fun deletePassword(passwordId: Long) {
+        viewModelScope.launch {
+            repository.deletePassword(passwordId)
         }
     }
 }

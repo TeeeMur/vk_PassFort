@@ -1,13 +1,14 @@
-package com.example.passfort.repository
+package com.example.passfort.repository.impl
 
 import com.example.passfort.model.dbentity.PasswordRecordEntity
 import com.example.passfort.model.PassFortDB
+import com.example.passfort.repository.PasswordsDetailRepo
 
 class PasswordsDetailRepoImpl(db: PassFortDB): PasswordsDetailRepo {
 
     val passwordDao = db.getPasswordDao()
 
-    override suspend fun getPassword(id: Int): PasswordRecordEntity {
+    override suspend fun getPassword(id: Long): PasswordRecordEntity {
         return passwordDao.getById(id)
     }
 

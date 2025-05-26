@@ -52,7 +52,7 @@ import com.example.passfort.viewModel.DetailViewModel
 @Composable
 fun PasswordDetailScreen(
     viewModel: DetailViewModel = hiltViewModel(),
-    idPasswordRecord: Int,
+    idPasswordRecord: Long,
     onGeneratePassword: () -> Unit,
     OnBackScreen: () -> Unit
 ) {

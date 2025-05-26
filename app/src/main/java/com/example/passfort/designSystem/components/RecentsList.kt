@@ -20,6 +20,9 @@ fun RecentsList(
     @SuppressLint("ModifierParameter") titleModifier: Modifier = Modifier,
     passwordsList: ImmutableList<PasswordRecordEntity>,
     title: String = "Недавние",
+    onClickPassword: (Long) -> Unit,
+    onPin: (Long) -> Unit,
+    onDelete: (Long) -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -30,10 +33,17 @@ fun RecentsList(
             text = title,
             fontSize = 24.sp,
             textAlign = TextAlign.Left,
-            modifier = titleModifier.fillMaxWidth().padding(vertical = 4.dp)
+            modifier = titleModifier
+                .fillMaxWidth()
+                .padding(vertical = 4.dp)
         )
-        passwordsList.forEach {
-            item -> PasswordCard(item = item.convertToPasswordItem()) {}
+        passwordsList.reversed().forEach {
+            item -> PasswordCard(
+                item = item.convertToPasswordItem(),
+                onClickPassword = onClickPassword,
+                onPin = onPin,
+                onDelete = onDelete
+            )
         }
     }
 }

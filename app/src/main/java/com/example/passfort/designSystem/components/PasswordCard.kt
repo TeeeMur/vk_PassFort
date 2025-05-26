@@ -8,11 +8,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,6 +26,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.GpsOff
 import androidx.compose.material.icons.outlined.PushPin
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
@@ -63,6 +67,8 @@ import kotlinx.coroutines.launch
 fun PasswordCard(
     item: PasswordItem,
     onClickPassword: (Long) -> Unit,
+    onPin: (Long) -> Unit,
+    onDelete: (Long) -> Unit
 ) {
     val localClipboard = LocalClipboard.current
     val clipData = ClipData.newPlainText("Copied:", item.itemPassword).apply {
@@ -76,47 +82,54 @@ fun PasswordCard(
 
     var stateCopy by remember { mutableStateOf(false) }
 
+    val onHideProperties = {
+        scope.launch {
+            offset.animateTo(0f)
+        }
+    }
+
     Box(modifier = Modifier
-        .fillMaxHeight()
         .fillMaxWidth()
     ) {
         Row(
             modifier = Modifier
                 .align(Alignment.CenterEnd)
                 .onSizeChanged {
-                    actionWidth = it.width.toFloat()
+                    actionWidth = it.width.toFloat() + 20f
                 }
                 .height(IntrinsicSize.Min)
                 .background(Color.Transparent),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             IconButton(
                 modifier = Modifier
-                    .fillMaxHeight()
                     .width(80.dp)
                     .height(80.dp)
                     .background(MaterialTheme.colorScheme.secondaryContainer, MaterialTheme.shapes.medium)
-                    .padding(horizontal = 12.dp),
+                    .padding(horizontal = 15.dp),
                 onClick = {
-                    //onPin()
+                    onPin(item.id)
+                    onHideProperties()
                 }
             ) {
                 Icon(
-                    imageVector = Icons.Outlined.PushPin,
+                    imageVector = if(item.isPinned) Icons.Outlined.GpsOff else Icons.Outlined.PushPin,
                     contentDescription = "Pin",
                     tint = Color.White,
                     modifier = Modifier.size(28.dp)
                 )
             }
+            Spacer(Modifier.width(5.dp))
             IconButton(
                 modifier = Modifier
-                    .fillMaxHeight()
                     .width(80.dp)
                     .height(80.dp)
                     .background(MaterialTheme.colorScheme.primaryContainer, MaterialTheme.shapes.medium)
                     .padding(horizontal = 12.dp),
                 onClick = {
-                    //onDelete()
+                    onDelete(item.id)
+                    onHideProperties()
                 }
             ) {
                 Icon(
@@ -148,9 +161,7 @@ fun PasswordCard(
                                     offset.animateTo(-actionWidth)
                                 }
                             } else {
-                                scope.launch {
-                                    offset.animateTo(0f)
-                                }
+                                onHideProperties()
                             }
                         }
                     )
@@ -217,7 +228,8 @@ fun PreviewPasCard() {
         0,
         "Figma",
         "asdf@gmail.com",
-        ""
+        "",
+        false
     )
-    PassFortTheme { PasswordCard(pasData, {}) }
+    PassFortTheme { PasswordCard(pasData, {}, {}, {}) }
 }

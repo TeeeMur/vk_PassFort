@@ -33,6 +33,7 @@ data class PasswordRecordEntity(
             itemLogin = recordLogin,
             itemName = recordName,
             itemPassword = recordPassword,
+            isPinned = pinned
         )
     }
 }

@@ -116,7 +116,8 @@ fun NavigationGraph(
 
         composable(Screen.HomeScreen.route) {
             MainScreen(navController = navController,
-                navigationBar = { NavigationBar(navController){showBottomSheetCreatePassword = true} }
+                navigationBar = { NavigationBar(navController){showBottomSheetCreatePassword = true}},
+                onClickPassword = {id: Long -> navController.navigate(Screen.PasswordDetail.createRoute(id))},
             )
         }
         composable(Screen.PasswordGenerator.route) {
@@ -125,24 +126,22 @@ fun NavigationGraph(
 
         composable(Screen.PasswordList.route) {
             PasswordListScreen(navController = navController,
-                onClickPassword = {id: Long -> navController.navigate(Screen.PasswordDetail.createRoute(id))
-                },
-                onAddPassword = {showBottomSheetCreatePassword = true},
-                onItemClick = {},
-                onItemDelete = {})
+                onClickPassword = {id: Long -> navController.navigate(Screen.PasswordDetail.createRoute(id))},
+                onAddPassword = {showBottomSheetCreatePassword = true}
+            )
         }
 
         composable(
             Screen.PasswordDetail.route,
             arguments = listOf(
                 navArgument("passwordId"){
-                    type = NavType.IntType
+                    type = NavType.LongType
                     nullable = false
                 }
             )
         )
         {
-            it.arguments?.getInt("passwordId")?.let {
+            it.arguments?.getLong("passwordId")?.let {
                 PasswordDetailScreen(
                     idPasswordRecord = it,
                     onGeneratePassword = { showBottomSheetGeneratePassword = true },

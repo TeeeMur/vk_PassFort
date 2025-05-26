@@ -100,6 +100,7 @@ val mainScreenImages = persistentListOf(
 fun MainScreen(
     viewModel: MainScreenViewModel = hiltViewModel(),
     navController: NavController,
+    onClickPassword: (Long) -> Unit,
     navigationBar: @Composable () -> Unit = {
         PreviewNavBar()
     }
@@ -274,7 +275,10 @@ fun MainScreen(
                         if (viewModel.recentPasswords.value.isNotEmpty()) {
                             RecentsList(
                                 passwordsList = viewModel.recentPasswords.collectAsState().value,
-                                titleModifier = Modifier.padding(top = 8.dp, start = 6.dp)
+                                titleModifier = Modifier.padding(top = 8.dp, start = 6.dp),
+                                onClickPassword = { onClickPassword(it) },
+                                onPin = { viewModel.pinPassword(it) },
+                                onDelete = { viewModel.deletePassword(it) }
                             )
                         }
                     }
@@ -289,7 +293,7 @@ fun SmallPasswordsList(
     modifier: Modifier = Modifier,
     passwordsList: ImmutableList<PasswordRecordEntity>,
     title: String = "Недавние",
-    showIcons: Boolean = false
+    showIcons: Boolean = false,
 ) {
     Column(
         modifier = modifier
@@ -318,7 +322,10 @@ fun SmallPasswordsList(
 }
 
 @Composable
-fun SmallPasswordsListRow(item: PasswordRecordEntity, showIcon: Boolean = false) {
+fun SmallPasswordsListRow(
+    item: PasswordRecordEntity,
+    showIcon: Boolean = false,
+) {
     val clipData = ClipData.newPlainText("Copied password:", item.recordPassword)
         .apply {
             description.extras = PersistableBundle().apply {
