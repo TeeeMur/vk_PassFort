@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -82,15 +83,16 @@ fun InputFieldTitle(value: String, onValueChange: (String) -> Unit = {}, onClick
 }
 
 @Composable
-fun InputFieldWithCopy(labelResourceString: String,
-                       value: String,
-                       onValueChange: (String) -> Unit = {},
-                       visualTransformation: VisualTransformation = VisualTransformation.None,
-                       isTitle: Boolean = false,
-                       isSingleLine: Boolean = false,
-                       isReadOnly : Boolean = false,
-                       isShowErrorText: Boolean = false
-){
+fun InputFieldWithCopy(
+    labelResourceString: String,
+    value: String,
+    onValueChange: (String) -> Unit = {},
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    isTitle: Boolean = false,
+    isSingleLine: Boolean = false,
+    isReadOnly: Boolean = false,
+    isShowErrorText: Boolean = false
+) {
     val clipboardManager = LocalClipboard.current
     val clipData = ClipData.newPlainText("Copied:", value).apply {
         description.extras = PersistableBundle().apply {
@@ -136,15 +138,16 @@ fun InputFieldWithCopy(labelResourceString: String,
 }
 
 @Composable
-fun InputFieldModalScreen(labelResourceString: String,
-                          value: String,
-                          onValueChange: (String) -> Unit = {},
-                          onCLick: () -> Unit = {},
-                          visualTransformation: VisualTransformation = VisualTransformation.None,
-                          isTitle: Boolean = false,
-                          isSingleLine: Boolean = false,
-                          isReadOnly : Boolean = false,
-){
+fun InputFieldModalScreen(
+    labelResourceString: String,
+    value: String,
+    onValueChange: (String) -> Unit = {},
+    onCLick: () -> Unit = {},
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    isTitle: Boolean = false,
+    isSingleLine: Boolean = false,
+    isReadOnly: Boolean = false,
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -175,12 +178,13 @@ fun InputFieldModalScreen(labelResourceString: String,
 }
 
 @Composable
-fun InputFieldPasswordWithCopy(labelResourceString: String,
-                       value: String,
-                       onValueChange: (String) -> Unit = {},
-                       isTitle: Boolean = false,
-                       isReadOnly : Boolean = false,
-){
+fun InputFieldPasswordWithCopy(
+    labelResourceString: String,
+    value: String,
+    onValueChange: (String) -> Unit = {},
+    isTitle: Boolean = false,
+    isReadOnly: Boolean = false,
+) {
     var passwordVisible by remember { mutableStateOf(false) }
 
     val visualTransformation = if (!passwordVisible)
@@ -242,10 +246,11 @@ fun InputFieldPasswordWithCopy(labelResourceString: String,
 }
 
 @Composable
-fun InputFieldPassword(labelResourceString: String,
-                       value: String,
-                       onValueChange: (String) -> Unit = {},
-){
+fun InputFieldPassword(
+    labelResourceString: String,
+    value: String,
+    onValueChange: (String) -> Unit = {},
+) {
     var passwordVisible by remember { mutableStateOf(false) }
 
     val visualTransformation = if (!passwordVisible)
@@ -290,14 +295,14 @@ fun InputFieldBase(
     visualTransformation: VisualTransformation = VisualTransformation.None,
     isTitle: Boolean = false,
     isSingleLine: Boolean = false,
-    isReadOnly : Boolean = false,
+    isReadOnly: Boolean = false,
     enabled: Boolean = true,
     titleFontSize: TextUnit = 29.sp,
     errorString: String = "",
     isShowErrorText: Boolean = false,
     trailingIcon: @Composable (() -> Unit),
 ) {
-    Column{
+    Column {
         Text(
             modifier = Modifier
                 .fillMaxWidth()
@@ -357,7 +362,7 @@ fun InputFieldBase(
 @PreviewLightDark()
 @Composable
 fun AuthTextFieldPreview() {
-    PassFortTheme{
+    PassFortTheme {
         Column {
             InputFieldTitle("New Password")
             InputFieldBase(
@@ -387,7 +392,45 @@ fun AuthTextFieldPreview() {
                 onValueChange = {},
                 isTitle = true,
 
-            )
+                )
         }
     }
+}
+
+@Composable
+fun SettingsInputField(
+    value: String,
+    onValueChange: (String) -> Unit = {},
+    onClick: () -> Unit = {},
+    showIcon: Boolean,
+) {
+    TextField(
+        modifier = Modifier
+            .padding(horizontal = 10.dp)
+            .padding(bottom = 10.dp)
+            .fillMaxWidth(),
+        value = value,
+        singleLine = true,
+        onValueChange = onValueChange,
+        textStyle = LocalTextStyle.current.copy(
+            fontSize = MaterialTheme.typography.headlineSmall.fontSize,
+        ),
+        colors = OutlinedTextFieldDefaults.colors(
+            unfocusedBorderColor = Color.Transparent,
+            focusedBorderColor = Color.Transparent,
+        ),
+        trailingIcon = if (showIcon) {
+            {
+                IconButton(
+                    modifier = Modifier.padding(end = 4.dp),
+                    onClick = onClick
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Check,
+                        contentDescription = "Save"
+                    )
+                }
+            }
+        } else null
+    )
 }
