@@ -13,9 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
@@ -31,12 +29,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.passfort.R
@@ -46,7 +42,6 @@ import com.example.passfort.designSystem.components.InputFieldPassword
 import com.example.passfort.designSystem.components.InputFieldTitle
 import com.example.passfort.designSystem.components.InputFieldWithCopy
 import com.example.passfort.designSystem.components.PasswordRemindOptions
-import com.example.passfort.designSystem.theme.PassFortTheme
 import com.example.passfort.viewModel.DetailViewModel
 
 @Composable
@@ -54,7 +49,7 @@ fun PasswordDetailScreen(
     viewModel: DetailViewModel = hiltViewModel(),
     idPasswordRecord: Int,
     onGeneratePassword: () -> Unit,
-    OnBackScreen: () -> Unit
+    onBackScreen: () -> Unit
 ) {
 
     viewModel.initPassword(idPasswordRecord)
@@ -72,7 +67,7 @@ fun PasswordDetailScreen(
         ) {
             Column {
                 ButtonRows(
-                    onBackScreen = OnBackScreen,
+                    onBackScreen = onBackScreen,
                     onPinned = { viewModel.setPinnedState() },
                     onDelete = { viewModel.deletePassword() }
                 )
@@ -104,7 +99,7 @@ fun PasswordDetailScreen(
                     setChangeIntervalDaysCount = { viewModel.setChangeIntervalDaysCount(it) }
                 )
             }
-            BottomButtonLine({ viewModel.editPassword() }, onDismiss = OnBackScreen)
+            BottomButtonLine({ viewModel.editPassword() }, onDismiss = onBackScreen)
         }
     }
 }

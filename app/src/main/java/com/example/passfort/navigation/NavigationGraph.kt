@@ -8,8 +8,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavDirections
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -115,7 +115,8 @@ fun NavigationGraph(
         }
 
         composable(Screen.HomeScreen.route) {
-            MainScreen(navController = navController,
+            MainScreen(
+                onClickPassword = {id: Long -> navController.navigate(Screen.PasswordDetail.createRoute(id))},
                 navigationBar = { NavigationBar(navController){showBottomSheetCreatePassword = true} }
             )
         }
@@ -125,8 +126,7 @@ fun NavigationGraph(
 
         composable(Screen.PasswordList.route) {
             PasswordListScreen(navController = navController,
-                onClickPassword = {id: Long -> navController.navigate(Screen.PasswordDetail.createRoute(id))
-                },
+                onClickPassword = {id: Long -> navController.navigate(Screen.PasswordDetail.createRoute(id))},
                 onAddPassword = {showBottomSheetCreatePassword = true})
         }
 
@@ -144,7 +144,7 @@ fun NavigationGraph(
                 PasswordDetailScreen(
                     idPasswordRecord = it,
                     onGeneratePassword = { showBottomSheetGeneratePassword = true },
-                    OnBackScreen = { navController.navigate(Screen.PasswordList.route) }
+                    onBackScreen = { navController.navigateUp() }
                 )
             }
         }
