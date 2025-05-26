@@ -261,7 +261,7 @@ fun MainScreen(
                                 onClickPassword = onClickPassword
                             )
                         }
-                        if (pinned.value.isNotEmpty()) {
+                        if (recents.value.isNotEmpty()) {
                             RecentsList(
                                 viewModel = viewModel,
                                 titleModifier = Modifier.padding(top = 8.dp, start = 6.dp),
@@ -301,7 +301,6 @@ fun BackgroundList(
             fontWeight = FontWeight.Medium
         )
         val pinned = viewModel.pinnedPasswords.collectAsState()
-
         Column(
             modifier = Modifier.padding(top = 4.dp),
             verticalArrangement = Arrangement.SpaceAround
