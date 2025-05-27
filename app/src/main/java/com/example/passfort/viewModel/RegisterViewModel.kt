@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.passfort.repository.NetworkChecker
 import com.example.passfort.repository.AuthRepository
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
@@ -24,7 +25,8 @@ data class RegisterUiState(
     val passwordError: String? = null,
     val confirmPasswordError: String? = null,
     val registrationError: String? = null,
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
+    val generalError: String? = null
 )
 
 sealed class RegisterEvent {
@@ -33,7 +35,8 @@ sealed class RegisterEvent {
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val networkChecker: NetworkChecker
 ) : ViewModel() {
 
     var uiState by mutableStateOf(RegisterUiState())
@@ -61,15 +64,21 @@ class RegisterViewModel @Inject constructor(
     fun onRegisterAttempt() {
         if (uiState.isLoading) return
 
-        val validationErrorsState = validateInputs()
-        if (validationErrorsState != null) {
-            uiState = validationErrorsState
+        if (!networkChecker.isNetworkAvailable()) {
+            uiState = uiState.copy(
+                generalError = "Отсутствует подключение к интернету. Пожалуйста, проверьте ваше соединение."
+            )
+            return
+        }
+
+        val validationError = validateInputs()
+        if (validationError != null) {
+            uiState = uiState.copy(generalError = validationError)
             return
         }
 
         viewModelScope.launch {
-            uiState = uiState.copy(isLoading = true, registrationError = null)
-
+            uiState = uiState.copy(isLoading = true)
             val result = authRepository.register(
                 name = uiState.name,
                 email = uiState.email,
@@ -87,45 +96,26 @@ class RegisterViewModel @Inject constructor(
                         is FirebaseAuthWeakPasswordException -> "Пароль слишком слабый. Используйте не менее 6 символов."
                         else -> exception.message ?: "Ошибка регистрации. Попробуйте снова."
                     }
-                    uiState = uiState.copy(
-                        isLoading = false,
-                        registrationError = errorMessage
-                    )
+                    uiState = uiState.copy(isLoading = false, generalError = errorMessage)
                 }
             )
         }
     }
 
-    private fun validateInputs(): RegisterUiState? {
-        val nameError = if (uiState.name.isBlank()) "Введите имя" else null
-        val emailError = when {
+    private fun validateInputs(): String? {
+        return when {
+            uiState.name.isBlank() -> "Введите имя"
             uiState.email.isBlank() -> "Введите почту"
             !android.util.Patterns.EMAIL_ADDRESS.matcher(uiState.email).matches() -> "Неверный формат почты"
-            else -> null
-        }
-
-        val passwordError = when {
             uiState.password.isBlank() -> "Введите пароль"
             uiState.password.length < 6 -> "Пароль должен быть не менее 6 символов"
-            else -> null
-        }
-        val confirmPasswordError = when {
             uiState.confirmPassword.isBlank() -> "Повторите пароль"
             uiState.confirmPassword != uiState.password -> "Пароли не совпадают"
             else -> null
         }
-
-        return if (listOf(nameError, emailError, passwordError, confirmPasswordError).all { it == null }) {
-            null
-        } else {
-            uiState.copy(
-                nameError = nameError,
-                emailError = emailError,
-                passwordError = passwordError,
-                confirmPasswordError = confirmPasswordError,
-                isLoading = false
-            )
-        }
+    }
+    fun dismissErrorDialog() {
+        uiState = uiState.copy(generalError = null)
     }
 
     fun resetState() {

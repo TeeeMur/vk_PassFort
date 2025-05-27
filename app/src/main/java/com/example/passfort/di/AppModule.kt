@@ -1,11 +1,13 @@
 package com.example.passfort.di
 
+import NetworkCheckerImpl
 import android.content.Context
 import androidx.room.Room
 import com.example.passfort.model.PassFortDB
 import com.example.passfort.model.PreferencesManager
 import com.example.passfort.repository.AuthRepository
 import com.example.passfort.repository.FirebaseAuthRepository
+import com.example.passfort.repository.NetworkChecker
 import com.example.passfort.repository.PasswordsListRepo
 import com.example.passfort.repository.PasswordsListRepoImpl
 import com.google.firebase.Firebase
@@ -52,5 +54,12 @@ object AppModule {
         firebaseAuth: FirebaseAuth
     ): AuthRepository {
         return FirebaseAuthRepository(firebaseAuth)
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideNetworkChecker(@ApplicationContext context: Context): NetworkChecker {
+        return NetworkCheckerImpl(context)
     }
 }

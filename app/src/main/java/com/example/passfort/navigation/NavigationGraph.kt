@@ -63,7 +63,8 @@ fun NavigationGraph(
                 onLoginAttempt = viewModel::onLoginAttempt,
                 onNavigateToRegister = { navController.navigate(Screen.Register.route) },
                 onNavigateToForgotPassword = {},
-                onNavigateToPrivacyPolicy = {}
+                onNavigateToPrivacyPolicy = {},
+                onErrorDialogDismiss = viewModel::errorDialogDismissed
             )
         }
 
@@ -103,8 +104,8 @@ fun NavigationGraph(
                 onPasswordChange = registerViewModel::onPasswordChange,
                 onConfirmPasswordChange = registerViewModel::onConfirmPasswordChange,
                 onRegisterAttempt = registerViewModel::onRegisterAttempt,
-                onBack = { navController.popBackStack() },
-                onPrivacyPolicy = {}
+                onPrivacyPolicy = {},
+                onErrorDialogDismiss = registerViewModel::dismissErrorDialog
             )
         }
         composable(Screen.Settings.route) {
