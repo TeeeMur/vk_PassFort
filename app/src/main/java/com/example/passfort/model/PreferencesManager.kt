@@ -14,6 +14,7 @@ class PreferencesManager @Inject constructor(@ApplicationContext context: Contex
 
     companion object {
         private const val KEY_IS_USER_LOGGED_IN = "is_user_logged_in"
+        private const val KEY_USER_PIN = "user_pin" // Added a constant for the PIN key
     }
 
     fun setUserLoggedIn(isLoggedIn: Boolean) {
@@ -32,26 +33,29 @@ class PreferencesManager @Inject constructor(@ApplicationContext context: Contex
         }
     }
 
-
+    // This method is redundant with setUserLoggedIn, consider removing one.
+    // I'm keeping it for now to match your original structure, but renamed the key for clarity.
     fun saveAuthState(isLoggedIn: Boolean) {
         sharedPreferences.edit {
-            putBoolean("is_user_logged_in", isLoggedIn)
+            putBoolean(KEY_IS_USER_LOGGED_IN, isLoggedIn) // Using the existing key for consistency
         }
     }
 
     fun clearAuthState() {
-        prefs.edit { clear() }
+        sharedPreferences.edit { clear() } // Use sharedPreferences
     }
 
-    fun isUserLoggedIn(): Boolean = prefs.getBoolean("is_user_logged_in", false)
+    // This method is redundant with the first isUserLoggedIn, consider removing one.
+    // I'm keeping it for now to match your original structure.
+    fun isUserLoggedInAuthCheck(): Boolean = sharedPreferences.getBoolean(KEY_IS_USER_LOGGED_IN, false)
 
     fun savePin(pin: String) {
-        prefs.edit {
-            putString("user_pin", pin)
+        sharedPreferences.edit {
+            putString(KEY_USER_PIN, pin) // Using the new constant for PIN key
         }
     }
 
-    fun getPin(): String? = prefs.getString("user_pin", null)
+    fun getPin(): String? = sharedPreferences.getString(KEY_USER_PIN, null) // Using the new constant for PIN key
 
     fun hasPin(): Boolean = getPin() != null
 }

@@ -8,12 +8,14 @@ import com.example.passfort.model.PreferencesManager
 import com.example.passfort.repository.AuthRepository
 import com.example.passfort.repository.FirebaseAuthRepository
 import com.example.passfort.repository.MainScreenRepo
+import com.example.passfort.repository.NetworkChecker
 import com.example.passfort.repository.PasswordsCreateRepo
 import com.example.passfort.repository.impl.PasswordsCreateRepoImpl
 import com.example.passfort.repository.PasswordsDetailRepo
 import com.example.passfort.repository.impl.PasswordsDetailRepoImpl
 import com.example.passfort.repository.PasswordsListRepo
-import com.example.passfort.repository.PasswordsListRepoImpl
+import com.example.passfort.repository.impl.MainScreenRepoImpl
+import com.example.passfort.repository.impl.PasswordsListRepoImpl
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth

@@ -85,6 +85,7 @@ fun PasswordDetailScreen(
                     labelResourceString = stringResource(R.string.passwordcreate_inputfield_password),
                     value = viewModel.password.collectAsState().value,
                     onValueChange = { viewModel.onPasswordChange(it) },
+                    isCopy = true
                 )
                 ButtonAdditionally { onGeneratePassword() }
                 InputFieldWithCopy(

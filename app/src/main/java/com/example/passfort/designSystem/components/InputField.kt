@@ -89,6 +89,8 @@ fun InputFieldWithCopy(labelResourceString: String,
                        isTitle: Boolean = false,
                        isSingleLine: Boolean = false,
                        isReadOnly : Boolean = false,
+                       errorString: String = "Не должна быть пустой",
+                       isCopy: Boolean = true,
                        isShowErrorText: Boolean = false
 ){
     val clipboardManager = LocalClipboard.current
@@ -111,19 +113,21 @@ fun InputFieldWithCopy(labelResourceString: String,
             isTitle = isTitle,
             isSingleLine = isSingleLine,
             isReadOnly = isReadOnly,
-            errorString = "Не должна быть пустой",
+            errorString = errorString,
             isShowErrorText = (isShowErrorText && value == ""),
             trailingIcon = {
-                IconButton(
-                    modifier = Modifier.padding(end = 4.dp),
-                    onClick = {
-                        stateCopy = !stateCopy
+                if (isCopy) {
+                    IconButton(
+                        modifier = Modifier.padding(end = 4.dp),
+                        onClick = {
+                            stateCopy = !stateCopy
+                        }
+                    ) {
+                        Icon(
+                            imageVector = ImageVector.vectorResource(R.drawable.icon_button_copy),
+                            contentDescription = "copy"
+                        )
                     }
-                ) {
-                    Icon(
-                        imageVector = ImageVector.vectorResource(R.drawable.icon_button_copy),
-                        contentDescription = "copy"
-                    )
                 }
             }
         )
@@ -144,6 +148,8 @@ fun InputFieldModalScreen(labelResourceString: String,
                           isTitle: Boolean = false,
                           isSingleLine: Boolean = false,
                           isReadOnly : Boolean = false,
+                          isCopy: Boolean = true,
+                          errorString: String = ""
 ){
     Box(
         modifier = Modifier
@@ -245,8 +251,11 @@ fun InputFieldPasswordWithCopy(labelResourceString: String,
 fun InputFieldPassword(labelResourceString: String,
                        value: String,
                        onValueChange: (String) -> Unit = {},
+                       errorString: String = "Не должны быть пустой",
+                       isCopy: Boolean
 ){
-    var passwordVisible by remember { mutableStateOf(false) }
+
+    var passwordVisible by remember { mutableStateOf(isCopy) }
 
     val visualTransformation = if (!passwordVisible)
         PasswordVisualTransformation() else VisualTransformation.None
@@ -266,16 +275,18 @@ fun InputFieldPassword(labelResourceString: String,
             value = value,
             onValueChange = onValueChange,
             visualTransformation = visualTransformation,
-            errorString = "Не должна быть пустой",
+            errorString = errorString,
             isShowErrorText = (value == ""),
             trailingIcon = {
-                IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                    Icon(
-                        imageVector = icon,
-                        contentDescription =
-                            if (passwordVisible) stringResource(R.string.input_field_hide_password)
-                            else stringResource(R.string.input_field_show_password)
-                    )
+                if (isCopy) {
+                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                        Icon(
+                            imageVector = icon,
+                            contentDescription =
+                                if (passwordVisible) stringResource(R.string.input_field_hide_password)
+                                else stringResource(R.string.input_field_show_password)
+                        )
+                    }
                 }
             }
         )
@@ -374,6 +385,7 @@ fun AuthTextFieldPreview() {
             InputFieldPassword(
                 labelResourceString = "",
                 value = "pass",
+                isCopy = false,
                 onValueChange = {}
             )
             InputFieldPasswordWithCopy(

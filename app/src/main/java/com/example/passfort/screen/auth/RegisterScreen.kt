@@ -30,10 +30,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import com.example.passfort.designSystem.components.AuthButton
 import com.example.passfort.designSystem.components.InputFieldPassword
 import com.example.passfort.designSystem.components.InputFieldWithCopy
 import com.example.passfort.ui.register.RegisterUiState
-import com.yourpackage.ui.components.AuthButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

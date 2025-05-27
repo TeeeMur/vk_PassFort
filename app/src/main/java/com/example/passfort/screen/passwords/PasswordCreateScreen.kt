@@ -54,12 +54,14 @@ fun PasswordCreateScreen(viewModel: CreateViewModel = hiltViewModel(), onDismiss
                     labelResourceString = stringResource(R.string.passwordcreate_inputfield_password),
                     value = viewModel.password.collectAsState().value,
                     onValueChange = { viewModel.onPasswordChange(it) },
+                    isCopy = true
                     )
                 ButtonAdditionally { onGeneratePassword() }
                 InputFieldWithCopy(
                     labelResourceString = stringResource(R.string.passwordcreate_inputfield_note),
                     value = viewModel.note.collectAsState().value,
                     onValueChange = { viewModel.onNoteChange(it) },
+                    isCopy = true
                 )
                 PasswordRemindOptions(
                     passwordIntervalDays = viewModel.changeIntervalDays.collectAsState().value,
