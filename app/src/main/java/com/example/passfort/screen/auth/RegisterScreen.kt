@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.example.passfort.designSystem.components.InputFieldPassword
 import com.example.passfort.designSystem.components.InputFieldWithCopy
@@ -180,9 +181,12 @@ fun RegisterForm(
 
         Text(
             text = stringResource(R.string.login_privacy_policy_button),
+            style = MaterialTheme.typography.labelSmall.copy(
+                textDecoration = TextDecoration.Underline
+            ),
             modifier = Modifier
-                .clickable(onClick = onPrivacyPolicy)
-                .padding(bottom = 16.dp),
+                .align(Alignment.CenterHorizontally)
+                .clickable(onClick = onPrivacyPolicy),
             color = MaterialTheme.colorScheme.secondary
         )
     }

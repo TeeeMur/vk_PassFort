@@ -24,6 +24,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.example.passfort.R
 import com.example.passfort.designSystem.components.InputFieldPassword
@@ -152,10 +153,13 @@ fun LoginForm(
 
         Text(
             text = stringResource(R.string.login_forgot_password_button),
+            style = MaterialTheme.typography.bodySmall.copy(
+                textDecoration = TextDecoration.Underline
+            ),
             modifier = Modifier
                 .align(Alignment.Start)
                 .clickable(enabled = !isLoading, onClick = onForgotPassword)
-                .padding(start = 25.dp, top = 4.dp, bottom = 8.dp),
+                .padding(start = 20.dp, bottom = 2.dp),
             color = MaterialTheme.colorScheme.primary
         )
 
@@ -187,12 +191,14 @@ fun LoginForm(
 
         Text(
             text = stringResource(R.string.login_privacy_policy_button),
+            style = MaterialTheme.typography.labelSmall.copy(
+                textDecoration = TextDecoration.Underline
+            ),
             modifier = Modifier
+
                 .align(Alignment.CenterHorizontally)
-                .clickable(enabled = !isLoading, onClick = onPrivacyPolicy)
-                .padding(bottom = 16.dp),
-            color = MaterialTheme.colorScheme.secondary,
-            style = MaterialTheme.typography.bodyMedium
+                .clickable(onClick = onPrivacyPolicy),
+            color = MaterialTheme.colorScheme.secondary
         )
     }
 }
