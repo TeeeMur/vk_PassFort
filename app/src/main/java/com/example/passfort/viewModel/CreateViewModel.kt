@@ -1,28 +1,36 @@
 package com.example.passfort.viewModel
 
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
-import com.example.passfort.R
+import androidx.lifecycle.viewModelScope
+import com.example.passfort.model.dbentity.PasswordRecordEntity
+import com.example.passfort.repository.PasswordsListRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 import javax.inject.Inject
-import java.security.SecureRandom
 
 @HiltViewModel
-class CreateViewModel @Inject constructor() : ViewModel() {
+class CreateViewModel @Inject constructor(
+    private val repository: PasswordsListRepo
+) : ViewModel() {
 
     private val _namePassword: MutableStateFlow<String> = MutableStateFlow("")
     private val _login: MutableStateFlow<String> = MutableStateFlow("")
     private val _password: MutableStateFlow<String> = MutableStateFlow("")
     private val _note: MutableStateFlow<String> = MutableStateFlow("")
+    private val _changeIntervalDays: MutableStateFlow<Int> = MutableStateFlow(0)
+    private val _isEmptyRecords: MutableStateFlow<Boolean> = MutableStateFlow(false)
 
     val namePassword: StateFlow<String> = _namePassword.asStateFlow()
     val login: StateFlow<String> = _login.asStateFlow()
     val password: StateFlow<String> = _password.asStateFlow()
     val note: StateFlow<String> = _note.asStateFlow()
+    val changeIntervalDays: StateFlow<Int> = _changeIntervalDays.asStateFlow()
+    val isEmptyRecords: StateFlow<Boolean> = _isEmptyRecords.asStateFlow()
 
     private val _enablePasswordChange: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val enablePasswordChange: StateFlow<Boolean> = _enablePasswordChange.asStateFlow()
@@ -51,7 +59,42 @@ class CreateViewModel @Inject constructor() : ViewModel() {
         _enablePasswordChange.update { !it }
     }
 
-    fun setPasswordDaysCount(daysCount: Int) {
+    fun setChangeIntervalDaysCount(daysCount: Int) {
+        _changeIntervalDays.update { daysCount }
+    }
+    
+    fun createPassword(): Boolean {
 
+        if (_login.value == "" || _password.value == ""){
+            _isEmptyRecords.update { true }
+            return false
+        }
+
+        viewModelScope.launch {
+            repository.upsertPassword(
+                password = PasswordRecordEntity(
+                    recordName = _namePassword.value,
+                    recordLogin = _login.value,
+                    recordPassword = _password.value,
+                    recordNote = _note.value,
+                    passwordLastChangeDate = LocalDateTime.now(),
+                    passwordChangeIntervalDays = _changeIntervalDays.value,
+                    iconIndex = 0,
+                    pinned = false,
+                    passwordLastUsedDate = LocalDateTime.now()
+                )
+            )
+        }
+        reset()
+        return true
+    }
+
+    private fun reset(){
+        _namePassword.update { "Новый пароль" }
+        _login.update { "" }
+        _password.update { "" }
+        _note.update { "" }
+        _changeIntervalDays.update { 0 }
+        _isEmptyRecords.update { false }
     }
 }

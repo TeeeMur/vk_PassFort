@@ -38,4 +38,20 @@ class PreferencesManager @Inject constructor(@ApplicationContext context: Contex
             putBoolean("is_user_logged_in", isLoggedIn)
         }
     }
+
+    fun clearAuthState() {
+        prefs.edit { clear() }
+    }
+
+    fun isUserLoggedIn(): Boolean = prefs.getBoolean("is_user_logged_in", false)
+
+    fun savePin(pin: String) {
+        prefs.edit {
+            putString("user_pin", pin)
+        }
+    }
+
+    fun getPin(): String? = prefs.getString("user_pin", null)
+
+    fun hasPin(): Boolean = getPin() != null
 }

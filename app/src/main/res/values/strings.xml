@@ -1,5 +1,5 @@
 <resources>
-    <string name="title_activity_nav_bar" translatable="false">NavBar</string>
+    <string name="title_activity_nav_bar">NavBar</string>
     <string name="login_screen_email_hint">Электронная почта</string>
     <string name="login_screen_password_hint">Пароль</string>
     <string name="login_login_button">Войти</string>
@@ -19,6 +19,8 @@
     <string name="passwordgen_toggle_uppercase_chars_name">Прописные буквы</string>
     <string name="passwordgen_bottombutton_text">Записать пароль</string>
 
+    <string name="passwordgen_generatebutton_text">Сгенерировать пароль</string>
+
     <string name="passwordcreate_screen_title">Новый пароль</string>
     <string name="passwordcreate_inputfield_login">Логин</string>
     <string name="passwordcreate_inputfield_password">Пароль</string>
@@ -29,6 +31,8 @@
     <string name="input_field_show_password">Показать пароль</string>
     <string name="input_field_hide_password">Скрыть пароль</string>
 
+    <string name="input_field_error_necessary">Обязательное поле</string>
+
     <string name="login">login</string>
     <string name="register">register</string>
     <string name="home_screen">home_screen</string>
@@ -38,6 +42,11 @@
     <string name="settings">settings</string>
     <string name="profile">profile</string>
     <string name="app_name">passfort</string>
+    <string name="main_screen_recents_title">Недавние</string>
+    <string name="search_passwords_field_placeholder">Начните искать свой пароль</string>
+    <string name="main_screen_pinned_title">Закрепленные</string>
+    <string name="password_icon_string_description">Password icon</string>
+    <string name="profile_icon_string_description">Профиль</string>
     <string name="register_name_label">Имя</string>
     <string name="register_email_label">Email</string>
     <string name="register_password_label">Пароль</string>

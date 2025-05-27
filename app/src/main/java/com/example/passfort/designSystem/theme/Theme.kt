@@ -13,6 +13,9 @@ private val DarkColorScheme = darkColorScheme(
     background = background_dark,
     outline = outline_dark,
     inversePrimary = inverse,
+    primaryContainer = red,
+    secondaryContainer = yellow,
+
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -22,6 +25,8 @@ private val LightColorScheme = lightColorScheme(
     background = background_light,
     outline = outline_light,
     inversePrimary = inverse,
+    primaryContainer = red,
+    secondaryContainer = yellow,
 
     /* Other default colors to override
     onPrimary = Color.White,
