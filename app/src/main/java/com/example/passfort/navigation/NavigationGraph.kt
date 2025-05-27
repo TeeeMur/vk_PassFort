@@ -137,16 +137,6 @@ fun NavigationGraph(
                     }
                 },
             )
-//            SettingsScreen(
-//                navController,
-//                onLogout = {
-//                    onLogout()
-//                    navController.navigate(Screen.Login.route) {
-//                        popUpTo(0)
-//                    }
-//                }
-//            )
-//            { showBottomSheetCreatePassword = true }
         }
     }
 
