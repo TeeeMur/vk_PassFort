@@ -1,9 +1,12 @@
 package com.example.passfort.designSystem.components
 
 import android.content.ClipData
+import android.net.Uri
 import android.os.PersistableBundle
 import androidx.compose.animation.core.Animatable
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -12,11 +15,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.GpsOff
@@ -38,19 +44,28 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.ClipEntry
 import androidx.compose.ui.platform.LocalClipboard
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
+import coil3.compose.AsyncImage
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import com.example.passfort.R
 import com.example.passfort.designSystem.theme.PassFortTheme
 import com.example.passfort.model.PasswordItem
@@ -167,14 +182,15 @@ fun PasswordCard(
                 disabledContentColor = Color.Transparent,
                 disabledContainerColor = Color.Transparent
             ),
-            shape = MaterialTheme.shapes.medium,
+            shape = RoundedCornerShape(15.dp),
         ) {
             Row(
                 modifier = Modifier
-                    .padding(18.dp)
+                    .padding(10.dp)
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                ImageUserCard(item.imageCardUri)
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = item.itemName,
@@ -214,6 +230,65 @@ fun PasswordCard(
     }
 }
 
+@Composable
+fun ImageUserCard(
+    imageCardUri: String,
+) {
+    val placeholder = painterResource(R.drawable.image_base_card)
+    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+
+    if (imageCardUri != "") {
+        selectedImageUri = imageCardUri.toUri()
+    }
+
+    Row(
+        modifier = Modifier
+            .width(75.dp)
+            .height(65.dp),
+        horizontalArrangement = Arrangement.Start
+    ) {
+        Box(
+            modifier = Modifier
+                .size(65.dp)
+                .aspectRatio(1f)
+                .background(
+                    Color.White,
+                    RoundedCornerShape(10.dp)
+                    )
+                .border(
+                    BorderStroke(1.dp, MaterialTheme.colorScheme.surface),
+                    RoundedCornerShape(10.dp)
+                )
+        ) {
+            if (selectedImageUri != null) {
+                AsyncImage(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(RoundedCornerShape(10.dp)),
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(selectedImageUri)
+                        .crossfade(true)
+                        .build(),
+                    placeholder = placeholder,
+                    error = placeholder,
+                    contentDescription = stringResource(R.string.image_card_button),
+                    contentScale = ContentScale.Crop,
+                )
+            } else {
+                Icon(
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clip(RoundedCornerShape(10.dp))
+                        .align(Alignment.Center),
+                    imageVector = ImageVector.vectorResource(R.drawable.image_base_card),
+                    tint = MaterialTheme.colorScheme.inverseSurface,
+                    contentDescription = stringResource(R.string.image_card_button),
+                )
+            }
+        }
+    }
+}
+
 @PreviewLightDark
 @Composable
 fun PreviewPasCard() {
@@ -223,7 +298,8 @@ fun PreviewPasCard() {
         "Figma",
         "asdf@gmail.com",
         "",
-        false
+        false,
+        ""
     )
     PassFortTheme { PasswordCard(pasData, {}, {}, {}) }
 }

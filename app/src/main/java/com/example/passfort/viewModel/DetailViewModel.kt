@@ -1,5 +1,6 @@
 package com.example.passfort.viewModel
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.passfort.model.dbentity.PasswordRecordEntity
@@ -25,6 +26,7 @@ class DetailViewModel @Inject constructor(
     private val _note: MutableStateFlow<String> = MutableStateFlow("")
     private val _changeIntervalDays: MutableStateFlow<Int> = MutableStateFlow(0)
     private val _isPinned: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    private val _imageCardUri: MutableStateFlow<String> = MutableStateFlow("")
 
     private val _isEmptyRecords: MutableStateFlow<Boolean> = MutableStateFlow(false)
     private val _isChangedRecords: MutableStateFlow<Boolean> = MutableStateFlow(false)
@@ -37,6 +39,7 @@ class DetailViewModel @Inject constructor(
     val note: StateFlow<String> = _note.asStateFlow()
     val changeIntervalDays: StateFlow<Int> = _changeIntervalDays.asStateFlow()
     val isPinned: StateFlow<Boolean> = _isPinned.asStateFlow()
+    val imageCardUri: StateFlow<String> = _imageCardUri.asStateFlow()
 
     val isChangedRecords: StateFlow<Boolean> = _isEmptyRecords.asStateFlow()
     val isEmptyRecords: StateFlow<Boolean> = _isEmptyRecords.asStateFlow()
@@ -55,6 +58,7 @@ class DetailViewModel @Inject constructor(
             _note.update { password.recordNote }
             _changeIntervalDays.update { password.passwordChangeIntervalDays }
             _isPinned.update { password.pinned }
+            _imageCardUri.update { password.imageCardUri }
 
             _enablePasswordChange.update { _changeIntervalDays.value > 0 }
         }
@@ -94,6 +98,10 @@ class DetailViewModel @Inject constructor(
         _enablePasswordChange.update { !it }
     }
 
+    fun setImageUri(imageUri: String) {
+        _imageCardUri.update { imageUri }
+    }
+
     fun deletePassword() {
         viewModelScope.launch {
             repository.deletePassword(
@@ -107,7 +115,8 @@ class DetailViewModel @Inject constructor(
                     passwordChangeIntervalDays = _changeIntervalDays.value,
                     iconIndex = 0,
                     pinned = _isPinned.value,
-                    passwordLastUsedDate = LocalDateTime.now()
+                    passwordLastUsedDate = LocalDateTime.now(),
+                    imageCardUri = _imageCardUri.value
                 )
             )
         }
@@ -132,7 +141,8 @@ class DetailViewModel @Inject constructor(
                     passwordChangeIntervalDays = _changeIntervalDays.value,
                     iconIndex = 0,
                     pinned = _isPinned.value,
-                    passwordLastUsedDate = LocalDateTime.now()
+                    passwordLastUsedDate = LocalDateTime.now(),
+                    imageCardUri = _imageCardUri.value
                 )
             )
         }

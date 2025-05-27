@@ -1,5 +1,11 @@
 package com.example.passfort.screen.passwords
 
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -14,11 +20,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.AddPhotoAlternate
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,12 +38,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil3.compose.AsyncImage
+import coil3.request.ImageRequest
+import coil3.request.crossfade
+import coil3.toUri
 import com.example.passfort.R
 import com.example.passfort.designSystem.components.BottomButtonLine
 import com.example.passfort.designSystem.components.ButtonAdditionally
@@ -70,6 +88,10 @@ fun PasswordDetailScreen(
                     onBackScreen = onBackScreen,
                     onPinned = { viewModel.setPinnedState() },
                     onDelete = { viewModel.deletePassword() }
+                )
+                ImageUserCard(
+                    imageCardUri = viewModel.imageCardUri.collectAsState().value,
+                    setUriImage = { viewModel.setImageUri(it) }
                 )
                 InputFieldTitle(
                     value = viewModel.namePassword.collectAsState().value,
@@ -211,9 +233,73 @@ fun DropDownMenu(
             onClick = {
                 onBackScreen()
                 onDelete()
-                //onDismiss()
             }
         )
+    }
+}
+
+@Composable
+fun ImageUserCard(
+    imageCardUri: String,
+    setUriImage: (String) -> Unit
+) {
+    val placeholder = painterResource(R.drawable.image_base_card)
+    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+
+    if (imageCardUri != ""){
+        selectedImageUri = imageCardUri.toUri()
+    }
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult(),
+        onResult = { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                selectedImageUri = result.data?.data
+                setUriImage(selectedImageUri.toString())
+            }
+        }
+    )
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center
+    ) {
+        OutlinedIconButton(
+            modifier = Modifier
+                .size(120.dp),
+            shape = RoundedCornerShape(22.dp),
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.inverseSurface),
+            onClick = {
+                val intent = Intent(Intent.ACTION_PICK).apply {
+                    type = "image/*"
+                }
+                launcher.launch(intent)
+            }
+        ) {
+            if (selectedImageUri != null) {
+                AsyncImage(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(22.dp)),
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(selectedImageUri)
+                        .crossfade(true)
+                        .build(),
+                    placeholder = placeholder,
+                    error = placeholder,
+                    contentDescription = stringResource(R.string.image_card_button),
+                    contentScale = ContentScale.Crop,
+                )
+            }
+            else{
+                Icon(
+                    imageVector = Icons.Outlined.AddPhotoAlternate,
+                    tint = MaterialTheme.colorScheme.inverseSurface,
+                    contentDescription = stringResource(R.string.image_card_button),
+                    modifier = Modifier.size(50.dp)
+                )
+            }
+        }
     }
 }
 

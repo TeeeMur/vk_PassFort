@@ -24,7 +24,9 @@ data class PasswordRecordEntity(
     @ColumnInfo(name = "icon_enum") val iconIndex: Int,
     @ColumnInfo(name = "pinned") var pinned: Boolean,
     @field:TypeConverters(DBDateTimeConverters::class)
-    @ColumnInfo(name = "last_use") val passwordLastUsedDate: LocalDateTime
+    @ColumnInfo(name = "last_use") val passwordLastUsedDate: LocalDateTime,
+
+    @ColumnInfo(name = "uri_image") val imageCardUri: String
 ) {
     fun convertToPasswordItem(): PasswordItem {
         return PasswordItem(
@@ -33,7 +35,8 @@ data class PasswordRecordEntity(
             itemLogin = recordLogin,
             itemName = recordName,
             itemPassword = recordPassword,
-            isPinned = pinned
+            isPinned = pinned,
+            imageCardUri = imageCardUri
         )
     }
 }
