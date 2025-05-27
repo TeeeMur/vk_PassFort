@@ -32,22 +32,16 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.passfort.R
 import com.example.passfort.designSystem.theme.PassFortTheme
 import com.example.passfort.viewModel.GeneratorViewModel
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.StateFlow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SingleChoiceSegmentedButton(
-    intervalsDays: Int,
+fun SingleChoiceSegmentedButtonNew(
+    options: ImmutableList<String>,
+    selectedIndex: Int,
     switchAction: (Int) -> Unit
 ) {
-    var selectedIndex by remember { mutableIntStateOf(0) }
-    val options = listOf("60", "120", "180")
-
-    selectedIndex = options.indexOf(intervalsDays.toString())
-    if (intervalsDays == 0) {
-        switchAction(options[0].toInt())
-    }
-
     SingleChoiceSegmentedButtonRow(
         modifier = Modifier
             .fillMaxWidth()
@@ -68,8 +62,7 @@ fun SingleChoiceSegmentedButton(
                 ),
                 icon = {},
                 onClick = {
-                    selectedIndex = index
-                    switchAction(options[index].toInt()) },
+                    switchAction(index) },
                 selected = index == selectedIndex,
                 label = {
                     Text(
@@ -90,10 +83,12 @@ fun SingleChoiceSegmentedButton(
     }
 }
 
+
+/*
 @PreviewLightDark()
 @Composable
 fun SegmentsButtonPreview() {
     PassFortTheme{
         SingleChoiceSegmentedButton(120, {})
     }
-}
+}*/

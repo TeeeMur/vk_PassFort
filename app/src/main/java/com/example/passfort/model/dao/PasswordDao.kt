@@ -12,8 +12,8 @@ interface PasswordDao: BaseDao<PasswordRecordEntity> {
     @Query("SELECT * from password_record")
     fun getAll(): Flow<List<PasswordRecordEntity>>
 
-    @Query("SELECT * from password_record WHERE pinned = 1")
-    fun getPinned(): Flow<List<PasswordRecordEntity>>
+    @Query("SELECT * from password_record WHERE pinned = 1 LIMIT :count")
+    fun getPinned(count: Int = -1): Flow<List<PasswordRecordEntity>>
 
     @Query("SELECT * from password_record WHERE pinned == 0")
     fun getNonPinned(): Flow<List<PasswordRecordEntity>>

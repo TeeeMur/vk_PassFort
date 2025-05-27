@@ -37,6 +37,7 @@ import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -400,37 +401,26 @@ fun AuthTextFieldPreview() {
 @Composable
 fun SettingsInputField(
     value: String,
+    placeholder: String,
     onValueChange: (String) -> Unit = {},
-    onClick: () -> Unit = {},
-    showIcon: Boolean,
+    isPassword: Boolean = false
 ) {
     TextField(
         modifier = Modifier
-            .padding(horizontal = 10.dp)
             .padding(bottom = 10.dp)
             .fillMaxWidth(),
         value = value,
         singleLine = true,
+        placeholder = {Text(text = "Введите $placeholder")},
         onValueChange = onValueChange,
         textStyle = LocalTextStyle.current.copy(
-            fontSize = MaterialTheme.typography.headlineSmall.fontSize,
+            fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+            fontWeight = FontWeight.SemiBold
         ),
         colors = OutlinedTextFieldDefaults.colors(
             unfocusedBorderColor = Color.Transparent,
             focusedBorderColor = Color.Transparent,
         ),
-        trailingIcon = if (showIcon) {
-            {
-                IconButton(
-                    modifier = Modifier.padding(end = 4.dp),
-                    onClick = onClick
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Check,
-                        contentDescription = "Save"
-                    )
-                }
-            }
-        } else null
+        visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
     )
 }

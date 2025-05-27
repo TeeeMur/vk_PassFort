@@ -36,6 +36,7 @@ fun SearchBar(value: String, placeholder: String, modifier: Modifier = Modifier,
                 modifier = Modifier.padding(start = 4.dp)
             )
         },
+        singleLine = true,
         colors = OutlinedTextFieldDefaults.colors(
             focusedContainerColor = MaterialTheme.colorScheme.outline,
             unfocusedContainerColor = MaterialTheme.colorScheme.outline,

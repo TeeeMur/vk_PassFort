@@ -15,7 +15,6 @@ private val DarkColorScheme = darkColorScheme(
     inversePrimary = inverse,
     primaryContainer = red,
     secondaryContainer = yellow,
-
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -37,9 +36,15 @@ private val LightColorScheme = lightColorScheme(
     */
 )
 
+enum class ChosenTheme {
+    AUTO,
+    LIGHT,
+    DARK,
+}
+
 @Composable
 fun PassFortTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: ChosenTheme = ChosenTheme.AUTO,
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
@@ -56,14 +61,14 @@ fun PassFortTheme(
         else -> LightColorScheme
     }*/
 
-    val colors = if (!darkTheme) {
-        LightColorScheme
-    } else {
-        DarkColorScheme
+    val chosenColors = when (darkTheme) {
+        ChosenTheme.DARK -> DarkColorScheme
+        ChosenTheme.LIGHT -> LightColorScheme
+        ChosenTheme.AUTO -> if (isSystemInDarkTheme()) DarkColorScheme else LightColorScheme
     }
 
     MaterialTheme(
-        colorScheme = colors,
+        colorScheme = chosenColors,
         typography = Typography,
         content = content
     )
