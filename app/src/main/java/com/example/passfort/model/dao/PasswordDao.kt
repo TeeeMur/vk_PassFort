@@ -1,7 +1,6 @@
 package com.example.passfort.model.dao
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Query
 import com.example.passfort.model.dbentity.PasswordRecordEntity
 import kotlinx.coroutines.flow.Flow
