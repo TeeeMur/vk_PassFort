@@ -6,4 +6,5 @@ data class PasswordItem(
     val itemName: String,
     val itemLogin: String,
     val itemPassword: String,
+    val isPinned: Boolean,
 )

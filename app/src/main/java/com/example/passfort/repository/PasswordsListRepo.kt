@@ -8,5 +8,7 @@ interface PasswordsListRepo {
     fun getPinnedPasswords(): Flow<List<PasswordRecordEntity>>
     fun getNonPinnedPasswords(): Flow<List<PasswordRecordEntity>>
     suspend fun upsertPassword(password: PasswordRecordEntity)
-    suspend fun deletePassword(password: PasswordRecordEntity)
+    suspend fun getByIdPassword(id: Long): PasswordRecordEntity
+    suspend fun pinPassword(passwordEntity: PasswordRecordEntity)
+    suspend fun deletePassword(passwordID: Long)
 }

@@ -1,9 +1,9 @@
 package com.example.passfort.model.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Query
 import com.example.passfort.model.dbentity.PasswordRecordEntity
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -25,5 +25,8 @@ interface PasswordDao: BaseDao<PasswordRecordEntity> {
     suspend fun getByName(name: String): List<PasswordRecordEntity>
 
     @Query("SELECT * from password_record WHERE id LIKE :id")
-    suspend fun getById(id: Int): PasswordRecordEntity
+    suspend fun getById(id: Long): PasswordRecordEntity
+
+    @Query("DELETE FROM password_record WHERE id = :id")
+    suspend fun deleteById(id: Long)
 }

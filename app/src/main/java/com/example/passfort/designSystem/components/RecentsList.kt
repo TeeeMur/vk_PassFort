@@ -26,6 +26,8 @@ fun RecentsList(
     listState: LazyListState,
     onClickPassword: (Long) -> Unit,
     title: String = "Недавние",
+    onPin: (Long) -> Unit,
+    onDelete: (Long) -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -36,7 +38,9 @@ fun RecentsList(
             text = title,
             fontSize = 24.sp,
             textAlign = TextAlign.Left,
-            modifier = titleModifier.fillMaxWidth().padding(vertical = 4.dp)
+            modifier = titleModifier
+                .fillMaxWidth()
+                .padding(vertical = 4.dp)
         )
         val recents = viewModel.recentPasswords.collectAsState()
         LazyColumn(
@@ -45,7 +49,12 @@ fun RecentsList(
             state = listState,
         ) {
             items(recents.value) {
-                    item -> PasswordCard(item = item.convertToPasswordItem(), onClickPassword = onClickPassword)
+                    item -> PasswordCard(
+                item = item.convertToPasswordItem(),
+                onClickPassword = onClickPassword,
+                onPin = onPin,
+                onDelete = onDelete,
+            )
             }
         }
     }
