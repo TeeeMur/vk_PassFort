@@ -26,7 +26,8 @@ import com.example.passfort.viewModel.GeneratorViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PasswordGenerateModalScreen(showBottomSheet: Boolean, onDismiss: () -> Unit) {
+fun PasswordGenerateModalScreen(
+    showBottomSheet: Boolean, onDismiss: () -> Unit) {
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
     )

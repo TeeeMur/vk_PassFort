@@ -7,8 +7,8 @@ import kotlinx.coroutines.flow.Flow
 
 class MainScreenRepoImpl(db: PassFortDB): MainScreenRepo {
     val passwordDao = db.getPasswordDao()
-    override fun getPinnedPasswords(): Flow<List<PasswordRecordEntity>> {
-        return passwordDao.getPinned()
+    override fun getPinnedPasswords(count: Int): Flow<List<PasswordRecordEntity>> {
+        return passwordDao.getPinned(count)
     }
 
     override fun getRecentPasswords(count: Int): Flow<List<PasswordRecordEntity>> {

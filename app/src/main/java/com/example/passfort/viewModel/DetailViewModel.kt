@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.passfort.model.dbentity.PasswordRecordEntity
 import com.example.passfort.repository.PasswordsDetailRepo
-import com.example.passfort.repository.PasswordsListRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,6 +23,7 @@ class DetailViewModel @Inject constructor(
     private val _password: MutableStateFlow<String> = MutableStateFlow("")
     private val _note: MutableStateFlow<String> = MutableStateFlow("")
     private val _changeIntervalDays: MutableStateFlow<Int> = MutableStateFlow(0)
+    private val _changeIntervalDaysIndex: MutableStateFlow<Int> = MutableStateFlow(0)
     private val _isPinned: MutableStateFlow<Boolean> = MutableStateFlow(false)
 
     private val _isEmptyRecords: MutableStateFlow<Boolean> = MutableStateFlow(false)
@@ -36,6 +36,7 @@ class DetailViewModel @Inject constructor(
     val password: StateFlow<String> = _password.asStateFlow()
     val note: StateFlow<String> = _note.asStateFlow()
     val changeIntervalDays: StateFlow<Int> = _changeIntervalDays.asStateFlow()
+    val changeIntervalDaysIndex: StateFlow<Int> = _changeIntervalDaysIndex.asStateFlow()
     val isPinned: StateFlow<Boolean> = _isPinned.asStateFlow()
 
     val isChangedRecords: StateFlow<Boolean> = _isEmptyRecords.asStateFlow()
@@ -46,7 +47,7 @@ class DetailViewModel @Inject constructor(
         idPassword: Long
     ){
         viewModelScope.launch {
-            val password = repository.getPassword(idPassword) ?: return@launch
+            val password = repository.getPassword(idPassword)
 
             _idPassword.update { password.id }
             _namePassword.update { password.recordName }
@@ -54,6 +55,9 @@ class DetailViewModel @Inject constructor(
             _password.update { password.recordPassword }
             _note.update { password.recordNote }
             _changeIntervalDays.update { password.passwordChangeIntervalDays }
+            _changeIntervalDaysIndex.update{
+                PASS_CHANGE_NOTIFICATION_INTERVAL_OPTIONS.indexOf(_changeIntervalDays.value.toString())
+            }
             _isPinned.update { password.pinned }
 
             _enablePasswordChange.update { _changeIntervalDays.value > 0 }
@@ -80,8 +84,9 @@ class DetailViewModel @Inject constructor(
         onChanged()
     }
 
-    fun setChangeIntervalDaysCount(daysCount: Int) {
-        _changeIntervalDays.update { daysCount }
+    fun setChangeIntervalDaysCountIndex(daysCountIndex: Int) {
+        _changeIntervalDaysIndex.update { daysCountIndex }
+        _changeIntervalDays.update { PASS_CHANGE_NOTIFICATION_INTERVAL_OPTIONS[daysCountIndex].toInt() }
         onChanged()
     }
 
@@ -92,6 +97,11 @@ class DetailViewModel @Inject constructor(
 
     fun setPasswordChange() {
         _enablePasswordChange.update { !it }
+        if (!_enablePasswordChange.value) {
+            _changeIntervalDays.update { 0 }
+        } else {
+            _changeIntervalDaysIndex.update { 0 }
+        }
     }
 
     fun deletePassword() {

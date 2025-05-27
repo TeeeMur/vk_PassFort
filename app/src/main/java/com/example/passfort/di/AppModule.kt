@@ -3,6 +3,7 @@ package com.example.passfort.di
 import android.content.Context
 import androidx.room.Room
 import com.example.passfort.model.PassFortDB
+import com.example.passfort.model.PreferencesManager
 import com.example.passfort.repository.MainScreenRepo
 import com.example.passfort.repository.PasswordsCreateRepo
 import com.example.passfort.repository.impl.PasswordsCreateRepoImpl
@@ -49,5 +50,10 @@ object AppModule {
     @Provides
     fun provideMainPasswordsRepository(db: PassFortDB): MainScreenRepo {
         return MainScreenRepoImpl(db)
+    }
+
+    @Provides
+    fun providePreferencesManager(@ApplicationContext appContext: Context): PreferencesManager {
+        return PreferencesManager(appContext)
     }
 }

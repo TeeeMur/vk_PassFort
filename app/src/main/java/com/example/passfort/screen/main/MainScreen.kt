@@ -67,11 +67,13 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.example.passfort.R
 import com.example.passfort.designSystem.components.PreviewNavBar
 import com.example.passfort.designSystem.components.RecentsList
 import com.example.passfort.designSystem.components.SearchBar
 import com.example.passfort.model.dbentity.PasswordRecordEntity
+import com.example.passfort.navigation.Screen
 import com.example.passfort.viewModel.MainScreenViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.drop
@@ -95,6 +97,7 @@ val mainScreenImages = persistentListOf(
 @Composable
 fun MainScreen(
     viewModel: MainScreenViewModel = hiltViewModel(),
+    navController: NavController,
     onClickPassword: (Long) -> Unit,
     navigationBar: @Composable () -> Unit = {
         PreviewNavBar()
@@ -126,17 +129,23 @@ fun MainScreen(
                     .background(MaterialTheme.colorScheme.primary)
                     .padding(end = 16.dp),
                 title = {
+                    val name = if (viewModel.userName.collectAsState().value != "") ", ${viewModel.userName.collectAsState().value}!" else "!"
                     Text(
-                        text = "Привет, Арина!",
-                        color = MaterialTheme.colorScheme.secondary
+                        text = "Привет$name",
+                        color = MaterialTheme.colorScheme.inversePrimary
                     )
                 },
                 actions = {
-                    Icon(
-                        imageVector = Icons.Outlined.AccountCircle,
-                        contentDescription = stringResource(R.string.profile_icon_string_description),
-                        tint = MaterialTheme.colorScheme.secondary
-                    )
+                    IconButton(
+                        onClick = {navController.navigate(Screen.Settings.route)}
+                    ) {
+                        Icon(
+                            modifier = Modifier.size(28.dp),
+                            imageVector = Icons.Outlined.AccountCircle,
+                            contentDescription = stringResource(R.string.profile_icon_string_description),
+                            tint = MaterialTheme.colorScheme.inversePrimary
+                        )
+                    }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color.Transparent
@@ -293,7 +302,8 @@ fun BackgroundList(
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
             .background(MaterialTheme.colorScheme.outline)
-            .padding(vertical = 16.dp, horizontal = 20.dp),
+            .padding(horizontal = 20.dp)
+            .padding(top = 20.dp, bottom = 14.dp),
     ) {
         Text(
             text = title,

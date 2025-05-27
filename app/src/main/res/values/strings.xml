@@ -49,4 +49,10 @@
     <string name="main_screen_pinned_title">Закрепленные</string>
     <string name="password_icon_string_description">Password icon</string>
     <string name="profile_icon_string_description">Профиль</string>
+    <string name="settings_toggle_sync_name">Синхронизировать пароли на устройствах</string>
+    <string name="settings_toggle_notifications_name">Разрешить уведомления</string>
+    <string name="settings_inputfield_title_email">E-mail</string>
+    <string name="settings_inputfield_title_password">Пароль</string>
+    <string name="settings_savebutton_text">Сохранить изменения</string>
+    <string name="settings_themechoice_title">Тема</string>
 </resources>
