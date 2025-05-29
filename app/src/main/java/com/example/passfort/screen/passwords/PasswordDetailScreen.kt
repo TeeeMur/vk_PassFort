@@ -6,6 +6,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -87,7 +88,11 @@ fun PasswordDetailScreen(
                     value = viewModel.password.collectAsState().value,
                     onValueChange = { viewModel.onPasswordChange(it) },
                 )
-                RectangleButton(stringResource(R.string.passwordgen_generatebutton_text)) { onGeneratePassword() }
+                RectangleButton(
+                    text = stringResource(R.string.passwordgen_generatebutton_text),
+                    paddingValues = PaddingValues(20.dp),
+                    onClick = onGeneratePassword
+                )
                 InputFieldWithCopy(
                     labelResourceString = stringResource(R.string.passwordcreate_inputfield_note),
                     value = viewModel.note.collectAsState().value,

@@ -16,10 +16,12 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.Dp
@@ -141,12 +143,14 @@ private fun SecondaryButtonPreview_Light() {
 @Composable
 fun RectangleButton(
     text: String,
-    onClick: () -> Unit) {
+    onClick: () -> Unit,
+    paddingValues: PaddingValues = PaddingValues(0.dp)
+) {
 
     Button(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(20.dp)
+            .padding(paddingValues)
             .height(56.dp),
         shape = RoundedCornerShape(16.dp),
         contentPadding = PaddingValues(0.dp),
@@ -192,13 +196,46 @@ fun BottomButtonLine(
     }
 }
 
+@Composable
+fun LeftTextButton(
+    onClick: () -> Unit = {},
+    text: String,
+    modifier: Modifier = Modifier,
+    mainColor: Color = MaterialTheme.colorScheme.surface,
+    textColor: Color = MaterialTheme.colorScheme.inverseSurface,
+) {
+    TextButton(
+        onClick = onClick,
+        modifier = modifier.fillMaxWidth()
+            .height(56.dp),
+        shape = RoundedCornerShape(16.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = mainColor
+        ),
+    ) {
+        Text(
+            text = text,
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Start,
+            color = textColor,
+            fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+            fontWeight = MaterialTheme.typography.bodyLarge.fontWeight
+        )
+    }
+}
+
 @PreviewLightDark
 @Composable
 fun ButtonsPreview(){
     PassFortTheme {
         Column {
-            RectangleButton(stringResource(R.string.passwordgen_generatebutton_text)) {}
+            RectangleButton(
+                stringResource(R.string.passwordgen_generatebutton_text),
+                paddingValues = PaddingValues(20.dp),
+                onClick = {}
+            )
             BottomButtonLine({ true }, {})
+            LeftTextButton(text = "Документы", mainColor = Color.Red)
         }
     }
 }

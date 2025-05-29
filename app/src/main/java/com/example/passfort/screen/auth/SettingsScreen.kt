@@ -2,49 +2,42 @@ package com.example.passfort.screen.auth
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.passfort.R
-import com.example.passfort.designSystem.components.InputFieldTitle
+import com.example.passfort.designSystem.components.LeftTextButton
 import com.example.passfort.designSystem.components.NavigationBar
 import com.example.passfort.designSystem.components.RectangleButton
 import com.example.passfort.designSystem.components.SettingsInputField
 import com.example.passfort.designSystem.components.SingleChoiceSegmentedButtonNew
 import com.example.passfort.designSystem.components.ToggleLine
 import com.example.passfort.designSystem.theme.ChosenTheme
+import com.example.passfort.navigation.Screen
 import com.example.passfort.viewModel.SettingsViewModel
 
 @Composable
 fun SettingsScreen(
     navController: NavHostController,
     onLogout: () -> Unit,
-    onAddPassword: () -> Unit
+    onAddPassword: () -> Unit,
 ) {
     Scaffold(
         bottomBar = { NavigationBar(navController, onAddPassword) }
@@ -76,65 +69,87 @@ fun SettingsScreenNew(
     viewModel: SettingsViewModel = hiltViewModel(),
     navController: NavHostController,
     onChangeTheme: (ChosenTheme) -> Unit,
-    onGeneratePassword: () -> Unit,
-    onLogout: () -> Unit,
+    navBar: @Composable () -> Unit,
 ) {
+    val horizontalPadding = 20.dp
     Scaffold(
-        topBar = { UpperButtonLine(onBack = { navController.navigateUp() }) }
+        topBar = { SettingsTopBar(PaddingValues(start = horizontalPadding, end = horizontalPadding, top = 60.dp)) },
+        bottomBar = navBar
     ) { innerPaddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = innerPaddingValues.calculateTopPadding())
+                .padding(top = innerPaddingValues.calculateTopPadding() + 12.dp, bottom = innerPaddingValues.calculateBottomPadding() + 18.dp)
         ) {
-            InputFieldTitle(
-                value = viewModel.name.collectAsState().value,
-                onValueChange = { viewModel.updateName(it) }
-            )
             Column(
                 modifier = Modifier
-                    .padding(horizontal = 8.dp),
+                    .fillMaxWidth()
+                    .padding(horizontal = horizontalPadding)
+                    .padding(bottom = 12.dp)
             ) {
+                SettingsDataRow(
+                    title = stringResource(R.string.settings_inputfield_title_name),
+                    value = viewModel.name.collectAsState().value,
+                    onChange = { viewModel.updateName(it) },
+                    placeholder = stringResource(R.string.settings_inputfield_placeholder_name)
+                )
+                SettingsDataRow(
+                    title = stringResource(R.string.settings_inputfield_title_surname),
+                    value = viewModel.surname.collectAsState().value,
+                    onChange = { viewModel.updateSurname(it) },
+                    placeholder = stringResource(R.string.settings_inputfield_placeholder_surname)
+                )
                 SettingsDataRow(
                     title = stringResource(R.string.settings_inputfield_title_email),
                     value = viewModel.email.collectAsState().value,
                     onChange = { viewModel.updateEmail(it) },
-                )
-                SettingsDataRow(
-                    title = stringResource(R.string.settings_inputfield_title_password),
-                    value = viewModel.password.collectAsState().value,
-                    onChange = { viewModel.updatePassword(it) },
-                    isPassword = true
+                    placeholder = stringResource(R.string.settings_inputfield_placeholder_email)
                 )
             }
             ToggleLine(
                 name = stringResource(R.string.settings_toggle_sync_name),
-                valueFlow = viewModel.syncEnabled.collectAsState().value
+                valueFlow = viewModel.syncEnabled.collectAsState().value,
+                horizontalPadding = horizontalPadding
             ) {
                 viewModel.changeSyncEnabled()
             }
             ToggleLine(
                 name = stringResource(R.string.settings_toggle_notifications_name),
-                valueFlow = viewModel.notificationsEnabled.collectAsState().value
+                valueFlow = viewModel.notificationsEnabled.collectAsState().value,
+                horizontalPadding = horizontalPadding
             ) {
                 viewModel.changeNotificationEnabled()
             }
-            RectangleButton(stringResource(R.string.passwordgen_generatebutton_text)) {
-                onGeneratePassword
+            Column(
+                modifier = Modifier.padding(horizontal = horizontalPadding)
+                    .padding(top = 8.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.settings_themechoice_title),
+                    modifier = Modifier.padding(bottom = 8.dp),
+                    fontSize = 18.sp,
+                )
+                SingleChoiceSegmentedButtonNew(
+                    options = viewModel.themeNames,
+                    selectedIndex = viewModel.themeIndex.collectAsState().value,
+                    switchAction = { viewModel.changeThemeIndex(it); onChangeTheme(ChosenTheme.entries[viewModel.themeIndex.value]) }
+                )
+                LeftTextButton(
+                    text = "Расширенные параметры",
+                    onClick = {navController.navigate(Screen.AdditionalSettings.route)},
+                    modifier = Modifier.padding(top = 12.dp)
+                )
             }
-            Text(
-                text = stringResource(R.string.settings_themechoice_title),
-                modifier = Modifier.padding(start = 22.dp, bottom = 16.dp),
-                fontSize = 22.sp,
-            )
-            SingleChoiceSegmentedButtonNew(
-                options = viewModel.themeNames,
-                selectedIndex = viewModel.themeIndex.collectAsState().value,
-                switchAction = { viewModel.changeThemeIndex(it); onChangeTheme(ChosenTheme.entries[viewModel.themeIndex.value]) }
-            )
             if (viewModel.dataChanged.collectAsState().value) {
-                RectangleButton(stringResource(R.string.settings_savebutton_text)) {
-                    viewModel.onSave()
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.Bottom
+                ) {
+                    RectangleButton(
+                        text = stringResource(R.string.settings_savebutton_text),
+                        paddingValues = PaddingValues(horizontal = horizontalPadding, vertical = 12.dp),
+                        onClick = { viewModel.onSave() }
+                    )
                 }
             }
         }
@@ -144,56 +159,46 @@ fun SettingsScreenNew(
 @Composable
 fun SettingsDataRow(
     title: String,
+    placeholder: String,
     value: String,
     onChange: (String) -> Unit,
     isPassword: Boolean = false
 ) {
     Column(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
     ) {
         Text(
             text = title,
-            color = Color.LightGray,
-            modifier = Modifier.padding(start = 14.dp)
+            modifier = Modifier,
+            color = MaterialTheme.colorScheme.inverseSurface
         )
         SettingsInputField(
             value = value,
             onValueChange = onChange,
             isPassword = isPassword,
-            placeholder = title
+            placeholder = placeholder,
         )
     }
 }
 
 @Composable
-fun UpperButtonLine(
-    onBack: () -> Unit,
+fun SettingsTopBar(
+    paddingValues: PaddingValues = PaddingValues(0.dp),
 ) {
     Row(
         modifier = Modifier
+            .fillMaxWidth()
             .statusBarsPadding()
-            .padding(horizontal = 14.dp)
-            .fillMaxWidth(),
-        horizontalArrangement = Arrangement.Start
+            .padding(paddingValues)
     ) {
-        IconButton(
-            modifier = Modifier
-                .height(50.dp)
-                .size(65.dp)
-                .padding(10.dp),
-            colors = IconButtonDefaults.iconButtonColors(
-                containerColor = MaterialTheme.colorScheme.surface,
-            ),
-            onClick = onBack
-        ) {
-            Icon(
-                modifier = Modifier
-                    .width(15.dp)
-                    .rotate(180f),
-                imageVector = ImageVector.vectorResource(R.drawable.icon_arrow_next),
-                tint = MaterialTheme.colorScheme.inverseSurface,
-                contentDescription = null,
-            )
-        }
+        Text(
+            text = stringResource(R.string.settings_title),
+            fontSize = MaterialTheme.typography.headlineMedium.fontSize,
+            fontWeight = FontWeight.Medium,
+            style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
+            color = MaterialTheme.colorScheme.inverseSurface,
+        )
     }
 }

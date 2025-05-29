@@ -2,6 +2,7 @@ package com.example.passfort.model
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.core.content.edit
 import com.example.passfort.designSystem.theme.ChosenTheme
 
@@ -20,28 +21,28 @@ class PreferencesManager(context: Context) {
     }
 
     fun saveSyncEnabled(enabled: Boolean) {
-        prefs.edit {
+        prefs.edit(commit = true) {
             putBoolean("sync_enabled", enabled)
         }
     }
     fun getSyncEnabled(): Boolean = prefs.getBoolean("sync_enabled", false)
 
     fun saveName(userName: String) {
-        prefs.edit {
+        prefs.edit(commit = true) {
             putString("user_name", userName)
         }
     }
     fun getName(): String = prefs.getString("user_name", "").toString()
 
     fun saveSurname(surname: String) {
-        prefs.edit {
+        prefs.edit(commit = true) {
             putString("user_surname", surname)
         }
     }
     fun getSurname(): String = prefs.getString("user_surname", "").toString()
 
     fun savePassword(password: String) {
-        prefs.edit {
+        prefs.edit(commit = true) {
             putString("user_password", password)
         }
     }
@@ -63,13 +64,15 @@ class PreferencesManager(context: Context) {
     fun hasPin(): Boolean = getPin() != null
 
     fun saveNotificationsEnabled(enabled: Boolean) {
-        prefs.edit {
+        prefs.edit(commit = true) {
             putBoolean("notifications_enabled", enabled)
         }
     }
     fun getNotificationsEnabled(): Boolean = prefs.getBoolean("notifications_enabled", false)
     fun saveEmail(email: String) {
-
+        prefs.edit(commit = true) {
+            putString("user_email", email)
+        }
     }
-    fun getEmail(): String = prefs.getString("email", "").toString()
+    fun getEmail(): String = prefs.getString("user_email", "").toString()
 }

@@ -16,6 +16,7 @@ import com.example.passfort.designSystem.components.NavigationBar
 import androidx.navigation.navArgument
 import com.example.passfort.designSystem.theme.ChosenTheme
 import com.example.passfort.model.PreferencesManager
+import com.example.passfort.screen.AdditionalSettings
 import com.example.passfort.screen.auth.LoginScreen
 import com.example.passfort.screen.auth.RegisterScreen
 import com.example.passfort.screen.main.MainScreen
@@ -129,13 +130,19 @@ fun NavigationGraph(
             SettingsScreenNew(
                 navController = navController,
                 onChangeTheme = onChangeTheme,
-                onGeneratePassword = {showBottomSheetGeneratePassword = true},
+                navBar = { NavigationBar(navController){showBottomSheetCreatePassword = true} },
+            )
+        }
+        composable(Screen.AdditionalSettings.route) {
+            AdditionalSettings(
                 onLogout = {
                     onLogout()
                     navController.navigate(Screen.Login.route) {
                         popUpTo(0)
                     }
                 },
+                onDeleteProfile = { },
+                onBack = {navController.navigateUp()},
             )
         }
     }

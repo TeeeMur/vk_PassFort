@@ -32,7 +32,6 @@ fun SingleChoiceSegmentedButtonNew(
         modifier = Modifier
             .fillMaxWidth()
             .height(50.dp)
-            .padding(horizontal = 30.dp)
     ) {
         options.forEachIndexed { index, label ->
             SegmentedButton(

@@ -1,5 +1,6 @@
 package com.example.passfort.viewModel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.passfort.model.PreferencesManager
@@ -31,7 +32,7 @@ class MainScreenViewModel @Inject constructor(
 
     init {
         prefs.prefs.registerOnSharedPreferenceChangeListener {itPref, name ->
-            userName.update { itPref.getString(name, "").toString() }
+            if (name == "user_name") userName.update { itPref.getString(name, "").toString()}
         }
         repo.getRecentPasswords(5).onEach { newIt ->
             _recentPasswords.update { oldIt -> newIt.toImmutableList() }

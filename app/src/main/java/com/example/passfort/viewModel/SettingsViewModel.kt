@@ -1,5 +1,6 @@
 package com.example.passfort.viewModel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.passfort.designSystem.theme.ChosenTheme
 import com.example.passfort.model.PreferencesManager
