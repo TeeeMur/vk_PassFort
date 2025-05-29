@@ -124,11 +124,11 @@ fun InputFieldWithCopy(
                     }
                 ) {
                     Icon(
-                            imageVector = ImageVector.vectorResource(R.drawable.icon_button_copy),
+                        imageVector = ImageVector.vectorResource(R.drawable.icon_button_copy),
                         contentDescription = "copy"
                     )
                 }
-                    }
+                }
             }
         )
     }

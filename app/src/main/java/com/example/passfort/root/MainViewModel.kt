@@ -40,8 +40,9 @@ class MainViewModel @Inject constructor(
                 if (_isUserLoggedIn.value != firebaseIsLoggedIn) {
                     _isUserLoggedIn.value = firebaseIsLoggedIn
                 }
+                // *** FIX: Changed saveAuthState to setUserLoggedIn ***
                 if (preferencesManager.isUserLoggedIn() != firebaseIsLoggedIn) {
-                    preferencesManager.saveAuthState(firebaseIsLoggedIn)
+                    preferencesManager.setUserLoggedIn(firebaseIsLoggedIn)
                 }
             }
         }
@@ -50,10 +51,12 @@ class MainViewModel @Inject constructor(
         val storedLoginState = preferencesManager.isUserLoggedIn()
 
         if (currentFirebaseUser != null && !storedLoginState) {
-            preferencesManager.saveAuthState(true)
+            // *** FIX: Changed saveAuthState to setUserLoggedIn ***
+            preferencesManager.setUserLoggedIn(true)
             if (!_isUserLoggedIn.value) _isUserLoggedIn.value = true
         } else if (currentFirebaseUser == null && storedLoginState) {
-            preferencesManager.saveAuthState(false)
+            // *** FIX: Changed saveAuthState to setUserLoggedIn ***
+            preferencesManager.setUserLoggedIn(false)
             if (_isUserLoggedIn.value) _isUserLoggedIn.value = false
         }
     }
@@ -64,6 +67,8 @@ class MainViewModel @Inject constructor(
 
     fun logout() {
         firebaseAuth.signOut()
+        // When logging out, also update the preferences manager
+        preferencesManager.setUserLoggedIn(false) // Make sure preferences reflect logout
         Timber.tag("MainViewModel").d("logout() called. Firebase signOut initiated.")
     }
 }

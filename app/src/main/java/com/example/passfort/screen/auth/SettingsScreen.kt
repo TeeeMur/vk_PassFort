@@ -73,8 +73,8 @@ fun SettingsScreen(
 
 @Composable
 fun SettingsScreenNew(
-    viewModel: SettingsViewModel = hiltViewModel(),
     navController: NavHostController,
+    viewModel: SettingsViewModel = hiltViewModel(),
     onChangeTheme: (ChosenTheme) -> Unit,
     onGeneratePassword: () -> Unit,
     onLogout: () -> Unit,

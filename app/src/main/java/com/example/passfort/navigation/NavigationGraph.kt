@@ -8,8 +8,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavDirections
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -20,9 +18,9 @@ import com.example.passfort.designSystem.theme.ChosenTheme
 import com.example.passfort.model.PreferencesManager
 import com.example.passfort.screen.auth.LoginScreen
 import com.example.passfort.screen.auth.RegisterScreen
+import com.example.passfort.screen.auth.SettingsScreenNew
 import com.example.passfort.screen.main.MainScreen
 import com.example.passfort.screen.passwords.PasswordListScreen
-import com.example.passfort.screen.passwords.SettingsScreen
 import com.example.passfort.screen.passwords.PasswordCreateModalScreen
 import com.example.passfort.screen.passwords.PasswordDetailScreen
 import com.example.passfort.screen.passwords.PasswordGenerateModalScreen
@@ -161,7 +159,6 @@ fun NavigationGraph(
                     }
                 },
             )
-            { showBottomSheetCreatePassword = true }
         }
     }
 

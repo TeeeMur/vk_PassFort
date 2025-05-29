@@ -137,7 +137,6 @@ fun LoginForm(
             value = username,
             onValueChange = onUsernameChange,
             isReadOnly = isLoading,
-            errorString = "",
             isCopy = false
         )
 

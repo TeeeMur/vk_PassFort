@@ -125,7 +125,6 @@ fun RegisterForm(
             value = uiState.name,
             onValueChange = onNameChange,
             isReadOnly = uiState.isLoading,
-            errorString = "",
             isCopy = false
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -134,7 +133,6 @@ fun RegisterForm(
             value = uiState.email,
             onValueChange = onEmailChange,
             isReadOnly = uiState.isLoading,
-            errorString = "",
             isCopy = false
         )
         Spacer(modifier = Modifier.height(8.dp))
