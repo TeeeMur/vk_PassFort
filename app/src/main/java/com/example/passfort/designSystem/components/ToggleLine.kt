@@ -11,21 +11,22 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.passfort.R
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun PasswordRemindOptions(
-    passwordIntervalDays: Int,
+    options: ImmutableList<String>,
+    passwordIntervalDaysIndex: Int,
     enablePasswordChange: Boolean,
     setPasswordChange: () -> Unit,
-    setChangeIntervalDaysCount: (Int) -> Unit
+    setChangeIntervalDaysCountIndex: (Int) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -40,12 +41,11 @@ fun PasswordRemindOptions(
         }
 
         if (enablePasswordChange) {
-            SingleChoiceSegmentedButton(passwordIntervalDays) {
-                setChangeIntervalDaysCount(it)
-            }
-        }
-        else{
-            setChangeIntervalDaysCount(0)
+            SingleChoiceSegmentedButtonNew(
+                options = options,
+                selectedIndex = passwordIntervalDaysIndex,
+                switchAction = {setChangeIntervalDaysCountIndex(it)}
+            )
         }
     }
 }
@@ -62,8 +62,9 @@ fun ToggleLine(name: String, valueFlow: Boolean, toggleAction: () -> Unit) {
     ) {
         Text(
             text = name,
-            modifier = Modifier.padding(start = 4.dp),
-            fontSize = 16.sp
+            modifier = Modifier.padding(start = 4.dp).weight(0.8f),
+            fontSize = 16.sp,
+            overflow = TextOverflow.Clip
         )
         Switch(
             checked = valueFlow,

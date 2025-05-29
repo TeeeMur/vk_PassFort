@@ -54,12 +54,13 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.example.passfort.R
 import com.example.passfort.designSystem.components.BottomButtonLine
-import com.example.passfort.designSystem.components.ButtonAdditionally
+import com.example.passfort.designSystem.components.RectangleButton
 import com.example.passfort.designSystem.components.InputFieldPassword
 import com.example.passfort.designSystem.components.InputFieldTitle
 import com.example.passfort.designSystem.components.InputFieldWithCopy
 import com.example.passfort.designSystem.components.PasswordRemindOptions
 import com.example.passfort.viewModel.DetailViewModel
+import com.example.passfort.viewModel.PASS_CHANGE_NOTIFICATION_INTERVAL_OPTIONS
 
 @Composable
 fun PasswordDetailScreen(
@@ -107,17 +108,18 @@ fun PasswordDetailScreen(
                     value = viewModel.password.collectAsState().value,
                     onValueChange = { viewModel.onPasswordChange(it) },
                 )
-                ButtonAdditionally { onGeneratePassword() }
+                RectangleButton(stringResource(R.string.passwordgen_generatebutton_text)) { onGeneratePassword() }
                 InputFieldWithCopy(
                     labelResourceString = stringResource(R.string.passwordcreate_inputfield_note),
                     value = viewModel.note.collectAsState().value,
                     onValueChange = { viewModel.onNoteChange(it) },
                 )
                 PasswordRemindOptions(
-                    passwordIntervalDays = viewModel.changeIntervalDays.collectAsState().value,
+                    options = PASS_CHANGE_NOTIFICATION_INTERVAL_OPTIONS,
+                    passwordIntervalDaysIndex = viewModel.changeIntervalDaysIndex.collectAsState().value,
                     enablePasswordChange = viewModel.enablePasswordChange.collectAsState().value,
                     setPasswordChange = { viewModel.setPasswordChange() },
-                    setChangeIntervalDaysCount = { viewModel.setChangeIntervalDaysCount(it) }
+                    setChangeIntervalDaysCountIndex = { viewModel.setChangeIntervalDaysCountIndex(it) }
                 )
             }
             BottomButtonLine({ viewModel.editPassword() }, onDismiss = onBackScreen)
