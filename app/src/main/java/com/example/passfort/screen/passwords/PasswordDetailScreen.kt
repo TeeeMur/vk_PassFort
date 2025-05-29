@@ -55,6 +55,7 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.example.passfort.R
+import com.example.passfort.designSystem.components.AlertTwoButtonsDialog
 import com.example.passfort.designSystem.components.BottomButtonLine
 import com.example.passfort.designSystem.components.RectangleButton
 import com.example.passfort.designSystem.components.InputFieldPassword

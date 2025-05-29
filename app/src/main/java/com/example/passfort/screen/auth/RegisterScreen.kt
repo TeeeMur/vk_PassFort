@@ -125,6 +125,7 @@ fun RegisterForm(
             value = uiState.name,
             onValueChange = onNameChange,
             isReadOnly = uiState.isLoading,
+            isSingleLine = true,
             isCopy = false
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -133,6 +134,7 @@ fun RegisterForm(
             value = uiState.email,
             onValueChange = onEmailChange,
             isReadOnly = uiState.isLoading,
+            isSingleLine = true,
             isCopy = false
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -141,6 +143,7 @@ fun RegisterForm(
             value = uiState.password,
             onValueChange = onPasswordChange,
             errorString = "",
+            isSingleLine = true,
             isCopy = false
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -148,6 +151,7 @@ fun RegisterForm(
             labelResourceString = stringResource(R.string.register_confirm_password_label),
             value = uiState.confirmPassword,
             onValueChange = onConfirmPasswordChange,
+            isSingleLine = true,
             errorString = "",
             isCopy = false
         )

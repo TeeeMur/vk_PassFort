@@ -262,6 +262,7 @@ fun InputFieldPasswordWithCopy(
 fun InputFieldPassword(
     labelResourceString: String,
     value: String,
+    isSingleLine: Boolean = false,
     onValueChange: (String) -> Unit = {},
                        errorString: String = "Не должны быть пустой",
                        isCopy: Boolean
@@ -288,6 +289,7 @@ fun InputFieldPassword(
             onValueChange = onValueChange,
             visualTransformation = visualTransformation,
             errorString = errorString,
+            isSingleLine = isSingleLine,
             isShowErrorText = (value == ""),
             trailingIcon = {
                 if (isCopy) {

@@ -137,7 +137,8 @@ fun LoginForm(
             value = username,
             onValueChange = onUsernameChange,
             isReadOnly = isLoading,
-            isCopy = false
+                    isCopy = false,
+            isSingleLine = true
         )
 
         InputFieldPassword(
@@ -145,7 +146,8 @@ fun LoginForm(
             value = password,
             onValueChange = onPasswordChange,
             errorString = "",
-            isCopy = false
+            isCopy = false,
+            isSingleLine = true
         )
 
         Spacer(modifier = Modifier.height(8.dp))
