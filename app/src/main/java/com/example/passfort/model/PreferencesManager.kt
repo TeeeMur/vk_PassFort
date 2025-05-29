@@ -26,7 +26,6 @@ class PreferencesManager @Inject constructor(@ApplicationContext context: Contex
         private const val KEY_USER_EMAIL = "email" // Consistent key for email
     }
 
-    // --- User Authentication and State ---
     fun setUserLoggedIn(isLoggedIn: Boolean) {
         prefs.edit {
             putBoolean(KEY_IS_USER_LOGGED_IN, isLoggedIn)
@@ -47,7 +46,6 @@ class PreferencesManager @Inject constructor(@ApplicationContext context: Contex
         prefs.edit { clear() }
     }
 
-    // --- Theme Management ---
     fun saveTheme(chosenTheme: ChosenTheme) {
         prefs.edit(commit = true) { // commit=true is usually not necessary with .apply()
             putString(KEY_APP_THEME, chosenTheme.name)
@@ -56,7 +54,6 @@ class PreferencesManager @Inject constructor(@ApplicationContext context: Contex
 
     fun getTheme(): String = prefs.getString(KEY_APP_THEME, ChosenTheme.AUTO.name).toString()
 
-    // --- Sync Settings ---
     fun saveSyncEnabled(enabled: Boolean) {
         prefs.edit { // No need for commit=true or nested edit blocks
             putBoolean(KEY_SYNC_ENABLED, enabled)
@@ -65,7 +62,6 @@ class PreferencesManager @Inject constructor(@ApplicationContext context: Contex
 
     fun getSyncEnabled(): Boolean = prefs.getBoolean(KEY_SYNC_ENABLED, false)
 
-    // --- User Profile Information ---
     fun saveName(userName: String) {
         prefs.edit {
             putString(KEY_USER_NAME, userName)
@@ -90,7 +86,6 @@ class PreferencesManager @Inject constructor(@ApplicationContext context: Contex
 
     fun getEmail(): String = prefs.getString(KEY_USER_EMAIL, "").toString()
 
-    // --- Password Management (for current user, not password records) ---
     fun savePassword(password: String) {
         prefs.edit {
             putString(KEY_USER_PASSWORD, password)
@@ -99,7 +94,6 @@ class PreferencesManager @Inject constructor(@ApplicationContext context: Contex
 
     fun getPassword(): String = prefs.getString(KEY_USER_PASSWORD, "").toString()
 
-    // --- PIN Management ---
     fun savePin(pin: String) {
         prefs.edit {
             putString(KEY_USER_PIN, pin)
@@ -110,7 +104,6 @@ class PreferencesManager @Inject constructor(@ApplicationContext context: Contex
 
     fun hasPin(): Boolean = getPin() != null
 
-    // --- Notification Settings ---
     fun saveNotificationsEnabled(enabled: Boolean) {
         prefs.edit {
             putBoolean(KEY_NOTIFICATIONS_ENABLED, enabled)
