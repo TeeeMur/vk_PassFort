@@ -1,5 +1,6 @@
 package com.example.passfort.screen.passwords
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -12,6 +13,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -69,7 +71,6 @@ fun PasswordDetailScreen(
     onGeneratePassword: () -> Unit,
     onBackScreen: () -> Unit
 ) {
-
     viewModel.initPassword(idPasswordRecord)
 
     Scaffold(
@@ -83,47 +84,109 @@ fun PasswordDetailScreen(
                 .fillMaxSize(),
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
-            Column {
-                ButtonRows(
-                    onBackScreen = onBackScreen,
-                    onPinned = { viewModel.setPinnedState() },
-                    onDelete = { viewModel.deletePassword() }
-                )
-                ImageUserCard(
-                    imageCardUri = viewModel.imageCardUri.collectAsState().value,
-                    setUriImage = { viewModel.setImageUri(it) }
-                )
-                InputFieldTitle(
-                    value = viewModel.namePassword.collectAsState().value,
-                    onValueChange = { viewModel.onNamePasswordChange(it) },
-                    onClick = {}
-                )
-                InputFieldWithCopy(
-                    labelResourceString = stringResource(R.string.passwordcreate_inputfield_login),
-                    value = viewModel.login.collectAsState().value,
-                    onValueChange = { viewModel.onLoginChange(it) }
-                )
-                InputFieldPassword(
-                    labelResourceString = stringResource(R.string.passwordcreate_inputfield_password),
-                    value = viewModel.password.collectAsState().value,
-                    onValueChange = { viewModel.onPasswordChange(it) },
+            DetailScreen(
+                viewModel = viewModel,
+                onGeneratePassword = onGeneratePassword,
+                onBackScreen = onBackScreen
+            )
+        }
+    }
+}
+
+@SuppressLint("StateFlowValueCalledInComposition")
+@Composable
+fun DetailScreen(
+    viewModel: DetailViewModel = hiltViewModel(),
+    onGeneratePassword: () -> Unit,
+    onBackScreen: () -> Unit
+){
+    val namePasswordDontChanged = viewModel.namePassword.value
+    val openAlertDontSaveDialog = remember { mutableStateOf(false) }
+    val openAlertDeleteDialog = remember { mutableStateOf(false) }
+
+    Column {
+        ButtonRows(
+            onBackScreen = {
+                if (viewModel.isChangedRecords.value) {
+                    openAlertDontSaveDialog.value = true
+                } else {
+                    onBackScreen()
+                }
+            },
+            onPinned = { viewModel.setPinnedState() },
+            onDelete = { openAlertDeleteDialog.value = true }
+        )
+        ImageUserCard(
+            imageCardUri = viewModel.imageCardUri.collectAsState().value,
+            setUriImage = { viewModel.setImageUri(it) }
+        )
+        InputFieldTitle(
+            value = viewModel.namePassword.collectAsState().value,
+            onValueChange = { viewModel.onNamePasswordChange(it) },
+            onClick = {}
+        )
+        InputFieldWithCopy(
+            labelResourceString = stringResource(R.string.passwordcreate_inputfield_login),
+            value = viewModel.login.collectAsState().value,
+            onValueChange = { viewModel.onLoginChange(it) }
+        )
+        InputFieldPassword(
+            labelResourceString = stringResource(R.string.passwordcreate_inputfield_password),
+            value = viewModel.password.collectAsState().value,
+            onValueChange = { viewModel.onPasswordChange(it) },
                     isCopy = true
-                )
-                RectangleButton(stringResource(R.string.passwordgen_generatebutton_text)) { onGeneratePassword() }
-                InputFieldWithCopy(
-                    labelResourceString = stringResource(R.string.passwordcreate_inputfield_note),
-                    value = viewModel.note.collectAsState().value,
-                    onValueChange = { viewModel.onNoteChange(it) },
-                )
-                PasswordRemindOptions(
-                    options = PASS_CHANGE_NOTIFICATION_INTERVAL_OPTIONS,
-                    passwordIntervalDaysIndex = viewModel.changeIntervalDaysIndex.collectAsState().value,
-                    enablePasswordChange = viewModel.enablePasswordChange.collectAsState().value,
-                    setPasswordChange = { viewModel.setPasswordChange() },
-                    setChangeIntervalDaysCountIndex = { viewModel.setChangeIntervalDaysCountIndex(it) }
-                )
-            }
-            BottomButtonLine({ viewModel.editPassword() }, onDismiss = onBackScreen)
+        )
+        RectangleButton(
+            text = stringResource(R.string.passwordgen_generatebutton_text),
+            paddingValues = PaddingValues(20.dp),
+            onClick = onGeneratePassword
+        )
+        InputFieldWithCopy(
+            labelResourceString = stringResource(R.string.passwordcreate_inputfield_note),
+            value = viewModel.note.collectAsState().value,
+            onValueChange = { viewModel.onNoteChange(it) },
+        )
+        PasswordRemindOptions(
+            options = PASS_CHANGE_NOTIFICATION_INTERVAL_OPTIONS,
+            passwordIntervalDaysIndex = viewModel.changeIntervalDaysIndex.collectAsState().value,
+            enablePasswordChange = viewModel.enablePasswordChange.collectAsState().value,
+            setPasswordChange = { viewModel.setPasswordChange() },
+            setChangeIntervalDaysCountIndex = { viewModel.setChangeIntervalDaysCountIndex(it) }
+        )
+    }
+    BottomButtonLine(
+        onDismiss = onBackScreen,
+        onClick = { viewModel.editPassword() })
+
+    when {
+        openAlertDontSaveDialog.value -> {
+            AlertTwoButtonsDialog(
+                dialogText = stringResource(R.string.alert_dont_save_title),
+                confirmButtonText = stringResource(R.string.alert_exit_button),
+                dismissButtonText = stringResource(R.string.alert_exit_button),
+                onConfirmation = {
+                    openAlertDontSaveDialog.value = false
+                    onBackScreen()
+                },
+                onDismissRequest = { openAlertDontSaveDialog.value = false }
+            )
+        }
+
+        openAlertDeleteDialog.value -> {
+            AlertTwoButtonsDialog(
+                dialogText = StringBuilder()
+                    .append(stringResource(R.string.alert_delete_title))
+                    .append(" \"$namePasswordDontChanged\" ?")
+                    .toString(),
+                confirmButtonText = stringResource(R.string.alert_delete_button),
+                dismissButtonText = stringResource(R.string.alert_cancel_button),
+                onConfirmation = {
+                    openAlertDeleteDialog.value = false
+                    viewModel.deletePassword()
+                    onBackScreen()
+                },
+                onDismissRequest = { openAlertDeleteDialog.value = false }
+            )
         }
     }
 }
@@ -223,7 +286,7 @@ fun DropDownMenu(
         onDismissRequest = { onDismiss() }
     ) {
         DropdownMenuItem(
-            text = { Text(text = "Star") },
+            text = { Text(text = "Pinned") },
             onClick = {
                 onPinned()
                 onDismiss()
@@ -233,7 +296,7 @@ fun DropDownMenu(
         DropdownMenuItem(
             text = { Text(text = "Delete") },
             onClick = {
-                onBackScreen()
+                onDismiss()
                 onDelete()
             }
         )
@@ -249,7 +312,7 @@ fun ImageUserCard(
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
     if (imageCardUri != ""){
-        imageCardUri.toUri()
+        selectedImageUri = imageCardUri.toUri()
     }
 
     val context = LocalContext.current

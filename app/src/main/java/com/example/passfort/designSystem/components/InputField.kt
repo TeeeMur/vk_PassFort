@@ -10,8 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Search
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
@@ -30,10 +29,10 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.ClipEntry
 import androidx.compose.ui.platform.LocalClipboard
-import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
@@ -50,13 +49,25 @@ import com.example.passfort.designSystem.theme.PassFortTheme
 import kotlinx.coroutines.flow.drop
 
 @Composable
-fun InputFieldTitle(value: String, onValueChange: (String) -> Unit = {}, onClick: () -> Unit = {}) {
+fun InputFieldTitle(
+    modifier: Modifier = Modifier,
+    value: String,
+    onValueChange: (String) -> Unit = {},
+    onClick: () -> Unit = {},
+    placeholder: String = ""
+) {
     TextField(
-        modifier = Modifier
-            .padding(horizontal = 10.dp)
+        modifier = modifier
             .padding(bottom = 10.dp)
             .fillMaxWidth(),
         value = value,
+        placeholder = {
+            Text(
+                text = placeholder,
+                color = Color.LightGray,
+                fontSize = MaterialTheme.typography.headlineMedium.fontSize
+            )
+        },
         singleLine = true,
         onValueChange = onValueChange,
         textStyle = LocalTextStyle.current.copy(
@@ -371,7 +382,7 @@ fun InputFieldBase(
 fun AuthTextFieldPreview() {
     PassFortTheme {
         Column {
-            InputFieldTitle("New Password")
+            InputFieldTitle(value = "New Password")
             InputFieldBase(
                 labelResourceString = stringResource(R.string.passwordcreate_inputfield_password),
                 value = "",
@@ -412,22 +423,27 @@ fun SettingsInputField(
     onValueChange: (String) -> Unit = {},
     isPassword: Boolean = false
 ) {
-    TextField(
-        modifier = Modifier
-            .padding(bottom = 10.dp)
-            .fillMaxWidth(),
+    BasicTextField(
         value = value,
-        singleLine = true,
-        placeholder = {Text(text = "Введите $placeholder")},
         onValueChange = onValueChange,
+        modifier = Modifier
+            .fillMaxWidth(),
+        singleLine = true,
         textStyle = LocalTextStyle.current.copy(
             fontSize = MaterialTheme.typography.bodyLarge.fontSize,
-            fontWeight = FontWeight.SemiBold
+            fontWeight = FontWeight.SemiBold,
+            color = MaterialTheme.colorScheme.inverseSurface,
         ),
-        colors = OutlinedTextFieldDefaults.colors(
-            unfocusedBorderColor = Color.Transparent,
-            focusedBorderColor = Color.Transparent,
-        ),
+        decorationBox = { innerTextField ->
+            if (value == "") {
+                Text(
+                    text = placeholder,
+                    color = MaterialTheme.colorScheme.inverseSurface.copy(alpha = 0.5f)
+                )
+            }
+            innerTextField()
+        },
+        cursorBrush = SolidColor(MaterialTheme.colorScheme.inverseSurface),
         visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
     )
 }

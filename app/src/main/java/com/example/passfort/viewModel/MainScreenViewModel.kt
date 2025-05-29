@@ -31,7 +31,7 @@ class MainScreenViewModel @Inject constructor(
 
     init {
         prefs.prefs.registerOnSharedPreferenceChangeListener {itPref, name ->
-            userName.update { itPref.getString(name, "").toString() }
+            if (name == "user_name") userName.update { itPref.getString(name, "").toString()}
         }
         repo.getRecentPasswords(5).onEach { newIt ->
             _recentPasswords.update { oldIt -> newIt.toImmutableList() }

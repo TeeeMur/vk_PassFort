@@ -58,6 +58,8 @@ class PreferencesManager @Inject constructor(@ApplicationContext context: Contex
 
     // --- Sync Settings ---
     fun saveSyncEnabled(enabled: Boolean) {
+        prefs.edit(commit = true) {
+            putBoolean("sync_enabled", enabled)
         prefs.edit {
             putBoolean(KEY_SYNC_ENABLED, enabled)
         }
@@ -67,6 +69,8 @@ class PreferencesManager @Inject constructor(@ApplicationContext context: Contex
 
     // --- User Profile Information ---
     fun saveName(userName: String) {
+        prefs.edit(commit = true) {
+            putString("user_name", userName)
         prefs.edit {
             putString(KEY_USER_NAME, userName)
         }
@@ -75,11 +79,16 @@ class PreferencesManager @Inject constructor(@ApplicationContext context: Contex
     fun getName(): String = prefs.getString(KEY_USER_NAME, "").toString()
 
     fun saveSurname(surname: String) {
+        prefs.edit(commit = true) {
+            putString("user_surname", surname)
         prefs.edit {
             putString(KEY_USER_SURNAME, surname)
         }
     }
 
+    fun savePassword(password: String) {
+        prefs.edit(commit = true) {
+            putString("user_password", password)
     fun getSurname(): String = prefs.getString(KEY_USER_SURNAME, "").toString()
 
     fun saveEmail(email: String) {
@@ -112,10 +121,18 @@ class PreferencesManager @Inject constructor(@ApplicationContext context: Contex
 
     // --- Notification Settings ---
     fun saveNotificationsEnabled(enabled: Boolean) {
+        prefs.edit(commit = true) {
+            putBoolean("notifications_enabled", enabled)
         prefs.edit {
             putBoolean(KEY_NOTIFICATIONS_ENABLED, enabled)
         }
     }
+    fun getNotificationsEnabled(): Boolean = prefs.getBoolean("notifications_enabled", false)
+    fun saveEmail(email: String) {
+        prefs.edit(commit = true) {
+            putString("user_email", email)
+        }
+    }
+    fun getEmail(): String = prefs.getString("user_email", "").toString()
 
-    fun getNotificationsEnabled(): Boolean = prefs.getBoolean(KEY_NOTIFICATIONS_ENABLED, false)
 }

@@ -2,6 +2,7 @@ package com.example.passfort.screen.passwords
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,6 +16,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.passfort.R
 import com.example.passfort.designSystem.components.BottomButtonLine
@@ -56,8 +58,12 @@ fun PasswordCreateScreen(viewModel: CreateViewModel = hiltViewModel(), onDismiss
                     value = viewModel.password.collectAsState().value,
                     onValueChange = { viewModel.onPasswordChange(it) },
                     isCopy = true
-                    )
-                RectangleButton(stringResource(R.string.passwordgen_generatebutton_text)) { onGeneratePassword() }
+                )
+                RectangleButton(
+                    text = stringResource(R.string.passwordgen_generatebutton_text),
+                    paddingValues = PaddingValues(20.dp),
+                    onClick = onGeneratePassword
+                )
                 InputFieldWithCopy(
                     labelResourceString = stringResource(R.string.passwordcreate_inputfield_note),
                     value = viewModel.note.collectAsState().value,
