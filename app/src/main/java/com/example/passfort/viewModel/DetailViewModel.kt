@@ -42,7 +42,7 @@ class DetailViewModel @Inject constructor(
     val isPinned: StateFlow<Boolean> = _isPinned.asStateFlow()
     val imageCardUri: StateFlow<String> = _imageCardUri.asStateFlow()
 
-    val isChangedRecords: StateFlow<Boolean> = _isEmptyRecords.asStateFlow()
+    val isChangedRecords: StateFlow<Boolean> = _isChangedRecords.asStateFlow()
     val isEmptyRecords: StateFlow<Boolean> = _isEmptyRecords.asStateFlow()
     val enablePasswordChange: StateFlow<Boolean> = _enablePasswordChange.asStateFlow()
 
@@ -50,7 +50,7 @@ class DetailViewModel @Inject constructor(
         idPassword: Long
     ){
         viewModelScope.launch {
-            val password = repository.getPassword(idPassword)
+            val password = repository.getPassword(idPassword) ?: return@launch
 
             _idPassword.update { password.id }
             _namePassword.update { password.recordName }
@@ -106,10 +106,12 @@ class DetailViewModel @Inject constructor(
         } else {
             _changeIntervalDaysIndex.update { 0 }
         }
+        onChanged()
     }
 
     fun setImageUri(imageUri: String) {
         _imageCardUri.update { imageUri }
+        onChanged()
     }
 
     fun deletePassword() {
@@ -157,6 +159,7 @@ class DetailViewModel @Inject constructor(
             )
         }
         _isEmptyRecords.update { false }
+        _isChangedRecords.update { false }
         return true
     }
 

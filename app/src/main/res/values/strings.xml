@@ -34,6 +34,14 @@
     <string name="input_field_error_necessary">Обязательное поле</string>
     <string name="image_card_button">Загрузить изображение</string>
 
+    <string name="alert_dont_save_title">Действительно хотите выйти, сбросив все изменения?</string>
+    <string name="alert_change_button">Редактировать</string>
+    <string name="alert_exit_button">Выйти</string>
+
+    <string name="alert_delete_title">Действительно хотите удалить пароль</string>
+    <string name="alert_delete_button">Удалить</string>
+    <string name="alert_cancel_button">Отменить</string>
+
     <string name="login">login</string>
     <string name="register">register</string>
     <string name="home_screen">home_screen</string>
