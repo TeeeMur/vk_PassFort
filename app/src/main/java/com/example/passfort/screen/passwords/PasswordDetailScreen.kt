@@ -1,7 +1,9 @@
 package com.example.passfort.screen.passwords
 
+import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -247,11 +249,22 @@ fun ImageUserCard(
         imageCardUri.toUri()
     }
 
+    val context = LocalContext.current
     val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
+        contract = ActivityResultContracts.PickVisualMedia()
     ) { uri:Uri? ->
-            selectedImageUri = uri
-            setUriImage(uri.toString())
+        try {
+            context.contentResolver.takePersistableUriPermission(
+                uri!!,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION
+            )
+        }
+        catch (e: SecurityException){
+            e.printStackTrace()
+        }
+
+        selectedImageUri = uri
+        setUriImage(uri.toString())
     }
 
     Row(
@@ -265,15 +278,18 @@ fun ImageUserCard(
             shape = RoundedCornerShape(22.dp),
             border = BorderStroke(1.dp, MaterialTheme.colorScheme.inverseSurface),
             onClick = {
-                launcher.launch("image/*")
+                launcher.launch(
+                    PickVisualMediaRequest(
+                        ActivityResultContracts.PickVisualMedia.SingleMimeType("image/*")
+                    ))
             }
         ) {
             if (selectedImageUri != null) {
                 AsyncImage(
                     modifier = Modifier
                         .clip(RoundedCornerShape(22.dp)),
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(selectedImageUri)
+                    model = ImageRequest.Builder(context)
+                        .data(selectedImageUri!!)
                         .crossfade(true)
                         .build(),
                     error = placeholder,
