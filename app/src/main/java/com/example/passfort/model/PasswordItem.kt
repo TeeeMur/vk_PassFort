@@ -7,4 +7,5 @@ data class PasswordItem(
     val itemLogin: String,
     val itemPassword: String,
     val isPinned: Boolean,
+    val imageCardUri: String,
 )

@@ -59,7 +59,8 @@ class PasswordViewModel @Inject constructor(
                                 itemName = password.recordName,
                                 itemLogin = password.recordLogin,
                                 itemPassword = password.recordPassword,
-                                isPinned = password.pinned
+                                isPinned = password.pinned,
+                                imageCardUri = password.imageCardUri
                             )
                         },
                         pinnedPasswords = passwordRecords.reversed().filter { it -> it.pinned }.map
@@ -70,7 +71,8 @@ class PasswordViewModel @Inject constructor(
                                 itemName = password.recordName,
                                 itemLogin = password.recordLogin,
                                 itemPassword = password.recordPassword,
-                                isPinned = password.pinned
+                                isPinned = password.pinned,
+                                imageCardUri = password.imageCardUri
                             )
                         }
                     )
@@ -84,7 +86,8 @@ class PasswordViewModel @Inject constructor(
                                 itemName = password.recordName,
                                 itemLogin = password.recordLogin,
                                 itemPassword = password.recordPassword,
-                                isPinned = password.pinned
+                                isPinned = password.pinned,
+                                imageCardUri = password.imageCardUri
                             )
                         },
                         pinnedPasswords = passwordRecords.reversed().filter { it -> it.pinned }.map
@@ -95,7 +98,8 @@ class PasswordViewModel @Inject constructor(
                                 itemName = password.recordName,
                                 itemLogin = password.recordLogin,
                                 itemPassword = password.recordPassword,
-                                isPinned = password.pinned
+                                isPinned = password.pinned,
+                                imageCardUri = password.imageCardUri
                             )
                         }
                     )

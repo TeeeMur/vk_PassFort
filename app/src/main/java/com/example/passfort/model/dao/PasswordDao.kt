@@ -28,4 +28,7 @@ interface PasswordDao: BaseDao<PasswordRecordEntity> {
 
     @Query("DELETE FROM password_record WHERE id = :id")
     suspend fun deleteById(id: Long)
+
+    @Query("UPDATE password_record SET uri_image = :uriImage WHERE id = :id")
+    suspend fun setUriImage(id: Long, uriImage: String)
 }
