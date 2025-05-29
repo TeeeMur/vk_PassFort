@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.passfort.model.dbentity.PasswordRecordEntity
 import com.example.passfort.repository.PasswordsListRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,22 +14,25 @@ import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
 
+val PASS_CHANGE_NOTIFICATION_INTERVAL_OPTIONS = persistentListOf("60", "120", "180")
+
 @HiltViewModel
 class CreateViewModel @Inject constructor(
     private val repository: PasswordsListRepo
 ) : ViewModel() {
-
     private val _namePassword: MutableStateFlow<String> = MutableStateFlow("")
     private val _login: MutableStateFlow<String> = MutableStateFlow("")
     private val _password: MutableStateFlow<String> = MutableStateFlow("")
     private val _note: MutableStateFlow<String> = MutableStateFlow("")
     private val _changeIntervalDays: MutableStateFlow<Int> = MutableStateFlow(0)
+    private val _changeIntervalDaysIndex: MutableStateFlow<Int> = MutableStateFlow(0)
     private val _isEmptyRecords: MutableStateFlow<Boolean> = MutableStateFlow(false)
 
     val namePassword: StateFlow<String> = _namePassword.asStateFlow()
     val login: StateFlow<String> = _login.asStateFlow()
     val password: StateFlow<String> = _password.asStateFlow()
     val note: StateFlow<String> = _note.asStateFlow()
+    val changeIntervalDaysIndex: StateFlow<Int> = _changeIntervalDaysIndex.asStateFlow()
     val changeIntervalDays: StateFlow<Int> = _changeIntervalDays.asStateFlow()
     val isEmptyRecords: StateFlow<Boolean> = _isEmptyRecords.asStateFlow()
 
@@ -57,10 +61,16 @@ class CreateViewModel @Inject constructor(
 
     fun setPasswordChange() {
         _enablePasswordChange.update { !it }
+        if (!_enablePasswordChange.value) {
+            _changeIntervalDays.update { 0 }
+        } else {
+            _changeIntervalDaysIndex.update { 0 }
+        }
     }
 
-    fun setChangeIntervalDaysCount(daysCount: Int) {
-        _changeIntervalDays.update { daysCount }
+    fun setChangeIntervalDaysCountIndex(daysCountIndex: Int) {
+        _changeIntervalDaysIndex.update { daysCountIndex }
+        _changeIntervalDays.update { PASS_CHANGE_NOTIFICATION_INTERVAL_OPTIONS[daysCountIndex].toInt() }
     }
     
     fun createPassword(): Boolean {
@@ -81,7 +91,8 @@ class CreateViewModel @Inject constructor(
                     passwordChangeIntervalDays = _changeIntervalDays.value,
                     iconIndex = 0,
                     pinned = false,
-                    passwordLastUsedDate = LocalDateTime.now()
+                    passwordLastUsedDate = LocalDateTime.now(),
+                    imageCardUri = ""
                 )
             )
         }

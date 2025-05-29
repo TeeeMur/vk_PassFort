@@ -82,17 +82,17 @@ fun InputFieldTitle(value: String, onValueChange: (String) -> Unit = {}, onClick
 }
 
 @Composable
-fun InputFieldWithCopy(labelResourceString: String,
-                       value: String,
-                       onValueChange: (String) -> Unit = {},
-                       visualTransformation: VisualTransformation = VisualTransformation.None,
-                       isTitle: Boolean = false,
-                       isSingleLine: Boolean = false,
-                       isReadOnly : Boolean = false,
-                       errorString: String = "Не должна быть пустой",
-                       isCopy: Boolean = true,
-                       isShowErrorText: Boolean = false
-){
+fun InputFieldWithCopy(
+    labelResourceString: String,
+    value: String,
+    onValueChange: (String) -> Unit = {},
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    isTitle: Boolean = false,
+    isSingleLine: Boolean = false,
+    isReadOnly: Boolean = false,
+    isCopy: Boolean = true,
+    isShowErrorText: Boolean = false
+) {
     val clipboardManager = LocalClipboard.current
     val clipData = ClipData.newPlainText("Copied:", value).apply {
         description.extras = PersistableBundle().apply {
@@ -113,22 +113,22 @@ fun InputFieldWithCopy(labelResourceString: String,
             isTitle = isTitle,
             isSingleLine = isSingleLine,
             isReadOnly = isReadOnly,
-            errorString = errorString,
+            errorString = "Не должна быть пустой",
             isShowErrorText = (isShowErrorText && value == ""),
             trailingIcon = {
                 if (isCopy) {
-                    IconButton(
-                        modifier = Modifier.padding(end = 4.dp),
-                        onClick = {
-                            stateCopy = !stateCopy
-                        }
-                    ) {
-                        Icon(
-                            imageVector = ImageVector.vectorResource(R.drawable.icon_button_copy),
-                            contentDescription = "copy"
-                        )
+                IconButton(
+                    modifier = Modifier.padding(end = 4.dp),
+                    onClick = {
+                        stateCopy = !stateCopy
                     }
+                ) {
+                    Icon(
+                            imageVector = ImageVector.vectorResource(R.drawable.icon_button_copy),
+                        contentDescription = "copy"
+                    )
                 }
+                    }
             }
         )
     }
@@ -140,17 +140,16 @@ fun InputFieldWithCopy(labelResourceString: String,
 }
 
 @Composable
-fun InputFieldModalScreen(labelResourceString: String,
-                          value: String,
-                          onValueChange: (String) -> Unit = {},
-                          onCLick: () -> Unit = {},
-                          visualTransformation: VisualTransformation = VisualTransformation.None,
-                          isTitle: Boolean = false,
-                          isSingleLine: Boolean = false,
-                          isReadOnly : Boolean = false,
-                          isCopy: Boolean = true,
-                          errorString: String = ""
-){
+fun InputFieldModalScreen(
+    labelResourceString: String,
+    value: String,
+    onValueChange: (String) -> Unit = {},
+    onCLick: () -> Unit = {},
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    isTitle: Boolean = false,
+    isSingleLine: Boolean = false,
+    isReadOnly: Boolean = false,
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -181,12 +180,13 @@ fun InputFieldModalScreen(labelResourceString: String,
 }
 
 @Composable
-fun InputFieldPasswordWithCopy(labelResourceString: String,
-                       value: String,
-                       onValueChange: (String) -> Unit = {},
-                       isTitle: Boolean = false,
-                       isReadOnly : Boolean = false,
-){
+fun InputFieldPasswordWithCopy(
+    labelResourceString: String,
+    value: String,
+    onValueChange: (String) -> Unit = {},
+    isTitle: Boolean = false,
+    isReadOnly: Boolean = false,
+) {
     var passwordVisible by remember { mutableStateOf(false) }
 
     val visualTransformation = if (!passwordVisible)
@@ -248,12 +248,13 @@ fun InputFieldPasswordWithCopy(labelResourceString: String,
 }
 
 @Composable
-fun InputFieldPassword(labelResourceString: String,
-                       value: String,
-                       onValueChange: (String) -> Unit = {},
+fun InputFieldPassword(
+    labelResourceString: String,
+    value: String,
+    onValueChange: (String) -> Unit = {},
                        errorString: String = "Не должны быть пустой",
                        isCopy: Boolean
-){
+) {
 
     var passwordVisible by remember { mutableStateOf(isCopy) }
 
@@ -301,14 +302,14 @@ fun InputFieldBase(
     visualTransformation: VisualTransformation = VisualTransformation.None,
     isTitle: Boolean = false,
     isSingleLine: Boolean = false,
-    isReadOnly : Boolean = false,
+    isReadOnly: Boolean = false,
     enabled: Boolean = true,
     titleFontSize: TextUnit = 29.sp,
     errorString: String = "",
     isShowErrorText: Boolean = false,
     trailingIcon: @Composable (() -> Unit),
 ) {
-    Column{
+    Column {
         Text(
             modifier = Modifier
                 .fillMaxWidth()
@@ -368,7 +369,7 @@ fun InputFieldBase(
 @PreviewLightDark()
 @Composable
 fun AuthTextFieldPreview() {
-    PassFortTheme{
+    PassFortTheme {
         Column {
             InputFieldTitle("New Password")
             InputFieldBase(
@@ -402,4 +403,31 @@ fun AuthTextFieldPreview() {
             )
         }
     }
+}
+
+@Composable
+fun SettingsInputField(
+    value: String,
+    placeholder: String,
+    onValueChange: (String) -> Unit = {},
+    isPassword: Boolean = false
+) {
+    TextField(
+        modifier = Modifier
+            .padding(bottom = 10.dp)
+            .fillMaxWidth(),
+        value = value,
+        singleLine = true,
+        placeholder = {Text(text = "Введите $placeholder")},
+        onValueChange = onValueChange,
+        textStyle = LocalTextStyle.current.copy(
+            fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+            fontWeight = FontWeight.SemiBold
+        ),
+        colors = OutlinedTextFieldDefaults.colors(
+            unfocusedBorderColor = Color.Transparent,
+            focusedBorderColor = Color.Transparent,
+        ),
+        visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
+    )
 }

@@ -146,7 +146,9 @@ private fun SecondaryButtonPreview_Light() {
 }
 
 @Composable
-fun ButtonAdditionally(onClick: () -> Unit) {
+fun RectangleButton(
+    text: String,
+    onClick: () -> Unit) {
 
     Button(
         modifier = Modifier
@@ -158,7 +160,7 @@ fun ButtonAdditionally(onClick: () -> Unit) {
         onClick = onClick
     ) {
         Text(
-            text = stringResource(R.string.passwordgen_generatebutton_text),
+            text = text,
             color = MaterialTheme.colorScheme.inversePrimary,
             fontSize = 18.sp,
         )
@@ -202,7 +204,7 @@ fun BottomButtonLine(
 fun ButtonsPreview(){
     PassFortTheme {
         Column {
-            ButtonAdditionally() {}
+            RectangleButton(stringResource(R.string.passwordgen_generatebutton_text)) {}
             BottomButtonLine({ true }, {})
         }
     }

@@ -3,59 +3,110 @@ package com.example.passfort.model
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
+import com.example.passfort.designSystem.theme.ChosenTheme
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class PreferencesManager @Inject constructor(@ApplicationContext context: Context) {
-    private val sharedPreferences: SharedPreferences =
+
+    private val prefs: SharedPreferences =
         context.getSharedPreferences("passfort_prefs", Context.MODE_PRIVATE)
 
     companion object {
         private const val KEY_IS_USER_LOGGED_IN = "is_user_logged_in"
-        private const val KEY_USER_PIN = "user_pin" // Added a constant for the PIN key
+        private const val KEY_USER_PIN = "user_pin"
+        private const val KEY_APP_THEME = "app_theme"
+        private const val KEY_SYNC_ENABLED = "sync_enabled"
+        private const val KEY_USER_NAME = "user_name"
+        private const val KEY_USER_SURNAME = "user_surname"
+        private const val KEY_USER_PASSWORD = "user_password"
+        private const val KEY_NOTIFICATIONS_ENABLED = "notifications_enabled"
+        private const val KEY_EMAIL = "email"
     }
 
     fun setUserLoggedIn(isLoggedIn: Boolean) {
-        sharedPreferences.edit {
+        prefs.edit {
             putBoolean(KEY_IS_USER_LOGGED_IN, isLoggedIn)
         }
     }
 
-    fun isUserLoggedIn(): Boolean {
-        return sharedPreferences.getBoolean(KEY_IS_USER_LOGGED_IN, false)
-    }
+    fun isUserLoggedIn(): Boolean = prefs.getBoolean(KEY_IS_USER_LOGGED_IN, false)
 
     fun clearLoginState() {
-        sharedPreferences.edit {
+        prefs.edit {
             remove(KEY_IS_USER_LOGGED_IN)
         }
     }
 
-    // This method is redundant with setUserLoggedIn, consider removing one.
-    // I'm keeping it for now to match your original structure, but renamed the key for clarity.
-    fun saveAuthState(isLoggedIn: Boolean) {
-        sharedPreferences.edit {
-            putBoolean(KEY_IS_USER_LOGGED_IN, isLoggedIn) // Using the existing key for consistency
-        }
-    }
-
-    fun clearAuthState() {
-        sharedPreferences.edit { clear() } // Use sharedPreferences
-    }
-
-    // This method is redundant with the first isUserLoggedIn, consider removing one.
-    // I'm keeping it for now to match your original structure.
-    fun isUserLoggedInAuthCheck(): Boolean = sharedPreferences.getBoolean(KEY_IS_USER_LOGGED_IN, false)
-
     fun savePin(pin: String) {
-        sharedPreferences.edit {
-            putString(KEY_USER_PIN, pin) // Using the new constant for PIN key
+        prefs.edit {
+            putString(KEY_USER_PIN, pin)
         }
     }
 
-    fun getPin(): String? = sharedPreferences.getString(KEY_USER_PIN, null) // Using the new constant for PIN key
+    fun getPin(): String? = prefs.getString(KEY_USER_PIN, null)
 
     fun hasPin(): Boolean = getPin() != null
+
+    fun saveTheme(chosenTheme: ChosenTheme) {
+        prefs.edit {
+            putString(KEY_APP_THEME, chosenTheme.name)
+        }
+    }
+
+    fun getTheme(): String = prefs.getString(KEY_APP_THEME, ChosenTheme.AUTO.name).toString()
+
+    fun saveSyncEnabled(enabled: Boolean) {
+        prefs.edit {
+            putBoolean(KEY_SYNC_ENABLED, enabled)
+        }
+    }
+
+    fun getSyncEnabled(): Boolean = prefs.getBoolean(KEY_SYNC_ENABLED, false)
+
+    fun saveName(userName: String) {
+        prefs.edit {
+            putString(KEY_USER_NAME, userName)
+        }
+    }
+
+    fun getName(): String = prefs.getString(KEY_USER_NAME, "").toString()
+
+    fun saveSurname(surname: String) {
+        prefs.edit {
+            putString(KEY_USER_SURNAME, surname)
+        }
+    }
+
+    fun getSurname(): String = prefs.getString(KEY_USER_SURNAME, "").toString()
+
+    fun savePassword(password: String) {
+        prefs.edit {
+            putString(KEY_USER_PASSWORD, password)
+        }
+    }
+
+    fun getPassword(): String = prefs.getString(KEY_USER_PASSWORD, "").toString()
+
+    fun saveNotificationsEnabled(enabled: Boolean) {
+        prefs.edit {
+            putBoolean(KEY_NOTIFICATIONS_ENABLED, enabled)
+        }
+    }
+
+    fun getNotificationsEnabled(): Boolean = prefs.getBoolean(KEY_NOTIFICATIONS_ENABLED, false)
+
+    fun saveEmail(email: String) {
+        prefs.edit {
+            putString(KEY_EMAIL, email)
+        }
+    }
+
+    fun getEmail(): String = prefs.getString(KEY_EMAIL, "").toString()
+
+    fun clearAll() {
+        prefs.edit { clear() }
+    }
 }

@@ -5,6 +5,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 
 private val DarkColorScheme = darkColorScheme(
     primary = active_state_dark,
@@ -15,7 +16,8 @@ private val DarkColorScheme = darkColorScheme(
     inversePrimary = inverse,
     primaryContainer = red,
     secondaryContainer = yellow,
-
+    tertiary = border_stroke_light,
+    onTertiary = background_dark
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -27,6 +29,8 @@ private val LightColorScheme = lightColorScheme(
     inversePrimary = inverse,
     primaryContainer = red,
     secondaryContainer = yellow,
+    tertiary = border_stroke_light,
+    onTertiary = Color.White
 
     /* Other default colors to override
     onPrimary = Color.White,
@@ -37,9 +41,15 @@ private val LightColorScheme = lightColorScheme(
     */
 )
 
+enum class ChosenTheme {
+    AUTO,
+    LIGHT,
+    DARK,
+}
+
 @Composable
 fun PassFortTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: ChosenTheme = ChosenTheme.AUTO,
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
@@ -56,14 +66,14 @@ fun PassFortTheme(
         else -> LightColorScheme
     }*/
 
-    val colors = if (!darkTheme) {
-        LightColorScheme
-    } else {
-        DarkColorScheme
+    val chosenColors = when (darkTheme) {
+        ChosenTheme.DARK -> DarkColorScheme
+        ChosenTheme.LIGHT -> LightColorScheme
+        ChosenTheme.AUTO -> if (isSystemInDarkTheme()) DarkColorScheme else LightColorScheme
     }
 
     MaterialTheme(
-        colorScheme = colors,
+        colorScheme = chosenColors,
         typography = Typography,
         content = content
     )

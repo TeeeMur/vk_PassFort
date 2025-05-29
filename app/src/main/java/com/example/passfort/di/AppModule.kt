@@ -85,4 +85,3 @@ object AppModule {
     fun provideMainPasswordsRepository(db: PassFortDB): MainScreenRepo {
         return MainScreenRepoImpl(db)
     }
-}
