@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.passfort.R
@@ -35,7 +36,8 @@ fun PasswordRemindOptions(
     ) {
         ToggleLine(
             name = stringResource(R.string.passwordcreate_toggle_remind_change_name),
-            valueFlow = enablePasswordChange
+            valueFlow = enablePasswordChange,
+            horizontalPadding = 20.dp,
         ) {
             setPasswordChange()
         }
@@ -51,18 +53,23 @@ fun PasswordRemindOptions(
 }
 
 @Composable
-fun ToggleLine(name: String, valueFlow: Boolean, toggleAction: () -> Unit) {
+fun ToggleLine(
+    name: String,
+    valueFlow: Boolean,
+    horizontalPadding: Dp = 0.dp,
+    toggleAction: () -> Unit,
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = toggleAction)
-            .padding(horizontal = 20.dp),
+            .padding(horizontal = horizontalPadding),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = name,
-            modifier = Modifier.padding(start = 4.dp).weight(0.8f),
+            modifier = Modifier.weight(0.8f),
             fontSize = 16.sp,
             overflow = TextOverflow.Clip
         )
