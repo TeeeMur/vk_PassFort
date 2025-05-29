@@ -1,7 +1,5 @@
 package com.example.passfort.screen.passwords
 
-import android.app.Activity
-import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -52,7 +50,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
-import coil3.toUri
 import com.example.passfort.R
 import com.example.passfort.designSystem.components.BottomButtonLine
 import com.example.passfort.designSystem.components.ButtonAdditionally
@@ -243,22 +240,19 @@ fun ImageUserCard(
     imageCardUri: String,
     setUriImage: (String) -> Unit
 ) {
-    val placeholder = painterResource(R.drawable.image_base_card)
+    val placeholder = painterResource(R.drawable.image_base_card_placeholder)
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
     if (imageCardUri != ""){
-        selectedImageUri = imageCardUri.toUri()
+        imageCardUri.toUri()
     }
 
     val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult(),
-        onResult = { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                selectedImageUri = result.data?.data
-                setUriImage(selectedImageUri.toString())
-            }
-        }
-    )
+        contract = ActivityResultContracts.GetContent()
+    ) { uri:Uri? ->
+            selectedImageUri = uri
+            setUriImage(uri.toString())
+    }
 
     Row(
         modifier = Modifier
@@ -271,10 +265,7 @@ fun ImageUserCard(
             shape = RoundedCornerShape(22.dp),
             border = BorderStroke(1.dp, MaterialTheme.colorScheme.inverseSurface),
             onClick = {
-                val intent = Intent(Intent.ACTION_PICK).apply {
-                    type = "image/*"
-                }
-                launcher.launch(intent)
+                launcher.launch("image/*")
             }
         ) {
             if (selectedImageUri != null) {
@@ -285,7 +276,6 @@ fun ImageUserCard(
                         .data(selectedImageUri)
                         .crossfade(true)
                         .build(),
-                    placeholder = placeholder,
                     error = placeholder,
                     contentDescription = stringResource(R.string.image_card_button),
                     contentScale = ContentScale.Crop,
@@ -301,5 +291,16 @@ fun ImageUserCard(
             }
         }
     }
+
+    /*LaunchedEffect(Unit) {
+        if (imageCardUri != "") {
+            selectedImageUri = Uri.withAppendedPath(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                imageCardUri
+            )
+            setUriImage(imageCardUri)
+        }
+    }*/
 }
+
 

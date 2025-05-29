@@ -49,7 +49,7 @@ fun RecentsList(
             state = listState,
         ) {
             items(recents.value) {
-                    item -> PasswordCard(
+                item -> PasswordCard(
                 item = item.convertToPasswordItem(),
                 onClickPassword = onClickPassword,
                 onPin = onPin,

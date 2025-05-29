@@ -234,8 +234,10 @@ fun PasswordCard(
 fun ImageUserCard(
     imageCardUri: String,
 ) {
-    val placeholder = painterResource(R.drawable.image_base_card)
+    val placeholder = painterResource(R.drawable.image_base_card_placeholder)
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+
+    placeholder.intrinsicSize
 
     if (imageCardUri != "") {
         selectedImageUri = imageCardUri.toUri()
@@ -252,7 +254,7 @@ fun ImageUserCard(
                 .size(65.dp)
                 .aspectRatio(1f)
                 .background(
-                    Color.White,
+                    MaterialTheme.colorScheme.onTertiary,
                     RoundedCornerShape(10.dp)
                     )
                 .border(
@@ -269,7 +271,6 @@ fun ImageUserCard(
                         .data(selectedImageUri)
                         .crossfade(true)
                         .build(),
-                    placeholder = placeholder,
                     error = placeholder,
                     contentDescription = stringResource(R.string.image_card_button),
                     contentScale = ContentScale.Crop,
@@ -281,7 +282,7 @@ fun ImageUserCard(
                         .clip(RoundedCornerShape(10.dp))
                         .align(Alignment.Center),
                     imageVector = ImageVector.vectorResource(R.drawable.image_base_card),
-                    tint = MaterialTheme.colorScheme.inverseSurface,
+                    tint = MaterialTheme.colorScheme.tertiary,
                     contentDescription = stringResource(R.string.image_card_button),
                 )
             }
