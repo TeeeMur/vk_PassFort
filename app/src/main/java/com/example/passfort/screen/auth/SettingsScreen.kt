@@ -34,37 +34,6 @@ import com.example.passfort.navigation.Screen
 import com.example.passfort.viewModel.SettingsViewModel
 
 @Composable
-fun SettingsScreen(
-    navController: NavHostController,
-    onLogout: () -> Unit,
-    onAddPassword: () -> Unit,
-) {
-    Scaffold(
-        bottomBar = { NavigationBar(navController, onAddPassword) }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding),
-            verticalArrangement = Arrangement.Center
-        )
-        {
-            Text(
-                text = "PasswordGeneratorScreen",
-            )
-            Button(
-                onClick = onLogout,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.error
-                )
-            ) {
-                Text("Выйти из аккаунта")
-            }
-        }
-    }
-}
-
-@Composable
 fun SettingsScreenNew(
     viewModel: SettingsViewModel = hiltViewModel(),
     navController: NavHostController,
