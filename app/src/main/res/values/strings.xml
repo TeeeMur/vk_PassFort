@@ -32,6 +32,7 @@
     <string name="input_field_hide_password">Скрыть пароль</string>
 
     <string name="input_field_error_necessary">Обязательное поле</string>
+    <string name="image_card_button">Загрузить изображение</string>
 
     <string name="login">login</string>
     <string name="register">register</string>

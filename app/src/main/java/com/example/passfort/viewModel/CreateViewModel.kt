@@ -91,7 +91,8 @@ class CreateViewModel @Inject constructor(
                     passwordChangeIntervalDays = _changeIntervalDays.value,
                     iconIndex = 0,
                     pinned = false,
-                    passwordLastUsedDate = LocalDateTime.now()
+                    passwordLastUsedDate = LocalDateTime.now(),
+                    imageCardUri = ""
                 )
             )
         }

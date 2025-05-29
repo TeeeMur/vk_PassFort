@@ -105,5 +105,7 @@ dependencies {
     implementation(libs.androidx.material.icons.extended)
     // Draggable main screen
     implementation(libs.androidx.foundation)
-
+    // Coil
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
 }
