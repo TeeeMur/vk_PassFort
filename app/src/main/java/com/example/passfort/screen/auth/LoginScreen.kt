@@ -23,6 +23,7 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
@@ -140,6 +141,7 @@ fun LoginForm(
                 value = password,
                 onValueChange = onPasswordChange,
                 enabled = !isLoading,
+                visualTransformation = PasswordVisualTransformation(),
                 trailingIcon = {}
             )
 

@@ -67,9 +67,10 @@ fun PasswordGenScreen(viewModel: GeneratorViewModel = hiltViewModel()) {
             .padding(top = 60.dp),
         verticalArrangement = Arrangement.SpaceBetween,
     ) {
+        val value = viewModel.password.collectAsState().value
         Column {
             InputFieldWithCopy(
-                value = viewModel.password.collectAsState().value,
+                value = value,
                 onValueChange = {},
                 labelResourceString = stringResource(R.string.passwordgen_screen_title),
                 isTitle = true,
@@ -118,28 +119,14 @@ fun GenerateBottomButtonLine(viewModel: GeneratorViewModel) {
             .fillMaxWidth()
             .padding(horizontal = 20.dp)
             .wrapContentHeight(),
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.End
     ){
-        Button(
-            modifier = Modifier
-                .fillMaxWidth(0.82f)
-                .padding(end = 8.dp)
-                .height(56.dp)
-            ,
-            shape = RoundedCornerShape(16.dp),
-            contentPadding = PaddingValues(0.dp),
-            onClick = {}
-        ) { Text(
-            text = stringResource(R.string.passwordgen_bottombutton_text),
-            color = MaterialTheme.colorScheme.inversePrimary,
-            fontSize = 18.sp,
-        )}
         OutlinedIconButton(
             modifier = Modifier.size(56.dp),
             shape = RoundedCornerShape(16.dp),
             colors = IconButtonDefaults.outlinedIconButtonColors(
                 containerColor = MaterialTheme.colorScheme.primary),
-            border = BorderStroke(1.dp, MaterialTheme.colorScheme.inversePrimary),
+            border = null,
             onClick = { viewModel.generatePassword() }
         ) {
             Icon(

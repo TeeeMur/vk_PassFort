@@ -101,14 +101,9 @@ fun InputFieldWithCopy(
     isTitle: Boolean = false,
     isSingleLine: Boolean = false,
     isReadOnly: Boolean = false,
-    isShowErrorText: Boolean = false
+    isShowErrorText: Boolean = false,
 ) {
     val clipboardManager = LocalClipboard.current
-    val clipData = ClipData.newPlainText("Copied:", value).apply {
-        description.extras = PersistableBundle().apply {
-            putBoolean("android.content.extra.IS_SENSITIVE", true)
-        }
-    }
     var stateCopy by remember { mutableStateOf(false) }
     Box(
         modifier = Modifier
@@ -141,6 +136,11 @@ fun InputFieldWithCopy(
         )
     }
     LaunchedEffect(stateCopy) {
+        val clipData = ClipData.newPlainText("Copied:", value).apply {
+            description.extras = PersistableBundle().apply {
+                putBoolean("android.content.extra.IS_SENSITIVE", true)
+            }
+        }
         snapshotFlow { stateCopy }
             .drop(1)
             .collect { clipboardManager.setClipEntry(ClipEntry(clipData)) }

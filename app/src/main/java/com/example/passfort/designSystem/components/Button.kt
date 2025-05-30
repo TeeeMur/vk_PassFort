@@ -18,6 +18,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -173,13 +174,14 @@ fun BottomButtonLine(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 20.dp)
-            .wrapContentHeight(),
-        horizontalArrangement = Arrangement.SpaceBetween
+            .height(60.dp),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Button(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 20.dp)
+                .padding(bottom = 12.dp)
                 .height(64.dp),
             shape = RoundedCornerShape(50.dp),
             onClick = {
