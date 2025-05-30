@@ -24,6 +24,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,6 +32,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
@@ -44,8 +47,6 @@ import com.example.passfort.designSystem.components.PasswordCard
 import com.example.passfort.designSystem.components.SearchBar
 import com.example.passfort.designSystem.theme.PassFortTheme
 import com.example.passfort.model.PasswordItem
-import com.example.passfort.viewModel.CreateViewModel
-import com.example.passfort.viewModel.DetailViewModel
 import com.example.passfort.viewModel.PasswordListState
 import com.example.passfort.viewModel.PasswordViewModel
 import com.valentinilk.shimmer.shimmer
@@ -54,12 +55,12 @@ import com.valentinilk.shimmer.shimmer
 fun PasswordListScreen(
     viewModel: PasswordViewModel = hiltViewModel(),
     navController: NavHostController,
+    focusOnSearch: Boolean = false,
     onAddPassword: () -> Unit,
     onClickPassword: (Long) -> Unit,
 ) {
     val uiState = viewModel.uiState.collectAsState().value
-    var searchQuery by remember { mutableStateOf("") }
-
+    val focusRequester = remember{ FocusRequester() }
     Scaffold(
         bottomBar = {
             com.example.passfort.designSystem.components.NavigationBar(
@@ -71,17 +72,19 @@ fun PasswordListScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = padding.calculateTopPadding(),
-                    bottom = 40.dp)
+                .padding(
+                    top = padding.calculateTopPadding(),
+                    bottom = 40.dp
+                )
                 .padding(20.dp)
         ) {
-            var searchValue by remember {mutableStateOf("")}
+            val searchValue = viewModel.searchPattern.collectAsState().value
             SearchBar(
                 value = searchValue,
+                modifier = Modifier.focusRequester(focusRequester),
                 placeholder = stringResource(id = R.string.search_passwords_field_placeholder),
-            ) {
-                searchValue = it
-            }
+                onValueChange = { viewModel.search(it) },
+            )
             Spacer(modifier = Modifier.height(12.dp))
 
             when (uiState) {
@@ -89,16 +92,29 @@ fun PasswordListScreen(
                 is PasswordListState.Error -> ErrorScreen(uiState.message)
                 is PasswordListState.Empty -> EmptyScreen()
                 is PasswordListState.Success -> {
-                    PasswordSections(
-                        pinnedPasswords = uiState.pinnedPasswords,
-                        allPasswords = uiState.allPasswords,
-                        onClickPassword = onClickPassword,
-                        onPinPassword = { viewModel.pinPassword(it) },
-                        onDeletePassword = { viewModel.deletePassword(it) }
-                    )
+                    if (searchValue.isNotEmpty()) {
+                        PasswordSections(
+                            pinnedPasswords = emptyList(),
+                            allPasswords = uiState.searchPasswords,
+                            onClickPassword = onClickPassword,
+                            onPinPassword = { viewModel.pinPassword(it) },
+                            onDeletePassword = { viewModel.deletePassword(it) }
+                        )
+                    } else {
+                        PasswordSections(
+                            pinnedPasswords = uiState.pinnedPasswords,
+                            allPasswords = uiState.allPasswords,
+                            onClickPassword = onClickPassword,
+                            onPinPassword = { viewModel.pinPassword(it) },
+                            onDeletePassword = { viewModel.deletePassword(it) }
+                        )
+                    }
                 }
             }
         }
+    }
+    LaunchedEffect(Unit) {
+        if (focusOnSearch) focusRequester.requestFocus()
     }
 }
 
@@ -113,7 +129,8 @@ fun PasswordSections(
     val scrollState = rememberLazyListState()
     var pinnedExpanded by remember { mutableStateOf(true) }
 
-    LazyColumn(modifier = Modifier.fillMaxSize(),
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
         state = scrollState
     ) {
         if (pinnedPasswords.isNotEmpty()) {
@@ -161,7 +178,8 @@ fun PasswordSections(
             )
         }
         items(allPasswords.size) { index ->
-            PasswordCard(allPasswords[index],
+            PasswordCard(
+                allPasswords[index],
                 onClickPassword = onClickPassword,
                 onPin = onPinPassword,
                 onDelete = onDeletePassword
@@ -196,7 +214,9 @@ fun ShimmerPasswordCard() {
         shape = MaterialTheme.shapes.medium,
         elevation = CardDefaults.cardElevation(1.dp)
     ) {
-        Box(modifier = Modifier.fillMaxSize().background(Color.LightGray))
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .background(Color.LightGray))
     }
 }
 
@@ -237,8 +257,8 @@ fun EmptyScreen() {
 
 @PreviewLightDark
 @Composable
-fun PreviewListScreen(){
+fun PreviewListScreen() {
     var viewModel = hiltViewModel<PasswordViewModel>()
     var navController = rememberNavController()
-    PassFortTheme { PasswordListScreen(viewModel,navController, {},{}) }
+    PassFortTheme { PasswordListScreen(viewModel, navController, focusOnSearch = false, {}, {}) }
 }

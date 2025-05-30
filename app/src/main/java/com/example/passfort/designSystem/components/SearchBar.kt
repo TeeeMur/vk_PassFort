@@ -17,7 +17,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun SearchBar(value: String, placeholder: String, modifier: Modifier = Modifier, onValueChange: (String) -> Unit) {
+fun SearchBar(
+    value: String,
+    placeholder: String,
+    modifier: Modifier = Modifier,
+    onValueChange: (String) -> Unit,
+) {
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
@@ -28,7 +33,7 @@ fun SearchBar(value: String, placeholder: String, modifier: Modifier = Modifier,
                 RoundedCornerShape(16.dp)
             ),
         shape = RoundedCornerShape(16.dp),
-        placeholder = {Text(placeholder)},
+        placeholder = { Text(placeholder) },
         leadingIcon = {
             Icon(
                 imageVector = Icons.Outlined.Search,

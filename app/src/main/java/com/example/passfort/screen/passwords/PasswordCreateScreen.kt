@@ -104,8 +104,7 @@ fun PasswordCreateModalScreen(
     if (showBottomSheetCreatePassword) {
         ModalBottomSheet(
             modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(0.95f),
+                .fillMaxSize(),
             containerColor = MaterialTheme.colorScheme.background,
             sheetState = sheetState,
             onDismissRequest = onDismiss

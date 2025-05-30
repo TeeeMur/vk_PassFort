@@ -21,6 +21,10 @@ class PasswordsListRepoImpl(db: PassFortDB): PasswordsListRepo {
         return passwordDao.getNonPinned()
     }
 
+    override suspend fun getPasswordsByName(pattern: String): List<PasswordRecordEntity> {
+        return passwordDao.getByName(pattern)
+    }
+
     override suspend fun upsertPassword(passwordEntity: PasswordRecordEntity) {
         passwordDao.upsertObj(passwordEntity)
     }

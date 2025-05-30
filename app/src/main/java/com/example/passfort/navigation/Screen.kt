@@ -4,7 +4,9 @@ sealed class Screen(val route: String) {
     object Login : Screen("login")
     object Register : Screen("register")
     object HomeScreen: Screen("home_screen")
-    object PasswordList : Screen("password_list")
+    object PasswordList : Screen("password_list/{FOCUS}") {
+        fun createRoute(focusOnSearch: Boolean) = "password_list/$focusOnSearch"
+    }
     object PasswordDetail : Screen("password_detail/{passwordId}") {
         fun createRoute(passwordId: Long) = "password_detail/$passwordId"
     }

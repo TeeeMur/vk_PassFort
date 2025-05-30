@@ -18,14 +18,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -52,7 +49,7 @@ enum class ENavigationItem(
     PASSWORDS(
         nameResId = R.string.password_list,
         iconResId = R.drawable.navbar_passwords,
-        route = Screen.PasswordList.route
+        route = Screen.PasswordList.createRoute(false)
     ),
     GENERATOR(
         nameResId = R.string.password_generator,
@@ -69,7 +66,9 @@ enum class ENavigationItem(
 }
 
 @Composable
-fun NavigationBar(navController: NavHostController, onAddPassword: () -> Unit) {
+fun NavigationBar(
+    navController: NavHostController,
+    onAddPassword: () -> Unit) {
     val navItems = ENavigationItem.entries.toList()
 
     Box(
@@ -103,9 +102,9 @@ fun NavigationBar(navController: NavHostController, onAddPassword: () -> Unit) {
                 navItems.forEachIndexed { index, item ->
                     NavItem(
                         ImageVector.vectorResource(item.iconResId),
-                        stringResource(item.nameResId),
                         item.route,
-                        navController
+                        navController,
+                        authenticPath = stringResource(item.nameResId),
                     )
 
                     if (index == 1) {
@@ -159,15 +158,15 @@ fun NavigationBar(navController: NavHostController, onAddPassword: () -> Unit) {
 
 @Composable
 fun NavItem(iconImage: ImageVector,
-            navigateString: String,
             route: String,
-            navController: NavHostController
+            navController: NavHostController,
+            authenticPath: String
 ) {
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    val iconColor = if (currentRoute == route) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
+    val iconColor = if (currentRoute?.contains(authenticPath) == true) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
 
     Box(
         modifier = Modifier
@@ -176,8 +175,7 @@ fun NavItem(iconImage: ImageVector,
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null
             ) {
-                navController.navigate(navigateString) {
-                    popUpTo(Screen.PasswordList.route) { inclusive = false }
+                navController.navigate(route) {
                     launchSingleTop = true
                     restoreState = true
                 }
@@ -199,5 +197,5 @@ fun NavItem(iconImage: ImageVector,
 @Composable
 fun PreviewNavBar(){
     var navController = rememberNavController()
-    PassFortTheme { NavigationBar(navController, {}) }
+    PassFortTheme { NavigationBar(navController) {} }
 }

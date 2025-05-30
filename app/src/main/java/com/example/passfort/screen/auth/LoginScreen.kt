@@ -24,6 +24,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.example.passfort.R
@@ -123,8 +124,6 @@ fun LoginForm(
 ) {
 
     val scrollState = rememberScrollState()
-
-
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier

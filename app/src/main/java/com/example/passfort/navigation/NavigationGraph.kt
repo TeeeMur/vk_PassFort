@@ -81,26 +81,53 @@ fun NavigationGraph(
 
         composable(Screen.HomeScreen.route) {
             MainScreen(
-                onClickPassword = {id: Long -> navController.navigate(Screen.PasswordDetail.createRoute(id))},
+                onClickPassword = { id: Long ->
+                    navController.navigate(
+                        Screen.PasswordDetail.createRoute(
+                            id
+                        )
+                    )
+                },
                 navController = navController,
-                navigationBar = { NavigationBar(navController){showBottomSheetCreatePassword = true} },
+                navigationBar = {
+                    NavigationBar(navController) {
+                        showBottomSheetCreatePassword = true
+                    }
+                },
             )
         }
         composable(Screen.PasswordGenerator.route) {
             PasswordGeneratorScreen(navController) { showBottomSheetCreatePassword = true }
         }
 
-        composable(Screen.PasswordList.route) {
-            PasswordListScreen(navController = navController,
-                onClickPassword = {id: Long -> navController.navigate(Screen.PasswordDetail.createRoute(id))},
-                onAddPassword = {showBottomSheetCreatePassword = true}
+        composable(
+            Screen.PasswordList.route,
+            arguments = listOf(
+                navArgument("FOCUS") {
+                    type = NavType.BoolType
+                    nullable = false
+                }
+            )
+        ) {
+            val focusOnSearch = it.arguments?.getBoolean("FOCUS") == true
+            PasswordListScreen(
+                navController = navController,
+                focusOnSearch = focusOnSearch,
+                onClickPassword = { id: Long ->
+                    navController.navigate(
+                        Screen.PasswordDetail.createRoute(
+                            id
+                        )
+                    )
+                },
+                onAddPassword = { showBottomSheetCreatePassword = true }
             )
         }
 
         composable(
             Screen.PasswordDetail.route,
             arguments = listOf(
-                navArgument("passwordId"){
+                navArgument("passwordId") {
                     type = NavType.LongType
                     nullable = false
                 }
@@ -149,7 +176,7 @@ fun NavigationGraph(
             SettingsScreenNew(
                 navController = navController,
                 onChangeTheme = onChangeTheme,
-                navBar = { NavigationBar(navController){showBottomSheetCreatePassword = true} },
+                navBar = { NavigationBar(navController) { showBottomSheetCreatePassword = true } },
             )
         }
         composable(Screen.AdditionalSettings.route) {
@@ -161,7 +188,7 @@ fun NavigationGraph(
                     }
                 },
                 onDeleteProfile = { },
-                onBack = {navController.navigateUp()},
+                onBack = { navController.navigateUp() },
             )
         }
     }

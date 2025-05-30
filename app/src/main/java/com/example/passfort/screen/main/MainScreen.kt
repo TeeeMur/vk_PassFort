@@ -52,6 +52,9 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -114,9 +117,11 @@ fun MainScreen(
         )
     }
     val recentsLazyColumnState = rememberLazyListState()
-    val lazyListScrollEnabled by remember{derivedStateOf{
-        anchoredDraggableState.currentValue == Anchors.End
-    }}
+    val lazyListScrollEnabled by remember {
+        derivedStateOf {
+            anchoredDraggableState.currentValue == Anchors.End
+        }
+    }
     val pagerState = rememberPagerState { mainScreenImages.size }
     val screenHeightInDp = with(LocalDensity.current) {
         LocalWindowInfo.current.containerSize.height.toDp()
@@ -129,7 +134,8 @@ fun MainScreen(
                     .background(MaterialTheme.colorScheme.primary)
                     .padding(end = 16.dp),
                 title = {
-                    val name = if (viewModel.userName.collectAsState().value != "") ", ${viewModel.userName.collectAsState().value}!" else "!"
+                    val name =
+                        if (viewModel.userName.collectAsState().value != "") ", ${viewModel.userName.collectAsState().value}!" else "!"
                     Text(
                         text = "Привет$name",
                         color = MaterialTheme.colorScheme.inversePrimary
@@ -137,7 +143,7 @@ fun MainScreen(
                 },
                 actions = {
                     IconButton(
-                        onClick = {navController.navigate(Screen.Settings.route)}
+                        onClick = { navController.navigate(Screen.Settings.route) }
                     ) {
                         Icon(
                             modifier = Modifier.size(28.dp),
@@ -250,16 +256,26 @@ fun MainScreen(
                             shape = MaterialTheme.shapes.extraLarge
                         )
                 )
+                val focusRequester = remember { FocusRequester() }
                 SearchBar(
                     value = searchString,
                     placeholder = stringResource(R.string.search_passwords_field_placeholder),
-                    modifier = Modifier.padding(vertical = 8.dp)
-                ) { searchString = it }
+                    modifier = Modifier
+                        .padding(vertical = 8.dp)
+                        .focusRequester(focusRequester)
+                        .onFocusChanged { event ->
+                            if (event.isFocused) {
+                                navController.navigate(Screen.PasswordList.createRoute(true))
+                            }
+                        },
+                    onValueChange = { searchString = it }
+                )
                 val recents = viewModel.recentPasswords.collectAsState()
                 val pinned = viewModel.pinnedPasswords.collectAsState()
                 if (recents.value.isNotEmpty() or pinned.value.isNotEmpty()) {
                     Column(
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier
+                            .fillMaxSize()
                             .padding(bottom = scaffoldPaddingValues.calculateBottomPadding() / 2f)
                     ) {
                         if (pinned.value.isNotEmpty()) {
@@ -267,7 +283,6 @@ fun MainScreen(
                                 modifier = Modifier.padding(vertical = 6.dp),
                                 title = stringResource(R.string.main_screen_pinned_title),
                                 viewModel = viewModel,
-                                showIcons = true,
                                 onClickPassword = onClickPassword
                             )
                         }
@@ -339,13 +354,13 @@ fun SmallPasswordsListRow(
                 putBoolean("android.content.extra.IS_SENSITIVE", true)
             }
         }
-    var copy by remember{mutableStateOf(false)}
+    var copy by remember { mutableStateOf(false) }
     val clipboardManager = LocalClipboard.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 6.dp)
-            .clickable(onClick = {onClickPassword(item.id)}),
+            .clickable(onClick = { onClickPassword(item.id) }),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {

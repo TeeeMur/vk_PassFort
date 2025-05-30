@@ -63,11 +63,12 @@ fun PasswordGeneratorModal(
             .fillMaxSize()
             .padding(top = 20.dp),
     ) {
+        val value = viewModelGeneration.password.collectAsState().value
         InputFieldModalScreen(
-            value = viewModelGeneration.password.collectAsState().value,
+            value = value,
             onValueChange = {},
             onCLick = {
-                viewModelEdit.onPasswordChange(viewModelGeneration.password.value)
+                viewModelEdit.onPasswordChange(value)
                 viewModelGeneration.generatePassword()
                 onDismiss()
             },
