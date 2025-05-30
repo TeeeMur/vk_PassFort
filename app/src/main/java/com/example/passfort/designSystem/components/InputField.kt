@@ -101,6 +101,7 @@ fun InputFieldWithCopy(
     isTitle: Boolean = false,
     isSingleLine: Boolean = false,
     isReadOnly: Boolean = false,
+    isCopy: Boolean = true,
     isShowErrorText: Boolean = false
 ) {
     val clipboardManager = LocalClipboard.current
@@ -126,6 +127,7 @@ fun InputFieldWithCopy(
             errorString = "Не должна быть пустой",
             isShowErrorText = (isShowErrorText && value == ""),
             trailingIcon = {
+                if (isCopy) {
                 IconButton(
                     modifier = Modifier.padding(end = 4.dp),
                     onClick = {
@@ -136,6 +138,7 @@ fun InputFieldWithCopy(
                         imageVector = ImageVector.vectorResource(R.drawable.icon_button_copy),
                         contentDescription = "copy"
                     )
+                }
                 }
             }
         )
@@ -259,9 +262,13 @@ fun InputFieldPasswordWithCopy(
 fun InputFieldPassword(
     labelResourceString: String,
     value: String,
+    isSingleLine: Boolean = false,
     onValueChange: (String) -> Unit = {},
+                       errorString: String = "Не должны быть пустой",
+                       isCopy: Boolean
 ) {
-    var passwordVisible by remember { mutableStateOf(false) }
+
+    var passwordVisible by remember { mutableStateOf(isCopy) }
 
     val visualTransformation = if (!passwordVisible)
         PasswordVisualTransformation() else VisualTransformation.None
@@ -281,16 +288,19 @@ fun InputFieldPassword(
             value = value,
             onValueChange = onValueChange,
             visualTransformation = visualTransformation,
-            errorString = "Не должна быть пустой",
+            errorString = errorString,
+            isSingleLine = isSingleLine,
             isShowErrorText = (value == ""),
             trailingIcon = {
-                IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                    Icon(
-                        imageVector = icon,
-                        contentDescription =
-                            if (passwordVisible) stringResource(R.string.input_field_hide_password)
-                            else stringResource(R.string.input_field_show_password)
-                    )
+                if (isCopy) {
+                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                        Icon(
+                            imageVector = icon,
+                            contentDescription =
+                                if (passwordVisible) stringResource(R.string.input_field_hide_password)
+                                else stringResource(R.string.input_field_show_password)
+                        )
+                    }
                 }
             }
         )
@@ -389,6 +399,7 @@ fun AuthTextFieldPreview() {
             InputFieldPassword(
                 labelResourceString = "",
                 value = "pass",
+                isCopy = false,
                 onValueChange = {}
             )
             InputFieldPasswordWithCopy(
@@ -401,6 +412,7 @@ fun AuthTextFieldPreview() {
                 value = "pass",
                 onValueChange = {},
                 isTitle = true,
+
             )
         }
     }

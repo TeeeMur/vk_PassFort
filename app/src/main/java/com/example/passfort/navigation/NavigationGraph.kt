@@ -7,7 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -19,13 +19,16 @@ import com.example.passfort.model.PreferencesManager
 import com.example.passfort.screen.AdditionalSettings
 import com.example.passfort.screen.auth.LoginScreen
 import com.example.passfort.screen.auth.RegisterScreen
+import com.example.passfort.screen.auth.SettingsScreenNew
 import com.example.passfort.screen.main.MainScreen
 import com.example.passfort.screen.passwords.PasswordListScreen
 import com.example.passfort.screen.passwords.PasswordCreateModalScreen
 import com.example.passfort.screen.passwords.PasswordDetailScreen
 import com.example.passfort.screen.passwords.PasswordGeneratorScreen
-import com.example.passfort.screen.auth.SettingsScreenNew
+import com.example.passfort.ui.register.RegisterEvent
+import com.example.passfort.ui.register.RegisterViewModel
 import com.example.passfort.viewModel.LoginViewModel
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 
@@ -38,21 +41,21 @@ fun NavigationGraph(
 ) {
     var showBottomSheetCreatePassword by remember { mutableStateOf(false) }
 
+    val context = LocalContext.current
+    val preferencesManager = remember { PreferencesManager(context.applicationContext) }
+    var pinEntered by remember { mutableStateOf(false) }
     NavHost(
         navController = navController,
         startDestination = if (isUserLoggedIn) Screen.HomeScreen.route
         else Screen.Login.route
     ) {
         composable(Screen.Login.route) {
-
-            val context = LocalContext.current
-            val preferencesManager = remember { PreferencesManager(context.applicationContext) }
-
-            val viewModel: LoginViewModel = viewModel(
-                factory = LoginViewModel.provideFactory(preferencesManager)
-            )
-
+            val viewModel: LoginViewModel = hiltViewModel()
             val uiState = viewModel.uiState
+
+            LaunchedEffect(Unit) {
+                viewModel.resetState()
+            }
 
             LaunchedEffect(uiState.loginSuccess) {
                 if (uiState.loginSuccess) {
@@ -69,14 +72,10 @@ fun NavigationGraph(
                 onUsernameChange = viewModel::onUsernameChange,
                 onPasswordChange = viewModel::onPasswordChange,
                 onLoginAttempt = viewModel::onLoginAttempt,
-
-                onNavigateToRegister = {
-                    navController.navigate(Screen.Register.route)
-                },
-                onNavigateToForgotPassword = {
-                },
-                onNavigateToPrivacyPolicy = {
-                }
+                onNavigateToRegister = { navController.navigate(Screen.Register.route) },
+                onNavigateToForgotPassword = {},
+                onNavigateToPrivacyPolicy = {},
+                onErrorDialogDismiss = viewModel::errorDialogDismissed
             )
         }
 
@@ -117,10 +116,33 @@ fun NavigationGraph(
         }
 
         composable(Screen.Register.route) {
+            val registerViewModel: RegisterViewModel = hiltViewModel()
+
+            LaunchedEffect(Unit) {
+                registerViewModel.resetState()
+            }
+
+            LaunchedEffect(Unit) {
+                registerViewModel.eventFlow.collectLatest { event ->
+                    when (event) {
+                        is RegisterEvent.Success -> {
+                            navController.navigate(Screen.Login.route) {
+                                popUpTo(Screen.Login.route) { inclusive = true }
+                            }
+                        }
+                    }
+                }
+            }
+
             RegisterScreen(
-                navController,
-                onBack = {navController.navigate(Screen.Login.route)},
-                onRegisterSuccess = {navController.navigate(Screen.Login.route)}
+                uiState = registerViewModel.uiState,
+                onNameChange = registerViewModel::onNameChange,
+                onEmailChange = registerViewModel::onEmailChange,
+                onPasswordChange = registerViewModel::onPasswordChange,
+                onConfirmPasswordChange = registerViewModel::onConfirmPasswordChange,
+                onRegisterAttempt = registerViewModel::onRegisterAttempt,
+                onPrivacyPolicy = {},
+                onErrorDialogDismiss = registerViewModel::dismissErrorDialog
             )
         }
         composable(Screen.Settings.route) {

@@ -143,6 +143,7 @@ fun DetailScreen(
             labelResourceString = stringResource(R.string.passwordcreate_inputfield_password),
             value = viewModel.password.collectAsState().value,
             onValueChange = { viewModel.onPasswordChange(it) },
+                    isCopy = true
         )
         RectangleButton(
             text = stringResource(R.string.passwordgen_generatebutton_text),
@@ -269,6 +270,7 @@ fun ButtonRows(
                 onPinned = onPinned,
                 onDelete = onDelete,
                 onDismiss = { expanded = false},
+                onBackScreen = onBackScreen
             )
         }
     }
@@ -280,12 +282,14 @@ fun DropDownMenu(
     onPinned: () -> Unit,
     onDelete: () -> Unit,
     onDismiss: () -> Unit,
+    onBackScreen: () -> Unit
 ) {
     DropdownMenu(
         modifier = Modifier
             .width(200.dp)
             .background(
                 MaterialTheme.colorScheme.inverseOnSurface,
+                //RoundedCornerShape(15.dp)
             ),
         expanded = expanded,
         onDismissRequest = { onDismiss() }
@@ -333,6 +337,7 @@ fun ImageUserCard(
         catch (e: SecurityException){
             e.printStackTrace()
         }
+
         selectedImageUri = uri
         setUriImage(uri.toString())
     }
@@ -377,6 +382,16 @@ fun ImageUserCard(
             }
         }
     }
+
+    /*LaunchedEffect(Unit) {
+        if (imageCardUri != "") {
+            selectedImageUri = Uri.withAppendedPath(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                imageCardUri
+            )
+            setUriImage(imageCardUri)
+        }
+    }*/
 }
 
 

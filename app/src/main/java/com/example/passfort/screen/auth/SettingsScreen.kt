@@ -35,8 +35,8 @@ import com.example.passfort.viewModel.SettingsViewModel
 
 @Composable
 fun SettingsScreenNew(
-    viewModel: SettingsViewModel = hiltViewModel(),
     navController: NavHostController,
+    viewModel: SettingsViewModel = hiltViewModel(),
     onChangeTheme: (ChosenTheme) -> Unit,
     navBar: @Composable () -> Unit,
 ) {

@@ -64,7 +64,8 @@ fun PasswordCreateScreen(
                 InputFieldPassword(
                     labelResourceString = stringResource(R.string.passwordcreate_inputfield_password),
                     value = viewModel.password.collectAsState().value,
-                    onValueChange = { viewModel.onPasswordChange(it) }
+                    onValueChange = { viewModel.onPasswordChange(it) },
+                    isCopy = true
                 )
                 RectangleButton(
                     text = stringResource(R.string.passwordgen_generatebutton_text),
@@ -75,6 +76,7 @@ fun PasswordCreateScreen(
                     labelResourceString = stringResource(R.string.passwordcreate_inputfield_note),
                     value = viewModel.note.collectAsState().value,
                     onValueChange = { viewModel.onNoteChange(it) },
+                    isCopy = true
                 )
                 PasswordRemindOptions(
                     passwordIntervalDaysIndex = viewModel.changeIntervalDaysIndex.collectAsState().value,
