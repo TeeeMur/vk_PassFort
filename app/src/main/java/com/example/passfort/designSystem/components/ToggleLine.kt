@@ -2,6 +2,7 @@ package com.example.passfort.designSystem.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -34,20 +35,25 @@ fun PasswordRemindOptions(
             .padding(bottom = 20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        var label = stringResource(R.string.passwordcreate_toggle_remind_change_name)
+        if (enablePasswordChange) {
+            label += stringResource(R.string.passwordcreate_toggle_remind_change_name_adder)
+        }
         ToggleLine(
-            name = stringResource(R.string.passwordcreate_toggle_remind_change_name),
+            name = label,
             valueFlow = enablePasswordChange,
             horizontalPadding = 20.dp,
         ) {
             setPasswordChange()
         }
-
         if (enablePasswordChange) {
-            SingleChoiceSegmentedButtonNew(
-                options = options,
-                selectedIndex = passwordIntervalDaysIndex,
-                switchAction = {setChangeIntervalDaysCountIndex(it)}
-            )
+            Box(modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp)) {
+                SingleChoiceSegmentedButtonNew(
+                    options = options,
+                    selectedIndex = passwordIntervalDaysIndex,
+                    switchAction = {setChangeIntervalDaysCountIndex(it)}
+                )
+            }
         }
     }
 }

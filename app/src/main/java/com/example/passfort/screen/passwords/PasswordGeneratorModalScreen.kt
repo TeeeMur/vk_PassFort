@@ -22,12 +22,16 @@ import com.example.passfort.designSystem.components.InputFieldModalScreen
 import com.example.passfort.designSystem.components.PasswordLengthSlider
 import com.example.passfort.designSystem.theme.PassFortTheme
 import com.example.passfort.viewModel.CreateViewModel
+import com.example.passfort.viewModel.DetailViewModel
+import com.example.passfort.viewModel.EditPasswordViewModel
 import com.example.passfort.viewModel.GeneratorViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PasswordGenerateModalScreen(
-    showBottomSheet: Boolean, onDismiss: () -> Unit) {
+    showBottomSheet: Boolean,
+    onDismiss: () -> Unit,
+    viewModelEdit: EditPasswordViewModel) {
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
     )
@@ -41,7 +45,9 @@ fun PasswordGenerateModalScreen(
             sheetState = sheetState,
             onDismissRequest = onDismiss
         ) {
-            PasswordGeneratorModal() { onDismiss() }
+            PasswordGeneratorModal(
+                viewModelEdit = viewModelEdit
+            ) { onDismiss() }
         }
     }
 }
@@ -49,7 +55,7 @@ fun PasswordGenerateModalScreen(
 @Composable
 fun PasswordGeneratorModal(
     viewModelGeneration: GeneratorViewModel = hiltViewModel(),
-    viewModelCreate: CreateViewModel = hiltViewModel(),
+    viewModelEdit: EditPasswordViewModel,
     onDismiss: () -> Unit
 ){
     Column(
@@ -61,7 +67,8 @@ fun PasswordGeneratorModal(
             value = viewModelGeneration.password.collectAsState().value,
             onValueChange = {},
             onCLick = {
-                viewModelCreate.onPasswordChange(viewModelGeneration.password.value)
+                viewModelEdit.onPasswordChange(viewModelGeneration.password.value)
+                viewModelGeneration.generatePassword()
                 onDismiss()
             },
             labelResourceString = stringResource(R.string.passwordgen_screen_title),
@@ -72,13 +79,5 @@ fun PasswordGeneratorModal(
         PasswordLengthSlider(viewModelGeneration)
         Spacer(Modifier.padding(bottom = 10.dp))
         PasswordGenOptions(viewModelGeneration)
-    }
-}
-
-@PreviewLightDark
-@Composable
-fun GenerateModalScreenPreview(){
-    PassFortTheme {
-        PasswordGeneratorModal(onDismiss = {})
     }
 }

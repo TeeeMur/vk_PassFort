@@ -70,4 +70,5 @@
     <string name="settings_inputfield_placeholder_name">Ваше имя</string>
     <string name="settings_inputfield_placeholder_surname">Ваша фамилия</string>
     <string name="settings_inputfield_placeholder_email">Ваш E-mail</string>
+    <string name="passwordcreate_toggle_remind_change_name_adder">" каждые:"</string>
 </resources>
