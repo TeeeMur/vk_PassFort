@@ -16,7 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class DetailViewModel @Inject constructor(
     private val repository: PasswordsDetailRepo
-) : ViewModel() {
+) : EditPasswordViewModel() {
 
     private val _idPassword: MutableStateFlow<Long> = MutableStateFlow(0)
     private val _namePassword: MutableStateFlow<String> = MutableStateFlow("")
@@ -50,7 +50,7 @@ class DetailViewModel @Inject constructor(
         idPassword: Long
     ){
         viewModelScope.launch {
-            val password = repository.getPassword(idPassword) ?: return@launch
+            val password = repository.getPassword(idPassword)
 
             _idPassword.update { password.id }
             _namePassword.update { password.recordName }
@@ -78,7 +78,7 @@ class DetailViewModel @Inject constructor(
         onChanged()
     }
 
-    fun onPasswordChange(newPassword: String) {
+    override fun onPasswordChange(newPassword: String) {
         _password.update { newPassword }
         onChanged()
     }

@@ -13,6 +13,10 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
@@ -28,9 +32,13 @@ import com.example.passfort.designSystem.components.PasswordRemindOptions
 import com.example.passfort.designSystem.theme.PassFortTheme
 import com.example.passfort.viewModel.CreateViewModel
 import com.example.passfort.viewModel.PASS_CHANGE_NOTIFICATION_INTERVAL_OPTIONS
+import kotlinx.collections.immutable.toPersistentList
 
 @Composable
-fun PasswordCreateScreen(viewModel: CreateViewModel = hiltViewModel(), onDismiss: () -> Unit, onGeneratePassword: () -> Unit) {
+fun PasswordCreateScreen(
+    viewModel: CreateViewModel,
+    onDismiss: () -> Unit,
+    onGeneratePassword: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -75,7 +83,7 @@ fun PasswordCreateScreen(viewModel: CreateViewModel = hiltViewModel(), onDismiss
                     enablePasswordChange = viewModel.enablePasswordChange.collectAsState().value,
                     setPasswordChange = { viewModel.setPasswordChange() },
                     setChangeIntervalDaysCountIndex = { viewModel.setChangeIntervalDaysCountIndex(it) },
-                    options = PASS_CHANGE_NOTIFICATION_INTERVAL_OPTIONS
+                    options = PASS_CHANGE_NOTIFICATION_INTERVAL_OPTIONS.map { it -> "$it дней" }.toPersistentList()
                 )
             }
         }
@@ -85,12 +93,15 @@ fun PasswordCreateScreen(viewModel: CreateViewModel = hiltViewModel(), onDismiss
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PasswordCreateModalScreen(showBottomSheet: Boolean, onDismiss: () -> Unit, onGeneratePassword: () -> Unit) {
+fun PasswordCreateModalScreen(
+    viewModel: CreateViewModel = hiltViewModel(),
+    showBottomSheetCreatePassword: Boolean,
+    onDismiss: () -> Unit,) {
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
     )
-
-    if (showBottomSheet) {
+    var showGenerateModalScreen by remember { mutableStateOf(false) }
+    if (showBottomSheetCreatePassword) {
         ModalBottomSheet(
             modifier = Modifier
                 .fillMaxWidth()
@@ -100,11 +111,17 @@ fun PasswordCreateModalScreen(showBottomSheet: Boolean, onDismiss: () -> Unit, o
             onDismissRequest = onDismiss
         ) {
             PasswordCreateScreen(
-                onGeneratePassword = onGeneratePassword,
+                viewModel = viewModel,
+                onGeneratePassword = { showGenerateModalScreen = true },
                 onDismiss = onDismiss
             )
         }
     }
+    PasswordGenerateModalScreen(
+        showBottomSheet = showGenerateModalScreen,
+        viewModelEdit = viewModel,
+        onDismiss = { showGenerateModalScreen = false }
+    )
 }
 
 @PreviewLightDark()

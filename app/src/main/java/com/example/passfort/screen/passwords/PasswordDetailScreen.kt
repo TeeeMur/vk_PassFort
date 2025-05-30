@@ -33,6 +33,7 @@ import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -64,34 +65,41 @@ import com.example.passfort.designSystem.components.InputFieldWithCopy
 import com.example.passfort.designSystem.components.PasswordRemindOptions
 import com.example.passfort.viewModel.DetailViewModel
 import com.example.passfort.viewModel.PASS_CHANGE_NOTIFICATION_INTERVAL_OPTIONS
+import kotlinx.collections.immutable.toPersistentList
 
 @Composable
 fun PasswordDetailScreen(
     viewModel: DetailViewModel = hiltViewModel(),
     idPasswordRecord: Long,
-    onGeneratePassword: () -> Unit,
     onBackScreen: () -> Unit
 ) {
-    viewModel.initPassword(idPasswordRecord)
-
+    LaunchedEffect(viewModel) {
+        viewModel.initPassword(idPasswordRecord)
+    }
+    var showGenerateModalScreen by remember { mutableStateOf(false) }
     Scaffold(
     ) { padding ->
         Column(
             modifier = Modifier
                 .padding(
                     top = padding.calculateTopPadding(),
-                    bottom = 40.dp
+                    bottom = 32.dp
                 )
                 .fillMaxSize(),
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
             DetailScreen(
                 viewModel = viewModel,
-                onGeneratePassword = onGeneratePassword,
+                onGeneratePassword = { showGenerateModalScreen = true },
                 onBackScreen = onBackScreen
             )
         }
     }
+    PasswordGenerateModalScreen(
+        showBottomSheet = showGenerateModalScreen,
+        viewModelEdit = viewModel,
+        onDismiss = { showGenerateModalScreen = false }
+    )
 }
 
 @SuppressLint("StateFlowValueCalledInComposition")
@@ -148,7 +156,7 @@ fun DetailScreen(
             onValueChange = { viewModel.onNoteChange(it) },
         )
         PasswordRemindOptions(
-            options = PASS_CHANGE_NOTIFICATION_INTERVAL_OPTIONS,
+            options = PASS_CHANGE_NOTIFICATION_INTERVAL_OPTIONS.map { it -> "$it дней" }.toPersistentList(),
             passwordIntervalDaysIndex = viewModel.changeIntervalDaysIndex.collectAsState().value,
             enablePasswordChange = viewModel.enablePasswordChange.collectAsState().value,
             setPasswordChange = { viewModel.setPasswordChange() },
@@ -341,7 +349,7 @@ fun ImageUserCard(
     ) {
         OutlinedIconButton(
             modifier = Modifier
-                .size(120.dp),
+                .size(80.dp),
             shape = RoundedCornerShape(22.dp),
             border = BorderStroke(1.dp, MaterialTheme.colorScheme.inverseSurface),
             onClick = {

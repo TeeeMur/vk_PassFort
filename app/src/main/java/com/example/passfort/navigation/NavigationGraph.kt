@@ -24,7 +24,6 @@ import com.example.passfort.screen.main.MainScreen
 import com.example.passfort.screen.passwords.PasswordListScreen
 import com.example.passfort.screen.passwords.PasswordCreateModalScreen
 import com.example.passfort.screen.passwords.PasswordDetailScreen
-import com.example.passfort.screen.passwords.PasswordGenerateModalScreen
 import com.example.passfort.screen.passwords.PasswordGeneratorScreen
 import com.example.passfort.ui.register.RegisterEvent
 import com.example.passfort.ui.register.RegisterViewModel
@@ -41,7 +40,6 @@ fun NavigationGraph(
     onLogout: () -> Unit
 ) {
     var showBottomSheetCreatePassword by remember { mutableStateOf(false) }
-    var showBottomSheetGeneratePassword by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
     val preferencesManager = remember { PreferencesManager(context.applicationContext) }
@@ -112,7 +110,6 @@ fun NavigationGraph(
             it.arguments?.getLong("passwordId")?.let {
                 PasswordDetailScreen(
                     idPasswordRecord = it,
-                    onGeneratePassword = { showBottomSheetGeneratePassword = true },
                     onBackScreen = { navController.navigateUp() }
                 )
             }
@@ -170,12 +167,9 @@ fun NavigationGraph(
     }
 
     PasswordCreateModalScreen(
-        showBottomSheet = showBottomSheetCreatePassword,
+        showBottomSheetCreatePassword = showBottomSheetCreatePassword,
         onDismiss = { showBottomSheetCreatePassword = false },
-        onGeneratePassword = {showBottomSheetGeneratePassword = true}
     )
-
-    PasswordGenerateModalScreen(showBottomSheetGeneratePassword) { showBottomSheetGeneratePassword = false }
 }
 
 

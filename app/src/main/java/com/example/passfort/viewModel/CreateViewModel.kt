@@ -19,7 +19,7 @@ val PASS_CHANGE_NOTIFICATION_INTERVAL_OPTIONS = persistentListOf("60", "120", "1
 @HiltViewModel
 class CreateViewModel @Inject constructor(
     private val repository: PasswordsListRepo
-) : ViewModel() {
+) : EditPasswordViewModel() {
     private val _namePassword: MutableStateFlow<String> = MutableStateFlow("")
     private val _login: MutableStateFlow<String> = MutableStateFlow("")
     private val _password: MutableStateFlow<String> = MutableStateFlow("")
@@ -51,7 +51,7 @@ class CreateViewModel @Inject constructor(
         _login.update { newUsername }
     }
 
-    fun onPasswordChange(newPassword: String) {
+    override fun onPasswordChange(newPassword: String) {
         _password.update { newPassword }
     }
 
