@@ -1,5 +1,6 @@
 package com.example.passfort.screen.auth
 
+import CenteredErrorDialog
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -8,30 +9,29 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.example.passfort.R
-import com.example.passfort.designSystem.components.InputFieldBase
-import com.example.passfort.designSystem.theme.PassFortTheme
-import com.example.passfort.viewModel.LoginUiState
 import com.example.passfort.designSystem.components.AuthButton
+import com.example.passfort.designSystem.components.InputFieldPassword
+import com.example.passfort.designSystem.components.InputFieldWithCopy
+import com.example.passfort.viewModel.LoginUiState
 
 
 @Composable
@@ -43,48 +43,68 @@ fun LoginScreen(
     onNavigateToRegister: () -> Unit,
     onNavigateToForgotPassword: () -> Unit,
     onNavigateToPrivacyPolicy: () -> Unit,
+    onErrorDialogDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier = modifier
-            .clipToBounds()
+    val errorMessage = uiState.loginError ?: uiState.usernameError ?: uiState.passwordError
+    val showErrorDialog = errorMessage != null
+
+
+    Box(
+        modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.primary)
+            .background(MaterialTheme.colorScheme.background)
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(0.8f)
-                .background(MaterialTheme.colorScheme.primary),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                modifier = Modifier.fillMaxWidth(0.4f),
-                imageVector = ImageVector.vectorResource(R.drawable.navbar_home),
-                tint = MaterialTheme.colorScheme.secondary,
-                contentDescription = null
-            )
-        }
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-                .clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .imePadding()
                 .background(MaterialTheme.colorScheme.background)
-                .padding(horizontal = 24.dp, vertical = 16.dp)
+
         ) {
-            LoginForm(
-                username = uiState.username,
-                password = uiState.password,
-                isLoading = uiState.isLoading,
-                usernameError = uiState.usernameError,
-                passwordError = uiState.passwordError,
-                onUsernameChange = onUsernameChange,
-                onPasswordChange = onPasswordChange,
-                onLogin = onLoginAttempt,
-                onRegister = onNavigateToRegister,
-                onForgotPassword = onNavigateToForgotPassword,
-                onPrivacyPolicy = onNavigateToPrivacyPolicy
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(0.9f)
+                    .background(MaterialTheme.colorScheme.primary),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    modifier = Modifier.fillMaxWidth(0.4f),
+                    imageVector = ImageVector.vectorResource(R.drawable.navbar_home),
+                    tint = MaterialTheme.colorScheme.secondary,
+                    contentDescription = null
+                )
+            }
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1.2f)
+                    .background(MaterialTheme.colorScheme.primary)
+                    .clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
+                    .background(MaterialTheme.colorScheme.background)
+                    .padding(vertical = 16.dp)
+
+            ) {
+                LoginForm(
+                    username = uiState.username,
+                    password = uiState.password,
+                    isLoading = uiState.isLoading,
+                    onUsernameChange = onUsernameChange,
+                    onPasswordChange = onPasswordChange,
+                    onLogin = onLoginAttempt,
+                    onRegister = onNavigateToRegister,
+                    onForgotPassword = onNavigateToForgotPassword,
+                    onPrivacyPolicy = onNavigateToPrivacyPolicy
+                )
+            }
+        }
+        if (showErrorDialog && errorMessage != null) {
+            CenteredErrorDialog(
+                title = stringResource(R.string.error_dialog_title), // Добавьте строку "Ошибка" в ресурсы
+                errorMessage = errorMessage,
+                onDismiss = onErrorDialogDismiss
             )
         }
     }
@@ -95,8 +115,6 @@ fun LoginForm(
     username: String,
     password: String,
     isLoading: Boolean,
-    usernameError: String?,
-    passwordError: String?,
     onUsernameChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onLogin: () -> Unit,
@@ -104,138 +122,83 @@ fun LoginForm(
     onForgotPassword: () -> Unit,
     onPrivacyPolicy: () -> Unit,
 ) {
-    Box(
+
+    val scrollState = rememberScrollState()
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxWidth()
+            .verticalScroll(scrollState)
+
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
+        InputFieldWithCopy(
+            labelResourceString = stringResource(R.string.login_username_label),
+            value = username,
+            onValueChange = onUsernameChange,
+            isReadOnly = isLoading,
+                    isCopy = false,
+            isSingleLine = true
+        )
+
+        InputFieldPassword(
+            labelResourceString = stringResource(R.string.login_password_label),
+            value = password,
+            onValueChange = onPasswordChange,
+            errorString = "",
+            isCopy = false,
+            isSingleLine = true
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Text(
+            text = stringResource(R.string.login_forgot_password_button),
+            style = MaterialTheme.typography.bodySmall.copy(
+                textDecoration = TextDecoration.Underline
+            ),
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 20.dp, bottom = 160.dp)
-        ) {
-            InputFieldBase(
-                labelResourceString = stringResource(R.string.login_username_label),
-                value = username,
-                onValueChange = onUsernameChange,
-                enabled = !isLoading,
-                trailingIcon = {}
-            )
+                .align(Alignment.Start)
+                .clickable(enabled = !isLoading, onClick = onForgotPassword)
+                .padding(start = 20.dp, bottom = 2.dp),
+            color = MaterialTheme.colorScheme.primary
+        )
 
-            if (usernameError != null) {
-                Text(
-                    text = usernameError,
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier
-                        .align(Alignment.Start)
-                        .padding(start = 8.dp)
-                        .heightIn(max = 20.dp)
-                )
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            InputFieldBase(
-                labelResourceString = stringResource(R.string.login_password_label),
-                value = password,
-                onValueChange = onPasswordChange,
-                enabled = !isLoading,
-                visualTransformation = PasswordVisualTransformation(),
-                trailingIcon = {}
-            )
-
-            if (passwordError != null) {
-                Text(
-                    text = passwordError,
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier
-                        .align(Alignment.Start)
-                        .padding(start = 8.dp)
-                        .heightIn(max = 20.dp)
-                )
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = stringResource(R.string.login_forgot_password_button),
-                style = MaterialTheme.typography.bodySmall.copy(
-                    textDecoration = TextDecoration.Underline
-                ),
-                modifier = Modifier
-                    .align(Alignment.Start)
-                    .clickable(enabled = !isLoading, onClick = onForgotPassword)
-                    .padding(start = 8.dp, bottom = 2.dp),
-                color = MaterialTheme.colorScheme.primary
-            )
-        }
-
-        Column(
+        Spacer(modifier = Modifier.height(16.dp))
+        AuthButton(
+            text = stringResource(R.string.login_login_button),
+            onClick = onLogin,
+            isLoading = isLoading,
             modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 40.dp)
-        ) {
-            Spacer(modifier = Modifier.weight(1f))
-            AuthButton(
-                text = stringResource(R.string.login_login_button),
-                onClick = onLogin,
-                isLoading = isLoading,
-                modifier = Modifier.fillMaxWidth()
-            )
+                .padding(horizontal = 20.dp)
+                .fillMaxWidth(),
+            fillMaxWidth = true,
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        AuthButton(
+            text = stringResource(R.string.login_register_button),
+            onClick = onRegister,
+            isLoading = false,
+            enabled = !isLoading,
+            modifier = Modifier
+                .padding(horizontal = 20.dp)
+                .fillMaxWidth(),
+            containerColor = MaterialTheme.colorScheme.secondary,
+            contentColor = MaterialTheme.colorScheme.onSecondary,
+            fillMaxWidth = true
+        )
 
-            Spacer(modifier = Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(4.dp))
 
-            AuthButton(
-                text = stringResource(R.string.login_register_button),
-                onClick = onRegister,
-                enabled = !isLoading,
-                modifier = Modifier
-                    .fillMaxWidth(),
-                containerColor = MaterialTheme.colorScheme.secondary,
-                contentColor = MaterialTheme.colorScheme.onSecondary,
-                isLoading = false
-            )
+        Text(
+            text = stringResource(R.string.login_privacy_policy_button),
+            style = MaterialTheme.typography.labelSmall.copy(
+                textDecoration = TextDecoration.Underline
+            ),
+            modifier = Modifier
 
-            Spacer(modifier = Modifier.height(4.dp))
-
-            Text(
-                text = stringResource(R.string.login_privacy_policy_button),
-                style = MaterialTheme.typography.labelSmall.copy(
-                    textDecoration = TextDecoration.Underline
-                ),
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .clickable(enabled = !isLoading, onClick = onPrivacyPolicy),
-                color = MaterialTheme.colorScheme.secondary
-            )
-        }
-    }
-}
-
-@PreviewLightDark()
-@Composable
-fun LoginScreenPreview() {
-    PassFortTheme {
-        Surface {
-            val previewState = LoginUiState(
-                username = "preview@user.com",
-                password = "password",
-                isLoading = false,
-                usernameError = "2323",
-
-                )
-            LoginScreen(
-                uiState = previewState,
-                onUsernameChange = {},
-                onPasswordChange = {},
-                onLoginAttempt = {},
-                onNavigateToRegister = {},
-                onNavigateToForgotPassword = {},
-                onNavigateToPrivacyPolicy = {}
-            )
-        }
+                .align(Alignment.CenterHorizontally)
+                .clickable(onClick = onPrivacyPolicy),
+            color = MaterialTheme.colorScheme.secondary
+        )
     }
 }
