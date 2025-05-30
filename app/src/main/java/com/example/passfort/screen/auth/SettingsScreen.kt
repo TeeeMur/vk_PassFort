@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -24,7 +22,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.passfort.R
 import com.example.passfort.designSystem.components.LeftTextButton
-import com.example.passfort.designSystem.components.NavigationBar
 import com.example.passfort.designSystem.components.RectangleButton
 import com.example.passfort.designSystem.components.SettingsInputField
 import com.example.passfort.designSystem.components.SingleChoiceSegmentedButtonNew
